@@ -37,7 +37,7 @@ export default async function Boosted({ compact = false }: { compact?: boolean }
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={i.image_url} alt="" width={48} height={48} className="sprite" />
           <div className="text-[12px] leading-tight">
-            <div className="muted text-[10px]">{i.label} boostado hoje</div>
+            <div className="muted text-[10px]">{i.label === "Criatura" ? "Criatura boostada hoje" : "Boss boostado hoje"}</div>
             <div className="font-bold">{i.name}</div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Box from "@/components/Box";
 import Boosted from "@/components/Boosted";
+import Rashid from "@/components/Rashid";
 import { NEWS, TICKER, formatDate } from "@/data/news";
 import { TIBIA, itemIcon, spellIcon } from "@/lib/icons";
 
@@ -16,8 +17,11 @@ const FEATURES = [
 export default function Home() {
   return (
     <div>
-      <Box title="Boostados hoje">
-        <Boosted />
+      <Box title="Hoje no Tibia">
+        <div className="flex flex-wrap gap-6 items-center">
+          <Boosted />
+          <Rashid />
+        </div>
       </Box>
       <Box title="Novidades rápidas">
         <ul className="tc-ticker">
