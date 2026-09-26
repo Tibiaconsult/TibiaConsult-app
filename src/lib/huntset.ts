@@ -8,7 +8,7 @@ import type { Element } from "@/data/spells";
 import type { Hunt } from "@/data/hunts";
 import { EquipRow, VOC_EQUIPMENT } from "@/data/voc-equipment";
 
-export type SetVoc = "druid" | "knight" | "paladin" | "monk";
+export type SetVoc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
 
 const PT: Record<string, Element> = { físico: "physical", fogo: "fire", gelo: "ice", terra: "earth", energia: "energy", death: "death", holy: "holy" };
 export const EL_PT: Record<Element, string> = { physical: "físico", fire: "fogo", ice: "gelo", earth: "terra", energy: "energia", death: "death", holy: "holy" };
@@ -34,6 +34,7 @@ export function incomingProfile(h: Hunt): Record<Element, number> {
 }
 
 const OFFENSE: Record<SetVoc, Element[]> = {
+  sorcerer: ["fire", "energy", "death"],
   druid: ["ice", "earth"],
   paladin: ["holy", "physical"],
   knight: ["fire", "energy", "ice", "earth", "death"],
@@ -67,7 +68,15 @@ function protScore(r: EquipRow, prof: Record<Element, number>): number {
   return (Object.keys(res) as Element[]).reduce((a, el) => a + (res[el] ?? 0) * (prof[el] ?? 0), 0);
 }
 
+/** Para magos: magic level e ML do elemento de ataque da hunt pesam na escolha. */
+function mageScore(r: EquipRow, best: Element | undefined): number {
+  const ml = r.sk?.["magic level"] ?? 0;
+  const el = best ? (r.sk?.[`${best} magic level`] ?? 0) : 0;
+  return ml * 3 + el * 5;
+}
+
 const SLOTS: Record<SetVoc, string[]> = {
+  sorcerer: ["Arma", "Spellbook", "Elmo", "Armadura", "Pernas", "Botas", "Anel", "Amuleto"],
   druid: ["Arma", "Spellbook", "Elmo", "Armadura", "Pernas", "Botas", "Anel", "Amuleto"],
   knight: ["Arma", "Escudo", "Elmo", "Armadura", "Pernas", "Botas", "Anel", "Amuleto"],
   paladin: ["Arma", "Aljava", "Elmo", "Armadura", "Pernas", "Botas", "Anel", "Amuleto"],
@@ -98,16 +107,18 @@ export function suggestSet(h: Hunt, voc: SetVoc, maxLevel: number): { picks: Set
       const pct = offense.find((o) => o.el === el)?.pct;
       return { slot, item: cand, why: el ? `ataque de ${EL_PT[el]}${pct ? `: os bichos tomam ${Math.round(pct)}% em média` : ""}` : "maior level disponível" };
     }
+    const mage = voc === "sorcerer" || voc === "druid";
+    const score = (r: EquipRow) => protScore(r, prof) + (mage ? mageScore(r, best) * 10 : 0);
     const cand =
       slot === "Arma"
-        ? items.sort((a, b) => b.level - a.level || protScore(b, prof) - protScore(a, prof))[0]
-        : items.sort((a, b) => protScore(b, prof) - protScore(a, prof) || b.level - a.level)[0];
+        ? items.sort((a, b) => (mage ? mageScore(b, best) - mageScore(a, best) : 0) || b.level - a.level || protScore(b, prof) - protScore(a, prof))[0]
+        : items.sort((a, b) => score(b) - score(a) || b.level - a.level)[0];
     const res = resists(cand);
     const useful = (Object.keys(res) as Element[]).filter((el) => (prof[el] ?? 0) / incomingTot >= 0.1 && (res[el] ?? 0) > 0);
     return {
       slot,
       item: cand,
-      why: slot === "Arma" ? "maior level disponível até o level escolhido" : useful.length ? `protege de ${useful.map((el) => `${EL_PT[el]} +${res[el]}%`).join(", ")}` : "melhor opção disponível no level",
+      why: slot === "Arma" ? (mage && best && (cand.sk?.[`${best} magic level`] ?? 0) > 0 ? `${EL_PT[best]} ML +${cand.sk[`${best} magic level`]}, ML +${cand.sk["magic level"] ?? 0}` : "maior level disponível até o level escolhido") : useful.length ? `protege de ${useful.map((el) => `${EL_PT[el]} +${res[el]}%`).join(", ")}` : "melhor opção disponível no level",
     };
   });
   return { picks, offense, incoming };
