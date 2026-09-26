@@ -8,11 +8,22 @@ export function itemSlug(name: string): string {
 }
 
 /** Sprite de um item: arquivo local quando existe; senão, a imagem da TibiaWiki. Nomes compostos usam o primeiro. */
+// itens sem sprite próprio na TibiaWiki, que usam o de outro item
+const ICON_ALIAS: Record<string, string> = {
+  "Crystalline Arrow Fire": "Crystalline Arrow",
+  "Crystalline Arrow Ice": "Crystalline Arrow",
+  "Crystalline Arrow Earth": "Crystalline Arrow",
+  "Crystalline Arrow Energy": "Crystalline Arrow",
+  // "Firemind / Thundermind / Frostmind / Earthmind Raiment" vira "Firemind" ao separar pela barra
+  Firemind: "Firemind Raiment",
+};
+
 export function itemIcon(name: string): string {
-  const first = name
+  const raw = name
     .replace(/\(.*?\)/g, "")
     .split(/\s+ou\s+|\//)[0]
     .trim();
+  const first = ICON_ALIAS[raw] ?? raw;
   const slug = itemSlug(first);
   const ext = LOCAL_ITEMS[slug];
   return ext ? `/items/${encodeURIComponent(slug)}.${ext}` : wikiImage(first);

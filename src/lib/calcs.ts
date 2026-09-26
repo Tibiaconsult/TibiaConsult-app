@@ -50,3 +50,18 @@ export function staminaAfterOffline(from: number, offline: number): number {
   if (st >= limit) st = Math.min(2520, st + Math.floor(t / 6));
   return st;
 }
+
+// Vida, mana e capacidade por vocação (TibiaWiki, Formulae, seção Hitpoints, Mana, and Capacity; consulta em 26/09/2026).
+export type StatVoc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
+export function vocStats(voc: StatVoc, lvl: number): { hp: number; mana: number; cap: number } {
+  switch (voc) {
+    case "knight":
+      return { hp: 5 * (3 * lvl + 13), mana: 5 * (lvl + 10), cap: 5 * (5 * lvl + 54) };
+    case "monk":
+      return { hp: 5 * (2 * lvl + 21), mana: 5 * (2 * lvl - 9), cap: 5 * (5 * lvl + 54) };
+    case "paladin":
+      return { hp: 5 * (2 * lvl + 21), mana: 5 * (3 * lvl - 6), cap: 10 * (2 * lvl + 31) };
+    default:
+      return { hp: 5 * (lvl + 29), mana: 5 * (6 * lvl - 30), cap: 10 * (lvl + 39) };
+  }
+}

@@ -4,20 +4,32 @@ import { useEffect, useMemo, useState } from "react";
 import { HUNTS } from "@/data/hunts";
 import { IMBUEMENTS, IMBUE_TIER } from "@/data/imbuements";
 import { EquipRow, VOC_EQUIPMENT } from "@/data/voc-equipment";
+import { AMMO, ExtraRow, JEWELRY } from "@/data/voc-extras";
 import { itemIcon } from "@/lib/icons";
-import { EL_PT, SetVoc, suggestSet } from "@/lib/huntset";
+import { wikiImage } from "@/lib/md5";
+import { EL_PT, suggestSet } from "@/lib/huntset";
+import { AMPLIFICATION, MOMENTUM, ONSLAUGHT, RUSE, TRANSCENDENCE } from "@/lib/set";
 
-type Voc = Exclude<SetVoc, "sorcerer">;
-const VOCS: [Voc, string][] = [
-  ["druid", "Elder Druid"],
-  ["knight", "Elite Knight"],
-  ["paladin", "Royal Paladin"],
-  ["monk", "Exalted Monk"],
-];
+export type Voc = "druid" | "knight" | "paladin" | "monk";
 
 const OFFHAND: Record<Voc, string | null> = { druid: "Spellbook", knight: "Escudo", paladin: "Aljava", monk: null };
-// grade do inventário do Tibia (3 × 4); null = casa vazia
-const GRID = (v: Voc): (string | null)[] => ["Amuleto", "Elmo", null, "Arma", "Armadura", OFFHAND[v], "Anel", "Pernas", null, null, "Botas", null];
+// grade do inventário do Tibia (3 × 4): colar, elmo, mochila / arma, armadura, mão esquerda / anel, pernas, munição / botas
+const GRID = (v: Voc): (string | null)[] => ["Amuleto", "Elmo", null, "Arma", "Armadura", OFFHAND[v], "Anel", "Pernas", v === "paladin" ? "Munição" : null, null, "Botas", null];
+const TIER_SLOTS = ["Arma", "Elmo", "Armadura", "Pernas", "Botas"];
+const FORGE: Record<string, [string, number[]]> = {
+  Arma: ["Onslaught", ONSLAUGHT],
+  Elmo: ["Momentum", MOMENTUM],
+  Armadura: ["Ruse", RUSE],
+  Pernas: ["Transcendence", TRANSCENDENCE],
+  Botas: ["Amplification", AMPLIFICATION],
+};
+const FORGE_PT: Record<string, string> = {
+  Onslaught: "chance de 60% de dano extra",
+  Momentum: "chance de reduzir cooldowns",
+  Ruse: "chance de esquivar do golpe",
+  Transcendence: "chance de ativar o avatar",
+  Amplification: "aumenta os outros efeitos",
+};
 
 const ELEMS = ["physical", "fire", "earth", "energy", "ice", "death", "holy"] as const;
 const PROT_IMB: Record<string, string> = { "lich-shroud": "death", "snake-skin": "earth", "dragon-hide": "fire", "quara-scale": "ice", "cloud-fabric": "energy", "demon-presence": "holy" };
@@ -55,106 +67,220 @@ const powerValue = (id: string, tier: number) => {
   if (!m) return 0;
   return Number(m[m.length - 1].replace("+", "").replace(",", "."));
 };
+const imbueIcon = (id: string, tier: number) => {
+  const d = IMBUEMENTS.find((i) => i.id === id);
+  return d ? wikiImage(`${IMBUE_TIER[tier]} ${d.name}`, "png") : "";
+};
 
-interface Pick {
+interface SlotPick {
   item: string | null;
+  tier: number;
   imbues: { id: string; tier: number }[];
 }
+type Build = Record<string, SlotPick>;
+const EMPTY: SlotPick = { item: null, tier: 0, imbues: [] };
+type Row = EquipRow & { dur?: string };
 
-export default function VocSetBuilder() {
-  const [voc, setVoc] = useState<Voc>("knight");
+/** Itens da vocação: lista 250+ do TibiaPal, mais anéis, amuletos e munição da TibiaWiki. */
+function rowsFor(voc: Voc): Row[] {
+  const base = VOC_EQUIPMENT[voc] ?? [];
+  const names = new Set(base.map((r) => r.name));
+  const extra = ([...JEWELRY, ...AMMO] as ExtraRow[]).filter((r) => (r.vocs.length === 0 || r.vocs.includes(voc)) && !names.has(r.name));
+  return [...base, ...extra];
+}
+
+interface Totals {
+  res: Record<string, number>;
+  sk: Record<string, number>;
+  arm: number;
+  extras: string[];
+  forge: Record<string, number>;
+}
+
+function compute(voc: Voc, build: Build, rows: Row[]): Totals {
+  const find = (n: string | null) => rows.find((r) => r.name === n) ?? null;
+  const weapon = find(build["Arma"]?.item ?? null);
+  const offBlocked = voc === "knight" && weapon?.hands === "Duas";
+  const res: Record<string, number> = {};
+  const sk: Record<string, number> = {};
+  let arm = 0;
+  const extras: string[] = [];
+  for (const [s, p] of Object.entries(build)) {
+    if (s === OFFHAND[voc] && offBlocked) continue;
+    const it = find(p.item);
+    if (!it) continue;
+    arm += it.arm;
+    for (const [e, v] of Object.entries(it.res)) res[e] = (res[e] ?? 0) + v;
+    for (const [k, v] of Object.entries(it.sk)) sk[k] = (sk[k] ?? 0) + v;
+    for (const im of p.imbues.slice(0, it.imb)) {
+      if (!im.id) continue;
+      const v = powerValue(im.id, im.tier);
+      const d = IMBUEMENTS.find((x) => x.id === im.id);
+      if (PROT_IMB[im.id]) res[PROT_IMB[im.id]] = (res[PROT_IMB[im.id]] ?? 0) + v;
+      else if (SKILL_IMB[im.id]) sk[SKILL_IMB[im.id]] = (sk[SKILL_IMB[im.id]] ?? 0) + v;
+      else if (DMG_IMB[im.id]) extras.push(`${v}% do dano físico vira ${DMG_IMB[im.id]} (${s})`);
+      else extras.push(`${d?.pt}: ${d?.tiers[im.tier]} (${s})`);
+    }
+  }
+  const amp = build["Botas"]?.item ? AMPLIFICATION[build["Botas"].tier ?? 0] : 0;
+  const forge: Record<string, number> = {};
+  for (const s of ["Arma", "Elmo", "Armadura", "Pernas"]) {
+    const p = build[s];
+    const [name, table] = FORGE[s];
+    forge[name] = p?.item ? table[p.tier ?? 0] * (1 + amp / 100) : 0;
+  }
+  forge.Amplification = amp;
+  return { res, sk, arm, extras, forge };
+}
+
+const encode = (b: Build) => btoa(unescape(encodeURIComponent(JSON.stringify(b))));
+const decode = (s: string | null): Build | null => {
+  if (!s) return null;
+  try {
+    const raw = JSON.parse(decodeURIComponent(escape(atob(s)))) as Record<string, Partial<SlotPick>>;
+    const out: Build = {};
+    for (const [k, v] of Object.entries(raw)) out[k] = { item: v.item ?? null, tier: v.tier ?? 0, imbues: v.imbues ?? [] };
+    return out;
+  } catch {
+    return null;
+  }
+};
+
+/** Casa do inventário com o sprite animado do item (GIF da TibiaWiki), tier e imbuements. */
+function InvSlot({ label, pick, selected, dim, onClick }: { label: string; pick: SlotPick | undefined; selected: boolean; dim: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={pick?.item ?? label}
+      className="tc-inv-slot relative w-[62px] h-[62px] flex items-center justify-center rounded border-2"
+      style={{ borderColor: selected ? "#ffd700" : "#000", opacity: dim ? 0.35 : 1 }}
+    >
+      {pick?.item ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img key={pick.item} src={itemIcon(pick.item)} alt={pick.item} width={44} height={44} className="tc-equip-pop" style={{ imageRendering: "pixelated" }} />
+      ) : (
+        <span className="text-[10px] text-[#9a917c]">{label}</span>
+      )}
+      {pick?.item && pick.tier > 0 && <span className="absolute top-0 left-1 text-[10px] font-bold text-[#ffd700] [text-shadow:0_1px_1px_#000]">T{pick.tier}</span>}
+      {pick?.item && pick.imbues.some((i) => i.id) && (
+        <span className="absolute bottom-0.5 right-0.5 flex gap-px">
+          {pick.imbues
+            .filter((i) => i.id)
+            .map((i, k) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={k} src={imbueIcon(i.id, i.tier)} alt="" width={14} height={14} className="rounded-sm border border-black/60" />
+            ))}
+        </span>
+      )}
+    </button>
+  );
+}
+
+export default function VocSetBuilder({ voc }: { voc: Voc }) {
+  const rows = useMemo(() => rowsFor(voc), [voc]);
   const [level, setLevel] = useState(800);
   const [slot, setSlot] = useState("Arma");
-  const [picks, setPicks] = useState<Record<string, Record<string, Pick>>>({});
+  const [a, setA] = useState<Build>({});
+  const [b, setB] = useState<Build>({});
+  const [compare, setCompare] = useState(false);
+  const [editing, setEditing] = useState<"A" | "B">("A");
   const [huntId, setHuntId] = useState("");
+  const [query, setQuery] = useState("");
+  const [kind, setKind] = useState("");
+  const [hands, setHands] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  // estado compartilhável na URL (?v=knight&s=...)
+  // estado compartilhável na URL (?v=knight&a=...&b=...); o antigo ?s= vale como set A
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    try {
-      const u = new URLSearchParams(window.location.search);
-      const v = u.get("v") as Voc | null;
-      const s = u.get("s");
-      if (v && VOCS.some(([x]) => x === v)) setVoc(v);
-      if (v && s) setPicks({ [v]: JSON.parse(decodeURIComponent(escape(atob(s)))) });
-    } catch {
-      // link antigo ou inválido
+    const u = new URLSearchParams(window.location.search);
+    if (u.get("v") !== voc) return;
+    const sa = decode(u.get("a") ?? u.get("s"));
+    const sb = decode(u.get("b"));
+    if (sa) setA(sa);
+    if (sb) {
+      setB(sb);
+      setCompare(true);
     }
-  }, []);
+    if (Number(u.get("level")) > 0) setLevel(Number(u.get("level")));
+  }, [voc]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const cur = picks[voc] ?? {};
-  const rows = VOC_EQUIPMENT[voc] ?? [];
-  const find = (name: string | null) => rows.find((r) => r.name === name) ?? null;
-  const setPick = (s: string, p: Pick) => {
-    const next = { ...picks, [voc]: { ...cur, [s]: p } };
-    setPicks(next);
+  const cur = editing === "A" ? a : b;
+  const syncUrl = (na: Build, nb: Build, cmp: boolean) => {
     try {
       const u = new URL(window.location.href);
       u.searchParams.set("v", voc);
-      u.searchParams.set("s", btoa(unescape(encodeURIComponent(JSON.stringify(next[voc])))));
+      u.searchParams.delete("s");
+      u.searchParams.set("level", String(level));
+      u.searchParams.set("a", encode(na));
+      if (cmp) u.searchParams.set("b", encode(nb));
+      else u.searchParams.delete("b");
       window.history.replaceState(null, "", u.toString());
     } catch {
       // sem URL: segue só na tela
     }
   };
+  const setCur = (next: Build) => {
+    if (editing === "A") setA(next);
+    else setB(next);
+    syncUrl(editing === "A" ? next : a, editing === "B" ? next : b, compare);
+  };
+  const setPick = (s: string, p: SlotPick) => setCur({ ...cur, [s]: p });
 
+  const find = (name: string | null) => rows.find((r) => r.name === name) ?? null;
   const weapon = find(cur["Arma"]?.item ?? null);
-  const twoHanded = weapon?.hands === "Duas";
-  const offBlocked = voc === "knight" && twoHanded;
-
-  const totals = useMemo(() => {
-    const res: Record<string, number> = {};
-    const sk: Record<string, number> = {};
-    let arm = 0;
-    const extras: string[] = [];
-    for (const [s, p] of Object.entries(cur)) {
-      if (s === OFFHAND[voc] && offBlocked) continue;
-      const it = find(p.item);
-      if (!it) continue;
-      arm += it.arm;
-      for (const [e, v] of Object.entries(it.res)) res[e] = (res[e] ?? 0) + v;
-      for (const [k, v] of Object.entries(it.sk)) sk[k] = (sk[k] ?? 0) + v;
-      for (const im of p.imbues.slice(0, it.imb)) {
-        if (!im.id) continue;
-        const v = powerValue(im.id, im.tier);
-        if (PROT_IMB[im.id]) res[PROT_IMB[im.id]] = (res[PROT_IMB[im.id]] ?? 0) + v;
-        else if (SKILL_IMB[im.id]) sk[SKILL_IMB[im.id]] = (sk[SKILL_IMB[im.id]] ?? 0) + v;
-        else if (DMG_IMB[im.id]) extras.push(`${v}% do dano físico vira ${DMG_IMB[im.id]} (${s})`);
-        else extras.push(`${IMBUEMENTS.find((x) => x.id === im.id)?.pt}: ${IMBUEMENTS.find((x) => x.id === im.id)?.tiers[im.tier]} (${s})`);
-      }
-    }
-    return { res, sk, arm, extras };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cur, voc, offBlocked]);
+  const offBlocked = voc === "knight" && weapon?.hands === "Duas";
+  const ta = useMemo(() => compute(voc, a, rows), [voc, a, rows]);
+  const tb = useMemo(() => (compare ? compute(voc, b, rows) : null), [voc, b, rows, compare]);
 
   const fillFromHunt = () => {
     const h = HUNTS.find((x) => x.id === huntId);
     if (!h) return;
     const s = suggestSet(h, voc, level);
-    const next: Record<string, Pick> = {};
-    for (const p of s.picks) if (p.item) next[p.slot] = { item: p.item.name, imbues: cur[p.slot]?.imbues ?? [] };
-    setPicks({ ...picks, [voc]: next });
+    const next: Build = { ...cur };
+    for (const p of s.picks) if (p.item) next[p.slot] = { item: p.item.name, tier: cur[p.slot]?.tier ?? 0, imbues: cur[p.slot]?.imbues ?? [] };
+    setCur(next);
   };
 
-  const slotItems = rows.filter((r) => r.slot === slot && r.level <= level).sort((a, b) => b.level - a.level || a.name.localeCompare(b.name));
-  const p = cur[slot] ?? { item: null, imbues: [] };
+  const baseKind = (k: string) => k.split(" · ")[0];
+  const kinds = [...new Set(rows.filter((r) => r.slot === slot && r.kind).map((r) => baseKind(r.kind)))];
+  const ammoKind = weapon?.kind.startsWith("Bow") ? "Arrow" : weapon?.kind.startsWith("Crossbow") ? "Bolt" : "";
+  const q = query.trim().toLowerCase();
+  const slotItems = rows
+    .filter((r) => r.slot === slot && r.level <= level)
+    .filter((r) => !q || r.name.toLowerCase().includes(q))
+    .filter((r) => !kind || baseKind(r.kind) === kind)
+    .filter((r) => !(slot === "Arma" && voc === "knight" && hands) || (hands === "2" ? r.hands === "Duas" : r.hands !== "Duas"))
+    .filter((r) => slot !== "Munição" || !ammoKind || r.kind === ammoKind)
+    .sort((x, y) => y.level - x.level || Number(y.name.startsWith("Charged")) - Number(x.name.startsWith("Charged")) || x.name.localeCompare(y.name));
+  const p = cur[slot] ?? EMPTY;
   const it = find(p.item);
   const opts = imbueOptions(voc, slot, it);
 
+  const shareUrl = () => {
+    const u = new URL(window.location.href);
+    u.search = `?v=${voc}&level=${level}&a=${encode(a)}${compare ? `&b=${encode(b)}` : ""}`;
+    return u.toString();
+  };
+
+  const tableRows: { label: string; va: number; vb?: number; unit?: string }[] = [
+    ...ELEMS.map((e) => ({ label: `Proteção ${EL_PT[e]}`, va: ta.res[e] ?? 0, vb: tb ? (tb.res[e] ?? 0) : undefined, unit: "%" })),
+    ...[...new Set([...Object.keys(ta.sk), ...Object.keys(tb?.sk ?? {})])].map((k) => ({ label: k, va: ta.sk[k] ?? 0, vb: tb ? (tb.sk[k] ?? 0) : undefined })),
+    { label: "Armadura total", va: ta.arm, vb: tb?.arm },
+    ...Object.keys(ta.forge).map((k) => ({ label: `${k} (forja)`, va: ta.forge[k], vb: tb?.forge[k], unit: "%" })),
+  ];
+  const fmt = (v: number, u?: string) => `${Number.isInteger(v) ? v : v.toFixed(2).replace(".", ",")}${u ?? ""}`;
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2 items-end">
-        {VOCS.map(([v, l]) => (
-          <button key={v} type="button" className={`tc-btn ${voc === v ? "" : "opacity-60"}`} onClick={() => (setVoc(v), setSlot("Arma"))}>
-            {l}
-          </button>
-        ))}
-        <label className="text-[12px] ml-2">
+      <div className="flex flex-wrap gap-3 items-end text-[12px]">
+        <label>
           <span className="font-bold block">Itens até o level</span>
-          <input type="number" className="w-24" value={level} min={250} onChange={(e) => setLevel(Number(e.target.value) || 250)} />
+          <input type="number" className="w-24" value={level} min={1} onChange={(e) => setLevel(Number(e.target.value) || 1)} />
         </label>
-        <label className="text-[12px]">
+        <label>
           <span className="font-bold block">Preencher pela hunt</span>
           <select value={huntId} onChange={(e) => setHuntId(e.target.value)}>
             <option value="">escolha</option>
@@ -168,142 +294,257 @@ export default function VocSetBuilder() {
         <button type="button" className="tc-btn" onClick={fillFromHunt} disabled={!huntId}>
           sugerir set
         </button>
-        <button type="button" className="tc-btn tc-btn-danger" onClick={() => setPicks({ ...picks, [voc]: {} })}>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={compare}
+            onChange={(e) => {
+              setCompare(e.target.checked);
+              if (!e.target.checked) setEditing("A");
+              syncUrl(a, b, e.target.checked);
+            }}
+          />
+          Comparar com um segundo set
+        </label>
+        {compare && (
+          <button
+            type="button"
+            className="tc-btn"
+            onClick={() => {
+              const copy = JSON.parse(JSON.stringify(a)) as Build;
+              setB(copy);
+              syncUrl(a, copy, true);
+            }}
+          >
+            Copiar A para B
+          </button>
+        )}
+        <button type="button" className="tc-btn tc-btn-danger" onClick={() => setCur({})}>
           limpar
         </button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-[auto_1fr]">
-        <div className="grid grid-cols-3 gap-1 w-fit p-2 rounded" style={{ background: "#1b140f" }}>
-          {GRID(voc).map((s, i) =>
-            s ? (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setSlot(s)}
-                title={cur[s]?.item ?? s}
-                className="relative w-[62px] h-[62px] flex items-center justify-center rounded border-2"
-                style={{ background: "linear-gradient(#3a3a3a,#1e1e1e)", borderColor: slot === s ? "#ffd700" : "#000", opacity: s === OFFHAND[voc] && offBlocked ? 0.35 : 1 }}
-              >
-                {cur[s]?.item ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={itemIcon(cur[s]!.item!)} alt="" width={44} height={44} style={{ imageRendering: "pixelated" }} />
-                ) : (
-                  <span className="text-[10px] text-[#9a917c]">{s}</span>
-                )}
-              </button>
-            ) : (
-              <div key={i} />
-            ),
+      <div className="grid gap-5 lg:grid-cols-[auto_1fr]">
+        <div className="space-y-3">
+          {compare && (
+            <div className="flex gap-2">
+              {(["A", "B"] as const).map((k) => (
+                <button key={k} type="button" className={`tc-btn ${editing === k ? "" : "opacity-60"}`} onClick={() => setEditing(k)}>
+                  Editando set {k}
+                </button>
+              ))}
+            </div>
           )}
+          <div className="tc-inv inline-grid grid-cols-3 gap-2 p-3 rounded">
+            {GRID(voc).map((s, i) =>
+              s ? (
+                <InvSlot
+                  key={s}
+                  label={s}
+                  pick={cur[s]}
+                  selected={slot === s}
+                  dim={s === OFFHAND[voc] && offBlocked}
+                  onClick={() => {
+                    setSlot(s);
+                    setKind("");
+                    setQuery("");
+                  }}
+                />
+              ) : (
+                <div key={`e${i}`} className="w-[62px] h-[62px]" />
+              ),
+            )}
+          </div>
+          <div className="text-[11px] muted max-w-[230px]">
+            Clique numa casa para trocar o item. Os sprites animados são os da TibiaWiki.
+            {voc === "paladin" && " A aljava vai na mão esquerda e a munição na casa de munição."}
+            {voc === "monk" && " Monk usa arma de duas mãos: não há escudo."}
+          </div>
         </div>
 
-        <div className="border border-[#b98a5a] rounded p-3 bg-white/40 text-[12px] space-y-2">
-          <div className="font-bold text-[#3a1a00]">{slot}</div>
+        <div className="border border-[#b98a5a] rounded p-3 bg-white/40 text-[12px] space-y-3">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
+            <h2 className="!mt-0 !mb-0">{slot}</h2>
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="buscar item" className="w-48" />
+          </div>
           {slot === OFFHAND[voc] && offBlocked && <p className="warn">A arma escolhida é de duas mãos: o escudo não conta.</p>}
-          <select className="w-full" value={p.item ?? ""} onChange={(e) => setPick(slot, { item: e.target.value || null, imbues: [] })}>
-            <option value="">vazio</option>
-            {slotItems.map((r) => (
-              <option key={r.name} value={r.name}>
-                {r.name} (lv {r.level}) {r.bonus ? `· ${r.bonus}` : ""} {r.resist ? `· ${r.resist}` : ""}
-              </option>
-            ))}
-          </select>
-          {slotItems.length === 0 && <p className="muted">Sem item de level 250+ na lista para este slot até o level escolhido.</p>}
-          {it && (
-            <>
-              <div>
-                {it.stats && <span className="mr-3">{it.stats}</span>}
-                {it.bonus && <span className="mr-3">{it.bonus}</span>}
-                {it.resist && <span>{it.resist}</span>}
-              </div>
-              {it.imb > 0 && opts.length > 0 ? (
-                <div className="space-y-1">
-                  {Array.from({ length: it.imb }).map((_, k) => {
-                    const im = p.imbues[k] ?? { id: "", tier: 2 };
-                    return (
-                      <div key={k} className="flex gap-2">
-                        <select
-                          className="flex-1"
-                          value={im.id}
-                          onChange={(e) => {
-                            const imbues = [...p.imbues];
-                            imbues[k] = { id: e.target.value, tier: im.tier };
-                            setPick(slot, { ...p, imbues });
-                          }}
-                        >
-                          <option value="">imbuement {k + 1}: nenhum</option>
-                          {opts.map((o) => {
-                            const d = IMBUEMENTS.find((x) => x.id === o);
-                            return (
-                              <option key={o} value={o}>
-                                {d?.name} ({d?.pt})
-                              </option>
-                            );
-                          })}
-                        </select>
-                        <select
-                          value={im.tier}
-                          onChange={(e) => {
-                            const imbues = [...p.imbues];
-                            imbues[k] = { id: im.id, tier: Number(e.target.value) };
-                            setPick(slot, { ...p, imbues });
-                          }}
-                        >
-                          {IMBUE_TIER.map((t, i) => (
-                            <option key={t} value={i}>
-                              {t}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="muted">Este item não tem espaço de imbuement.</p>
+          {slot === "Munição" && ammoKind && <p className="muted">Mostrando só {ammoKind === "Arrow" ? "flechas (a arma é um bow)" : "bolts (a arma é uma crossbow)"}.</p>}
+          {((kinds.length > 1 && !(slot === "Munição" && ammoKind)) || (slot === "Arma" && voc === "knight")) && (
+            <div className="flex flex-wrap gap-1 items-center">
+              {kinds.length > 1 &&
+                !(slot === "Munição" && ammoKind) &&
+                ["", ...kinds].map((k) => (
+                  <button key={k || "todos"} type="button" className={`tc-btn !py-0.5 ${kind === k ? "" : "opacity-60"}`} onClick={() => setKind(k)}>
+                    {k || "todos"}
+                  </button>
+                ))}
+              {slot === "Arma" && voc === "knight" && (
+                <>
+                  <span className="w-3" />
+                  {[
+                    ["", "1 e 2 mãos"],
+                    ["1", "uma mão"],
+                    ["2", "duas mãos"],
+                  ].map(([k, l]) => (
+                    <button key={l} type="button" className={`tc-btn !py-0.5 ${hands === k ? "" : "opacity-60"}`} onClick={() => setHands(k)}>
+                      {l}
+                    </button>
+                  ))}
+                </>
               )}
-            </>
+            </div>
+          )}
+          <div className="grid grid-cols-3 sm:grid-cols-4 xl:grid-cols-6 gap-2 max-h-[420px] overflow-y-auto pr-1">
+            <button type="button" onClick={() => setPick(slot, EMPTY)} className="border border-[#b98a5a] rounded p-1 bg-white/40 text-[11px]" style={p.item === null ? { outline: "2px solid #1a6b2d" } : undefined}>
+              vazio
+            </button>
+            {slotItems.map((r) => (
+              <button
+                key={r.name}
+                type="button"
+                onClick={() => setPick(slot, { item: r.name, tier: p.tier, imbues: p.item === r.name ? p.imbues : [] })}
+                className="tc-item-card border border-[#b98a5a] rounded p-1 bg-white/40 hover:bg-white/80 flex flex-col items-center gap-1 text-[10px] leading-tight"
+                style={p.item === r.name ? { outline: "2px solid #1a6b2d", background: "#f3e2bd" } : undefined}
+                title={[r.name, `lv ${r.level}`, r.stats, r.bonus, r.resist].filter(Boolean).join(" · ")}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={itemIcon(r.name)} alt="" width={32} height={32} loading="lazy" style={{ imageRendering: "pixelated" }} />
+                <span className="text-center">{r.name}</span>
+                <span className="muted">lv {r.level}</span>
+              </button>
+            ))}
+          </div>
+          {slotItems.length === 0 && <p className="muted">Nenhum item com esses filtros até o level escolhido.</p>}
+
+          {it && (
+            <div className="border-t border-[#d9c39a] pt-2 space-y-2">
+              <div className="flex gap-3 items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={itemIcon(it.name)} alt="" width={48} height={48} style={{ imageRendering: "pixelated" }} />
+                <div>
+                  <div className="font-bold text-[13px]">{it.name}</div>
+                  <div className="muted">
+                    level {it.level}
+                    {it.kind ? ` · ${it.kind}` : ""}
+                    {it.hands === "Duas" ? " · duas mãos" : ""}
+                    {it.dur ? ` · ${it.dur}` : ""}
+                  </div>
+                  <div>
+                    {it.stats && <span className="mr-3">{it.stats}</span>}
+                    {it.bonus && <span className="mr-3">{it.bonus}</span>}
+                    {it.resist && <span>{it.resist}</span>}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4 items-start">
+                {TIER_SLOTS.includes(slot) && (
+                  <label>
+                    <span className="font-bold block">Tier (forja)</span>
+                    <input type="number" min={0} max={10} className="w-20" value={p.tier} onChange={(e) => setPick(slot, { ...p, tier: Math.max(0, Math.min(10, Number(e.target.value) || 0)) })} />
+                    <span className="muted block text-[10px]">
+                      {FORGE[slot][0]} {fmt(FORGE[slot][1][p.tier])}%: {FORGE_PT[FORGE[slot][0]]}
+                    </span>
+                  </label>
+                )}
+                {it.imb > 0 && opts.length > 0
+                  ? Array.from({ length: it.imb }).map((_, k) => {
+                      const im = p.imbues[k] ?? { id: "", tier: 2 };
+                      const upd = (patch: Partial<{ id: string; tier: number }>) => {
+                        const imbues = [...p.imbues];
+                        imbues[k] = { ...im, ...patch };
+                        setPick(slot, { ...p, imbues });
+                      };
+                      return (
+                        <label key={k}>
+                          <span className="font-bold block">Imbuement {k + 1}</span>
+                          <span className="flex gap-1 items-center">
+                            {im.id && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={imbueIcon(im.id, im.tier)} alt="" width={24} height={24} />
+                            )}
+                            <select value={im.id} onChange={(e) => upd({ id: e.target.value })}>
+                              <option value="">nenhum</option>
+                              {opts.map((o) => {
+                                const d = IMBUEMENTS.find((x) => x.id === o);
+                                return (
+                                  <option key={o} value={o}>
+                                    {d?.name} ({d?.pt})
+                                  </option>
+                                );
+                              })}
+                            </select>
+                            <select value={im.tier} onChange={(e) => upd({ tier: Number(e.target.value) })} disabled={!im.id}>
+                              {IMBUE_TIER.map((t, i) => (
+                                <option key={t} value={i}>
+                                  {t}
+                                </option>
+                              ))}
+                            </select>
+                          </span>
+                          {im.id && <span className="muted block text-[10px]">{IMBUEMENTS.find((x) => x.id === im.id)?.tiers[im.tier]}</span>}
+                        </label>
+                      );
+                    })
+                  : !["Anel", "Amuleto", "Munição", "Aljava"].includes(slot) && <p className="muted">Este item não tem espaço de imbuement.</p>}
+              </div>
+            </div>
           )}
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3 text-[12px]">
-        <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
-          <div className="font-bold text-[#3a1a00] mb-1">Proteções</div>
-          {ELEMS.map((e) => (
-            <div key={e} className="flex justify-between">
-              <span>{EL_PT[e]}</span>
-              <b className={(totals.res[e] ?? 0) > 0 ? "good" : (totals.res[e] ?? 0) < 0 ? "bad" : ""}>{totals.res[e] ?? 0}%</b>
-            </div>
-          ))}
-          <p className="muted text-[10px] mt-1">Soma simples das porcentagens de itens e imbuements.</p>
+      <h2>Totais</h2>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="overflow-x-auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Atributo</th>
+                <th>Set A</th>
+                {tb && <th>Set B</th>}
+                {tb && <th>B − A</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {tableRows.map((r) => {
+                const d = r.vb !== undefined ? r.vb - r.va : 0;
+                return (
+                  <tr key={r.label}>
+                    <td className="font-bold">{r.label}</td>
+                    <td className={r.va < 0 ? "bad" : ""}>{fmt(r.va, r.unit)}</td>
+                    {tb && <td className={(r.vb ?? 0) < 0 ? "bad" : ""}>{fmt(r.vb ?? 0, r.unit)}</td>}
+                    {tb && <td className={d > 0 ? "good" : d < 0 ? "bad" : ""}>{d === 0 ? "=" : (d > 0 ? "+" : "") + fmt(d, r.unit)}</td>}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-        <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
-          <div className="font-bold text-[#3a1a00] mb-1">Skills e magic level</div>
-          {Object.keys(totals.sk).length === 0 ? (
-            <p className="muted">nenhum</p>
-          ) : (
-            Object.entries(totals.sk).map(([k, v]) => (
-              <div key={k} className="flex justify-between">
-                <span>{k}</span>
-                <b>+{v}</b>
-              </div>
-            ))
-          )}
-          <div className="flex justify-between mt-1 border-t border-[#d9c39a] pt-1">
-            <span>Armadura total</span>
-            <b>{totals.arm}</b>
+        <div className="space-y-3 text-[12px]">
+          <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
+            <div className="font-bold text-[#3a1a00] mb-1">Outros efeitos dos imbuements (set A)</div>
+            {ta.extras.length === 0 ? <p className="muted">nenhum</p> : ta.extras.map((x) => <div key={x}>{x}</div>)}
           </div>
-        </div>
-        <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
-          <div className="font-bold text-[#3a1a00] mb-1">Outros efeitos dos imbuements</div>
-          {totals.extras.length === 0 ? <p className="muted">nenhum</p> : totals.extras.map((x) => <div key={x}>{x}</div>)}
+          <button
+            type="button"
+            className="tc-btn"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(shareUrl());
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              } catch {
+                window.prompt("Copie o link:", shareUrl());
+              }
+            }}
+          >
+            {copied ? "Link copiado" : "Copiar link para compartilhar"}
+          </button>
         </div>
       </div>
       <p className="muted text-[10px]">
-        Itens de level 250+ da vocação (lista do TibiaPal, atributos da TibiaWiki). Imbuements pela página Imbuing da TibiaWiki. Forja e augments
-        das peças ficam fora desta conta. O link da página guarda o set montado.
+        Itens de level 250+ da vocação pela lista do TibiaPal, com atributos da TibiaWiki. Anéis, amuletos e munição vêm da TibiaWiki. Imbuements pela
+        página Imbuing da TibiaWiki. Proteções: soma simples das porcentagens, para comparar sets. Forja: tabelas da TibiaWiki, já multiplicadas pelo
+        Amplification das botas. Consulta em 26/09/2026.
       </p>
     </div>
   );

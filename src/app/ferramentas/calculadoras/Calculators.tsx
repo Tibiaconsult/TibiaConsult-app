@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Box from "@/components/Box";
 import ExerciseCalc from "./ExerciseCalc";
-import { blessEnhanced, blessRegular, expForLevel, staminaAfterOffline, staminaOfflineMinutes, twistOfFate } from "@/lib/calcs";
+import VocPicker from "./VocPicker";
+import { StatVoc, blessEnhanced, blessRegular, expForLevel, staminaAfterOffline, staminaOfflineMinutes, twistOfFate, vocStats } from "@/lib/calcs";
 
 const fmt = (v: number) => Math.round(v).toLocaleString("pt-BR");
 const hm = (min: number) => `${Math.floor(min / 60)}h${String(Math.round(min % 60)).padStart(2, "0")}`;
@@ -39,10 +40,17 @@ function ExpCalc() {
   const [pct, setPct] = useState(0);
   const [target, setTarget] = useState(900);
   const [perHour, setPerHour] = useState(5000000);
+  const [voc, setVoc] = useState<StatVoc>("sorcerer");
+  const now = vocStats(voc, level);
+  const then = vocStats(voc, Math.max(level, target));
   const cur = expForLevel(level) + (expForLevel(level + 1) - expForLevel(level)) * (pct / 100);
   const need = Math.max(0, expForLevel(target) - cur);
   return (
     <Box title="Experiência até o level">
+      <div className="mb-3">
+        <span className="font-bold block text-[12px] mb-1">Vocação</span>
+        <VocPicker value={voc} onChange={setVoc} />
+      </div>
       <div className="grid gap-3 sm:grid-cols-4">
         <Field label="Level atual">
           <input type="number" className="w-full" value={level} min={1} onChange={(e) => setLevel(Number(e.target.value) || 1)} />
@@ -64,7 +72,17 @@ function ExpCalc() {
           ["Exp total no level desejado", fmt(expForLevel(target))],
         ]}
       />
-      <p className="muted text-[10px] mt-2">Fórmula oficial de experiência (TibiaWiki, Experience Formula). Exp por hora conta a exp que o char recebe, com bônus.</p>
+      <Result
+        items={[
+          ["Vida no level desejado", `${fmt(then.hp)} (+${fmt(then.hp - now.hp)})`],
+          ["Mana no level desejado", `${fmt(then.mana)} (+${fmt(then.mana - now.mana)})`],
+          ["Capacidade no level desejado", `${fmt(then.cap)} oz (+${fmt(then.cap - now.cap)})`],
+        ]}
+      />
+      <p className="muted text-[10px] mt-2">
+        Fórmula oficial de experiência (TibiaWiki, Experience Formula). Exp por hora conta a exp que o char recebe, com bônus. Vida, mana e capacidade
+        base da vocação, sem itens, Wheel ou bônus (TibiaWiki, Formulae).
+      </p>
     </Box>
   );
 }

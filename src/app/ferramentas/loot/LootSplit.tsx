@@ -27,6 +27,11 @@ export default function LootSplit() {
     }
   };
 
+  // destaques da party: quem deu mais dano e quem mais gastou supplies
+  const top = (k: "damage" | "supplies") => session.members.reduce<(typeof session.members)[number] | null>((best, m) => (m[k] > 0 && (!best || m[k] > best[k]) ? m : best), null);
+  const king = top("damage");
+  const spender = top("supplies");
+
   const allCommands = result.transfers.map((t) => `${t.from}: transfer ${t.amount} to ${t.to}`).join("\n");
 
   return (
@@ -62,6 +67,27 @@ export default function LootSplit() {
             ))}
           </div>
 
+          {(king || spender) && (
+            <div className="flex flex-wrap gap-3 text-[12px]">
+              {king && (
+                <div className="border border-[#c9a13a] rounded px-3 py-2 bg-[#fff4cf]">
+                  <span className="tc-crown text-[18px] mr-1" aria-hidden>
+                    👑
+                  </span>
+                  <b>Rei do dano:</b> {king.name} com {fmt(king.damage)}
+                </div>
+              )}
+              {spender && (
+                <div className="border border-[#3f8a3a] rounded px-3 py-2 bg-[#e9f6df]">
+                  <span className="tc-spender text-[18px] mr-1" aria-hidden>
+                    💸
+                  </span>
+                  <b>Gastador da hunt:</b> {spender.name} com {fmt(spender.supplies)} em supplies
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="overflow-x-auto">
             <table>
               <thead>
@@ -83,15 +109,26 @@ export default function LootSplit() {
                   return (
                     <tr key={m.name} style={out ? { opacity: 0.5 } : undefined}>
                       <td className="font-bold whitespace-nowrap">
-                        {m.name} {m.leader && <span className="muted text-[10px]">(leader)</span>}
+                        {m.name}
+                        {king?.name === m.name && (
+                          <span className="tc-crown ml-1" title="Quem deu mais dano">
+                            👑
+                          </span>
+                        )}
+                        {spender?.name === m.name && (
+                          <span className="tc-spender ml-1" title="Quem mais gastou em supplies">
+                            💸
+                          </span>
+                        )}{" "}
+                        {m.leader && <span className="muted text-[10px]">(leader)</span>}
                       </td>
                       <td>{fmt(m.loot)}</td>
-                      <td>{fmt(m.supplies)}</td>
+                      <td className={spender?.name === m.name ? "font-bold" : ""}>{fmt(m.supplies)}</td>
                       <td className={m.balance >= 0 ? "good" : "bad"}>{fmt(m.balance)}</td>
                       <td>
                         <input className="w-28" value={expenses[m.name] ?? ""} placeholder="0" onChange={(e) => setExpenses({ ...expenses, [m.name]: e.target.value })} disabled={out} />
                       </td>
-                      <td>{fmt(m.damage)}</td>
+                      <td className={king?.name === m.name ? "font-bold" : ""}>{fmt(m.damage)}</td>
                       <td>{fmt(m.healing)}</td>
                       <td>
                         <input

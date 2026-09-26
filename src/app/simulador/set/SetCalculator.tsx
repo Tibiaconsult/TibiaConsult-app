@@ -48,7 +48,7 @@ function Slot({ id, set, selected, onSelect }: { id: SlotId; set: SetChoice; sel
     >
       {c.item ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={itemIcon(c.item)} alt={c.item} width={32} height={32} style={{ imageRendering: "pixelated", width: 44, height: 44 }} />
+        <img key={c.item} src={itemIcon(c.item)} alt={c.item} className="tc-equip-pop" width={32} height={32} style={{ imageRendering: "pixelated", width: 44, height: 44 }} />
       ) : (
         <span className="text-[10px] text-[#9a917c]">{LABEL[id]}</span>
       )}
