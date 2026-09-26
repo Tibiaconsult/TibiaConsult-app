@@ -6,10 +6,10 @@
 
 import type { Element } from "./spells";
 
-export type VocId = "druid" | "knight" | "paladin";
+export type VocId = "druid" | "knight" | "paladin" | "monk";
 
 /** Como o dano escala: magic level, skill + ataque da arma, defesa do escudo (sem fórmula pública) ou dano ao longo do tempo. */
-export type Scale = "ml" | "skill" | "shield" | "dot";
+export type Scale = "ml" | "skill" | "shield" | "dot" | "monk";
 
 export interface VSpell {
   id: string;
@@ -82,7 +82,7 @@ export interface VocationData {
   /** elementos que a vocação escolhe na rotação */
   elements: Element[];
   intro: string;
-  mainStat: "ml" | "melee" | "distance";
+  mainStat: "ml" | "melee" | "distance" | "fist";
   stances: Stance[];
   spells: VSpell[];
   revelations: Revelation[];
@@ -362,5 +362,97 @@ const PALADIN: VocationData = {
   ],
 };
 
-export const VOCATIONS: Record<VocId, VocationData> = { druid: DRUID, knight: KNIGHT, paladin: PALADIN };
-export const VOC_IDS: VocId[] = ["druid", "knight", "paladin"];
+
+// ---------------------------------------------------------------- MONK
+// Fonte: TibiaWiki (Category:Monk Spells, Harmony, Serene, Mantra, Supreme Mod, Wheel of Destiny), consulta em 26/09/2026.
+const M = (
+  id: string,
+  name: string,
+  words: string,
+  level: number,
+  mana: number,
+  base: number,
+  cooldown: number,
+  hit: VSpell["hit"],
+  area: string,
+  icon: string,
+  notes?: string,
+  extra: Partial<VSpell> = {},
+): VSpell => ({ id, name, words, level, mana, base, element: "weapon", scale: "monk", cooldown, lock: 2, hit, area, icon, notes, ...extra });
+
+const MONK: VocationData = {
+  id: "monk",
+  name: "Monk",
+  promoted: "Exalted Monk",
+  elements: ["physical"],
+  mainStat: "fist",
+  intro:
+    "Lutador de mãos nuas que também cura a party. Magias construtoras geram Harmony (até 5); magias gastadoras consomem toda a Harmony e ficam muito mais fortes. Cada ponto gerado ou gasto cura o membro da party com menor % de vida.",
+  stances: [
+    { name: "Virtue of Justice", effect: "+8% de fist fighting, ou +16% quando Serene." },
+    { name: "Virtue of Harmony", effect: "+3% no bônus base de Harmony (+6% quando Serene) e devolve 1 Harmony a cada gastadora usada." },
+    { name: "Virtue of Sustain", effect: "+35% em toda a cura das magias de monk (+70% quando Serene), incluindo a cura passiva das virtudes." },
+  ],
+  spells: [
+    M("spiritual-outburst", "Spiritual Outburst", "exori gran mas nia", 300, 425, 42, 24, "chain", "Alvo + até 7 inimigos em corrente", "spiritualoutburst", "Gastadora (Wheel: revelation). Com Harmony cheia, repete após 1 s com 37,5/50/62,5% do dano.", { revelation: "Spiritual Outburst", chain: 7, stageCooldown: [24, 20, 16] }),
+    M("sweeping-takedown", "Sweeping Takedown", "exori mas nia", 60, 195, 48, 8, "area", "Caixa 3x2 à frente + 75% na caixa seguinte", "sweepingtakedown", "Gastadora."),
+    M("devastating-knockout", "Devastating Knockout", "exori gran nia", 125, 210, 62, 8, "single", "Inimigo adjacente", "devastatingknockout", "Gastadora: usa toda a Harmony num alvo."),
+    M("greater-tiger-clash", "Greater Tiger Clash", "exori nia", 18, 50, 44, 8, "single", "Inimigo adjacente", "greatertigerclash", "Gastadora."),
+    M("tiger-clash", "Tiger Clash", "exori infir nia", 0, 18, 15, 8, "single", "Inimigo adjacente", "tigerclash", "Gastadora."),
+    M("greater-flurry-of-blows", "Greater Flurry of Blows", "exori gran mas pug", 90, 300, 86, 16, "area", "Área grande", "greaterflurryofblows", "Construtora."),
+    M("thousand-fist-blows", "Thousand Fist Blows", "exori mas amp pug", 120, 145, 62, 8, "area", "Alvo e a área em volta dele", "thousandfistblow", "Construtora. Nova em 06/2026."),
+    M("flurry-of-blows", "Flurry of Blows", "exori mas pug", 35, 110, 55, 4, "area", "Frente e laterais", "flurryofblows", "Construtora."),
+    M("chained-penance", "Chained Penance", "exori med pug", 70, 180, 70, 4, "chain", "Alvo + 4 em corrente (raio inicial 4 desde 07/2026)", "chainedpenance", "Construtora.", { chain: 4 }),
+    M("double-jab", "Double Jab", "exori pug", 14, 30, 40, 4, "single", "Inimigo adjacente", "doublejab", "Construtora."),
+    M("swift-jab", "Swift Jab", "exori infir pug", 0, 3, 12, 2, "single", "Inimigo adjacente", "swiftjab", "Construtora."),
+    M("forceful-uppercut", "Forceful Uppercut", "exori gran pug", 110, 325, 130, 60, "single", "Alvo adjacente", "forcefuluppercut"),
+    M("mystic-repulse", "Mystic Repulse", "exori amp pug", 30, 150, 85, 12, "single", "Alvo a até 7 sqm", "mysticrepulse", "Base 72 → 85 e cooldown 20 → 12 s em 06/2026 (o infobox da TibiaWiki ainda mostra 72)."),
+  ],
+  revelations: [
+    { name: "Spiritual Outburst", effect: "Gastadora que salta em 7 inimigos. Com Harmony cheia, repete após 1 s com 37,5/50/62,5% do dano. Cooldown 24/20/16 s." },
+    { name: "Ascetic", effect: "+1/2/3% no bônus base de Harmony, e o ataque automático soma 100/200/300% do seu Mantra." },
+    { name: "Avatar of Balance", effect: "Vira avatar: redução de dano e todo ataque sai crítico com dano crítico extra." },
+    ...GENERIC_REVELATIONS,
+  ],
+  convictions: [
+    { name: "Guiding Presence", effect: "Aura que divide 100% do seu Mantra com a party e aumenta em 33% os bônus passivos de party." },
+    { name: "Sanctuary", effect: "Gastar Harmony cria um campo de 5 s: +2% de dano e cura por Harmony gasta, +10% de dano em inimigos adjacentes e +10% de cura em aliados adjacentes." },
+  ],
+  augments: [
+    { spell: "mass-spirit-mend", label: "Mass Spirit Mend", t1: "+8% cura base", t2: "−4 s de cooldown", fx: { t1: {}, t2: {} } },
+    { spell: "flurry-of-blows", label: "Flurry of Blows", t1: "Área maior", t2: "+15% base", fx: { t1: {}, t2: { base: 0.15 } } },
+    { spell: "mystic-repulse", label: "Mystic Repulse", t1: "−6 s de cooldown", t2: "+40% base", fx: { t1: { cd: 6 }, t2: { base: 0.4 } } },
+    { spell: "thousand-fist-blows", label: "Thousand Fist Blows", t1: "+40% crit extra", t2: "−6 s de cooldown", fx: { t1: {}, t2: { cd: 6 } } },
+    { spell: "chained-penance", label: "Chained Penance", t1: "+1 alvo na corrente", t2: "+18% base", fx: { t1: { chain: 1 }, t2: { base: 0.18 } } },
+  ],
+  supreme: [
+    { mod: "Spiritual Outburst: dano base", values: SUP("+5%", "+5,5%", "+6%", "+7,5%") },
+    { mod: "Spiritual Outburst: crit extra", values: SUP("+8%", "+8,8%", "+9,6%", "+12%") },
+    { mod: "Sweeping Takedown: dano base", values: SUP("+5%", "+5,5%", "+6%", "+7,5%") },
+    { mod: "Sweeping Takedown: crit extra", values: SUP("+8%", "+8,8%", "+9,6%", "+12%") },
+    { mod: "Forceful Uppercut: dano base", values: SUP("+10%", "+11%", "+12%", "+15%") },
+    { mod: "Forceful Uppercut: crit extra", values: SUP("+8%", "+8,8%", "+9,6%", "+12%") },
+    { mod: "Flurry of Blows: dano base", values: SUP("+6,5%", "+7,2%", "+7,9%", "+9,75%") },
+    { mod: "Flurry of Blows: crit extra", values: SUP("+8%", "+8,8%", "+9,6%", "+12%") },
+    { mod: "Greater Flurry of Blows: dano base", values: SUP("+5%", "+5,5%", "+6%", "+7,5%") },
+    { mod: "Greater Flurry of Blows: crit extra", values: SUP("+8%", "+8,8%", "+9,6%", "+12%") },
+    { mod: "Focus Harmony: cooldown / momentum", values: SUP("−30 s", "−30 s / +0,33%", "−30 s / +0,66%", "−30 s / +1%") },
+    { mod: "Focus Serenity: cooldown / momentum", values: SUP("−150 s", "−150 s / +0,33%", "−150 s / +0,66%", "−150 s / +1%") },
+    { mod: "Spirit Mend: cura base", values: SUP("+6%", "+6,6%", "+7,2%", "+9%") },
+    { mod: "Mass Spirit Mend: cura base", values: SUP("+5%", "+5,5%", "+6%", "+7,5%") },
+    { mod: "Avatar of Balance: cooldown / momentum", values: SUP("−900 s", "−900 s / +0,33%", "−900 s / +0,66%", "−900 s / +1%") },
+    { mod: "Revelation Mastery (Ascetic, Avatar, Gift of Life, Spiritual Outburst)", values: SUP("+150 pts", "+165 pts", "+180 pts", "+225 pts") },
+  ],
+  weapons: [],
+  weaponNote: "As armas de punho do monk estão no Equipamento por slot, aba Arma.",
+  tips: [
+    "Bônus de Harmony: 7% com 1 ponto, dobrando a cada ponto até 112% com 5. Com Virtue of Harmony e Serene, chega a 208%.",
+    "Serene: o monk fica Serene sempre que está solo. Em party, perde o estado se houver membros perto e 6 ou mais monstros adjacentes.",
+    "Rotação base: construtoras até 5 de Harmony, depois a gastadora certa (Spiritual Outburst ou Sweeping Takedown em área, Devastating Knockout em alvo único).",
+    "Runas não geram Harmony: o monk rende mais nas magias próprias.",
+    "Mantra é proteção fixa contra fogo, gelo, energia e terra; dobra quando Serene.",
+  ],
+};
+
+export const VOCATIONS: Record<VocId, VocationData> = { druid: DRUID, knight: KNIGHT, paladin: PALADIN, monk: MONK };
+export const VOC_IDS: VocId[] = ["druid", "knight", "paladin", "monk"];

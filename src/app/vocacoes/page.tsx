@@ -4,7 +4,7 @@ import { VOCATIONS, VOC_IDS } from "@/data/vocations";
 
 export const metadata = { title: "Vocações" };
 
-const EMBLEM: Record<string, string> = { sorcerer: "energywave", druid: "eternalwinter", knight: "fierceberserk", paladin: "divinecaldera" };
+const EMBLEM: Record<string, string> = { sorcerer: "energywave", druid: "eternalwinter", knight: "fierceberserk", paladin: "divinecaldera", monk: "spiritualoutburst" };
 
 export default function VocacoesPage() {
   return (
@@ -30,10 +30,6 @@ export default function VocacoesPage() {
               </Link>
             );
           })}
-          <div className="border border-dashed border-[#b98a5a] rounded p-3 bg-white/20">
-            <b>Exalted Monk</b>
-            <p className="text-[12px] mt-1">Em breve.</p>
-          </div>
         </div>
       </Box>
     </div>

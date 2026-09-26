@@ -81,7 +81,7 @@ export function flatBonus(inp: VocInputs): number {
 
 /** Disponível na simulação? (dot, escudo e base desconhecida ficam fora; revelation precisa de estágio; runa só com a opção) */
 export function usable(v: VocationData, inp: VocInputs, s: VSpell): boolean {
-  if (s.scale === "dot" || s.scale === "shield" || s.base === null) return false;
+  if (s.scale === "dot" || s.scale === "shield" || s.scale === "monk" || s.base === null) return false;
   if (s.level > inp.level) return false;
   if (s.revelation && revelationStage(v, inp, s.revelation) === 0) return false;
   if (s.rune && !inp.useRunes) return false;
