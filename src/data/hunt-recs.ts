@@ -21,6 +21,74 @@ export const REC_SOURCE = "TibiaPal, Hunting Places (dados pós-rebalanceamento 
 export const SHARE_BONUS = [0, 0.2, 0.35, 0.7, 1];
 
 export const HUNT_RECS: Record<string, HuntRec> = {
+  // Parte 2 (26/09/2026). Warzones 7 a 9 do TibiaPal = masmorras da Too Hot to Handle (associação pelo perfil de resistências).
+  "antrum-of-the-fallen": {
+    solo: { knight: 500, paladin: 800, sorcerer: 600, druid: 600, monk: 500 },
+    style: { knight: "Fogo", paladin: "Diamond Arrows, Ethereal", sorcerer: "Fogo", druid: "Forked Thorns + Forked Glacier", monk: "Energia" },
+    detail: "TibiaPal: Warzone 7. Monk também aparece com físico a partir de 600.",
+  },
+  "grotto-of-the-lost": {
+    solo: { knight: 500, paladin: 800, sorcerer: 600, druid: 600, monk: 600 },
+    style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
+    detail: "TibiaPal: Warzone 8.",
+  },
+  "dwelling-of-the-forgotten": {
+    solo: { paladin: 800, sorcerer: 800, druid: 600, monk: 600 },
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
+    detail: "TibiaPal: Warzone 9 (knight não listado).",
+  },
+  "grounds-of-plague": { solo: { knight: 700, monk: 500 }, team: 500, style: { knight: "Energia", monk: "Energia" }, detail: "TibiaPal: Feru Plague Seal. Time: Feru Seals a partir de 500." },
+  "grounds-of-fire": {
+    solo: { paladin: 1000, sorcerer: 800, druid: 600, monk: 600 },
+    team: 500,
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Avalanche", monk: "Físico" },
+    detail: "TibiaPal: Feru Mazoran (o Mazoran é o boss do Grounds of Fire). Time: Feru Seals a partir de 500.",
+  },
+  "grounds-of-destruction": {
+    solo: { paladin: 1000, sorcerer: 800, druid: 600, monk: 600 },
+    team: 500,
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Thunderstorm", monk: "Energia" },
+    detail: "TibiaPal: Feru Juggernauts. Time: Feru Seals a partir de 500.",
+  },
+  "grounds-of-undeath": {
+    solo: { paladin: 800, sorcerer: 800, druid: 600, monk: 600 },
+    team: 500,
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Thunderstorm", monk: "Físico ou energia" },
+    detail: "TibiaPal: Feru Undead Dragons. Time: Feru Seals a partir de 500.",
+  },
+  "grounds-of-damnation": {
+    solo: { knight: 800, paladin: 1000, monk: 600 },
+    team: 500,
+    style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", monk: "Físico" },
+    detail: "TibiaPal: Feru DT Seal (Dark Torturer). Time: Feru Seals a partir de 500.",
+  },
+  ...Object.fromEntries(
+    ["grounds-of-deceit", "grounds-of-despair"].map((id) => [
+      id,
+      { solo: {}, team: 500, detail: "O TibiaPal cita também os selos Pumin e Infernatil e a Feru Way sem dizer a qual Ground correspondem; aqui fica só o nível de time (Feru Seals, 500+)." },
+    ]),
+  ),
+  "cobra-bastion": {
+    solo: { knight: 550, paladin: 600, sorcerer: 500, monk: 500 },
+    style: { knight: "Gelo, fogo, energia ou death", paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", monk: "Energia" },
+    detail: "Knight: 500 no andar de iniciante, 550 no -1 e 800 no Bastion inteiro.",
+  },
+  "issavi-catacombs": {
+    solo: { knight: 500, paladin: 600, sorcerer: 500, druid: 500 },
+    style: { knight: "Death", paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier" },
+  },
+  "issavi-sewers": {
+    solo: { knight: 600, paladin: 600, druid: 500, monk: 600 },
+    style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
+  },
+  "issavi-goannas": { solo: { sorcerer: 500, druid: 500, monk: 500 }, style: { sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", monk: "Energia" } },
+  "issavi-ogres": { solo: { paladin: 500, sorcerer: 500, druid: 500 }, style: { paladin: "Diamond Arrows, Divine", sorcerer: "Energia", druid: "Strong Ice Wave + Forked Glacier" } },
+  "upper-roshamuul": {
+    solo: { paladin: 500, sorcerer: 500, druid: 500, monk: 600 },
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Thunderstorm", monk: "Físico" },
+    detail: "Paladin: só o sul a partir de 500; norte e sul a partir de 600.",
+  },
+
   // Hunts de level alto (adicionadas em 26/09/2026). TibiaPal lista Soul War, Gnomprona, Rotten Blood, Unhallowed Crypt e as áreas Radiant só na aba de times.
   ...Object.fromEntries(
     ["ebb-and-flow", "furious-crater", "claustrophobic-inferno", "rotten-wasteland", "mirrored-nightmare"].map((id) => [

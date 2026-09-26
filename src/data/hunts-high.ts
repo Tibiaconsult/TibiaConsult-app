@@ -3,7 +3,7 @@
 // Infobox Creature), consulta em 26/09/2026. Elemento, charm e rotação calculados a partir das resistências.
 import type { Hunt } from "./hunts";
 
-const c = (name: string, hp: number, exp: number, mitigation: number, t: number[], attacks: string) => ({
+export const c = (name: string, hp: number, exp: number, mitigation: number, t: number[], attacks: string) => ({
   name,
   hp,
   exp,
@@ -13,20 +13,20 @@ const c = (name: string, hp: number, exp: number, mitigation: number, t: number[
   attacks,
 });
 
-const SET_ENERGIA = [
+export const SET_ENERGIA = [
   { slot: "Wand", item: "Sanguine Coil", why: "energy ML +1" },
   { slot: "Armadura", item: "Norcferatu Bloodhide ou Soulmantle", why: "energy ML +6 na Bloodhide" },
   { slot: "Botas", item: "Sanguine Boots", why: "Energy Wave +8% crit extra" },
   { slot: "Amuleto", item: "Enchanted Flamingo Amulet of Destruction", why: "energy ML +1" },
 ];
-const SET_FOGO = [
+export const SET_FOGO = [
   { slot: "Wand", item: "Sanguine Coil", why: "fire ML +1" },
   { slot: "Elmo", item: "Stag Helmet ou Moonsilver Nimbus Hat", why: "fire ML +2 e crit no Great Fire Wave" },
   { slot: "Botas", item: "Sanguine Boots", why: "Hell's Core +8% crit extra" },
   { slot: "Spellbook", item: "Arcanomancer Folio ou Alchemist's Notepad", why: "fire ML" },
 ];
 // death: sem peça de death ML conferida no site; a sugestão automática abaixo da ficha completa o resto pelas proteções
-const SET_DEATH = [{ slot: "Wand", item: "Sanguine Coil", why: "magic level; confira a sugestão automática pelas proteções" }];
+export const SET_DEATH = [{ slot: "Wand", item: "Sanguine Coil", why: "magic level; confira a sugestão automática pelas proteções" }];
 
 export const HIGH_HUNTS: Hunt[] = [
   {

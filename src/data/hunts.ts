@@ -1,6 +1,7 @@
 // Fichas de hunt. Fonte: TibiaWiki, 26/09/2026.
 import { EXTRA_HUNTS } from "./hunts-extra";
 import { HIGH_HUNTS } from "./hunts-high";
+import { HIGH_HUNTS_2 } from "./hunts-high2";
 
 export interface Creature {
   name: string;
@@ -98,4 +99,4 @@ const BASE_HUNTS: Hunt[] = [
   },
 ];
 
-export const HUNTS: Hunt[] = [...BASE_HUNTS, ...EXTRA_HUNTS, ...HIGH_HUNTS];
+export const HUNTS: Hunt[] = [...BASE_HUNTS, ...EXTRA_HUNTS, ...HIGH_HUNTS, ...HIGH_HUNTS_2];
