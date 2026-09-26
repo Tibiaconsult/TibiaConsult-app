@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ItemSprite } from "@/components/Icons";
 import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS, REC_SOURCE, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
 import { creatureIcon } from "@/lib/icons";
+import VocSets from "./VocSets";
 
 function pct(v: number) {
   const cls = v === 0 ? "bad" : v >= 110 ? "good" : v < 70 ? "warn" : "";
@@ -86,21 +86,8 @@ export default function HuntSheet({ h }: { h: Hunt }) {
       </p>
       <div className="grid gap-4 md:grid-cols-2 mt-4">
         <div>
-          <h2 className="mt-0">Set de sorcerer</h2>
-          <table>
-            <tbody>
-              {h.set.map((s) => (
-                <tr key={s.slot}>
-                  <td className="muted whitespace-nowrap">{s.slot}</td>
-                  <td className="font-bold">
-                    <ItemSprite name={s.item} size={28} />
-                    {s.item}
-                  </td>
-                  <td>{s.why}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h2 className="mt-0">Set por vocação</h2>
+          <VocSets h={h} />
         </div>
         <div>
           <h2 className="mt-0">Como jogar</h2>
