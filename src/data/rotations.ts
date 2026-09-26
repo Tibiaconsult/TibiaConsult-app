@@ -71,7 +71,7 @@ export const ROTATIONS: RotationPreset[] = [
     ],
     burst: [
       { t: 0, spellId: "great-death-beam", note: "arma a conversão" },
-      { t: 2, spellId: "rage-of-the-skies", note: "vira DEATH em 85 sqm (a conferir no jogo)" },
+      { t: 2, spellId: "rage-of-the-skies", note: "vira DEATH em 85 sqm (conversão confirmada no jogo)" },
       { t: 6, spellId: "ultimate-energy-strike", note: "+35% do Focus Mastery" },
     ],
     runes: "SD a cada 2 s em alvo único; Thunderstorm ou Avalanche em área não convertem, mas cabem entre feitiços.",

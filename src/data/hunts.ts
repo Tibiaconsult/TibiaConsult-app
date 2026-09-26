@@ -89,7 +89,7 @@ export const HUNTS: Hunt[] = [
     play: [
       "Master of Thunder + Aura of Exposed Weakness. Rotação de energia: Energy Wave, Great Energy Beam, Great Fire Wave convertida, Lightning.",
       "Rage of the Skies no lure cheio; Ultimate Energy Strike logo depois com o +35% do Focus Mastery.",
-      "Nada de fogo natural: Hell's Core e Great Fire Wave só valem convertidos, e Hell's Core não converte.",
+      "Nada de fogo natural: Great Fire Wave e Hell's Core só entram convertidos em energia. Hell's Core depois de um feitiço de energia vira um burst de energia em 73 sqm (conversão confirmada no jogo); o Rage continua mais barato em mana.",
       "Charms: Zap (energia) nos três; Poison (terra, 110%) empata ou passa o Zap e não depende de spell.",
     ],
     warning: "Os feitiços dos bichos ainda não constam na TibiaWiki: proteções a definir depois de uma sessão de teste.",
