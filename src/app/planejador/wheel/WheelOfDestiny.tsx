@@ -1,28 +1,21 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CODE_PREFIX, QUARTER_COLOR, QUARTERS, VOC_NAMES, WOD_SLICES, WodVoc, loadWodEngine, plain } from "@/lib/wod-engine";
+// os botões só leem os refs do motor no clique; o lint confunde isso com leitura durante o render
+/* eslint-disable react-hooks/refs */
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CODE_PREFIX, QUARTER_COLOR, QUARTERS, VOC_NAMES, WodVoc, loadWodEngine, plain } from "@/lib/wod-engine";
 import { WOD_BASIC, WOD_LARGE, WOD_MEDIUM, WOD_SMALL, formatGem, formatPerk, shortName, supremeEffect, supremeName } from "@/data/wod-strings";
 import { WOD_PRESETS } from "@/data/wod-presets";
 import { WheelConfig, encodeWheel } from "@/lib/wheel";
+import WodCanvas, { Pick, Q } from "./WodCanvas";
 
 const VOC_PT: Record<WodVoc, string> = { Knight: "Knight", Paladin: "Paladin", Sorcerer: "Sorcerer", Druid: "Druid", Monk: "Monk" };
 const Q_PT: Record<string, string> = { TL: "Superior esquerdo", TR: "Superior direito", BL: "Inferior esquerdo", BR: "Inferior direito" };
 const STAGE = ["bloqueada", "estágio 1", "estágio 2", "estágio 3"];
 const CAT_PT: Record<number, string> = { 0: "Únicos", 1: "Skill", 2: "Leech", 3: "Augments", 4: "Vessel Resonance", 5: "Resistências" };
 const LESSER_GEMS = ["Hit Points", "Mitigation", "Any Elemental Resistance", "Mana"];
-
-const C = 261;
-const R0 = 50;
-const RW = 42;
-
-function arc(r0: number, r1: number, a0: number, a1: number): string {
-  const rad = (a: number) => (a * Math.PI) / 180;
-  const p = (r: number, a: number) => `${(C + r * Math.cos(rad(a))).toFixed(2)} ${(C + r * Math.sin(rad(a))).toFixed(2)}`;
-  const large = a1 - a0 > 180 ? 1 : 0;
-  return `M ${p(r1, a0)} A ${r1} ${r1} 0 ${large} 1 ${p(r1, a1)} L ${p(r0, a1)} A ${r0} ${r0} 0 ${large} 0 ${p(r0, a0)} Z`;
-}
+const ROMAN = ["0", "I", "II", "III"];
 
 interface Slice {
   id: string;
@@ -60,6 +53,53 @@ interface State {
   supremeAvail: number[];
 }
 
+/** Caixa no estilo das caixas "Selection" e "Information" do planner oficial. */
+function WodBox({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
+  return (
+    <div className={`border-2 border-[#5f4d41] rounded-[3px] bg-[#f1e0c6] shadow-[0_2px_4px_rgba(0,0,0,.35)] ${className}`}>
+      <div className="bg-gradient-to-b from-[#6f5b4d] to-[#4e3d31] text-white font-bold text-[12px] px-2 py-1 border-b-2 border-[#3b2d23]">{title}</div>
+      <div className="p-2 text-[12px] text-[#3a2a1a]">{children}</div>
+    </div>
+  );
+}
+
+/** Botão que repete enquanto está pressionado, como os +1/−1 do planner oficial. */
+function HoldButton({ label, onFire, title, danger }: { label: string; onFire: (n: number) => void; title: string; danger?: boolean }) {
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stop = () => {
+    if (timer.current) clearInterval(timer.current);
+    timer.current = null;
+  };
+  useEffect(() => stop, []);
+  return (
+    <button
+      type="button"
+      title={title}
+      className={`tc-btn !py-0.5 !px-2 select-none ${danger ? "tc-btn-danger" : ""}`}
+      onPointerDown={(e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        const n = (e.shiftKey ? 10 : 1) * (e.ctrlKey ? 100 : 1);
+        onFire(n);
+        let ticks = 0;
+        stop();
+        timer.current = setInterval(() => (ticks < 15 ? ticks++ : onFire(n)), 30);
+      }}
+      onPointerUp={stop}
+      onPointerLeave={stop}
+      onPointerCancel={stop}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onFire(1);
+        }
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function WheelOfDestiny() {
   const engine = useRef<any>(null);
   const planner = useRef<any>(null);
@@ -67,7 +107,8 @@ export default function WheelOfDestiny() {
   const [st, setSt] = useState<State | null>(null);
   const [level, setLevel] = useState(896);
   const [extra, setExtra] = useState(0);
-  const [selected, setSelected] = useState<string>("QTR0");
+  const [pick, setPick] = useState<Pick>(null);
+  const [hoverPick, setHoverPick] = useState<Pick>(null);
   const [importCode, setImportCode] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [onlyFit, setOnlyFit] = useState(true);
@@ -140,7 +181,6 @@ export default function WheelOfDestiny() {
   }, [st, level]);
 
   const available = Math.max(0, level - 50) + extra;
-  const left = st ? available - st.spent : 0;
 
   const act = (fn: (P: any, M: any) => void) => {
     if (!planner.current) return;
@@ -153,18 +193,52 @@ export default function WheelOfDestiny() {
     read();
   };
   const tile = (id: string) => engine.current.EGridTile[id];
+  // lê a fatia direto do motor (os botões repetem mais rápido do que o React redesenha)
+  const live = (id: string): Slice | null => {
+    const M = engine.current;
+    const P = planner.current;
+    if (!M || !P) return null;
+    const v = M.EGridTile[id]?.value;
+    return (plain(P.getSkillParameters()) as Slice[]).find((s) => (s.id as unknown as number) === v) ?? null;
+  };
+  const room = () => available - (planner.current?.getSpentSkillPoints() ?? 0);
 
-  const add = (n: number) =>
+  // mesmas regras dos botões do planner oficial
+  const plus = (id: string, n: number) =>
     act((P) => {
-      const s = st?.slices[selected];
-      if (!s || !s.unlocked) return setMsg("Esta fatia ainda está bloqueada: encha uma fatia vizinha mais perto do centro.");
-      const k = Math.min(n, left, s.maxSkillPoints - s.currentSkillPoints);
-      if (k <= 0) return setMsg(left <= 0 ? "Sem pontos disponíveis para o seu level." : "Fatia cheia.");
-      P.addToSkill(tile(selected), k);
+      const s = live(id);
+      if (!s || s.fillPercent === 1) return;
+      if (!s.unlocked) return setMsg("Esta fatia ainda está bloqueada: encha uma fatia vizinha mais perto do centro.");
+      const k = Math.min(n, room());
+      if (k <= 0) return setMsg("Sem pontos disponíveis para o seu level.");
+      P.addToSkill(tile(id), k);
     });
-  const remove = (n: number) => act((P) => P.removeFromSkill(tile(selected), n));
-  const fill = () => add(10000);
-  const clear = () => act((P) => P.clearSkill(tile(selected)));
+  const minus = (id: string, n: number) =>
+    act((P) => {
+      const s = live(id);
+      if (s && s.fillPercent !== 0 && s.editable) P.removeFromSkill(tile(id), n);
+    });
+  const plusMax = (id: string) =>
+    act((P) => {
+      const s = live(id);
+      if (!s || s.fillPercent === 1 || !s.unlocked) return;
+      const k = Math.min(s.maxSkillPoints - s.currentSkillPoints, room());
+      if (k <= 0) return setMsg("Sem pontos disponíveis para o seu level.");
+      P.addToSkill(tile(id), k);
+    });
+  const minusMax = (id: string) =>
+    act((P) => {
+      const s = live(id);
+      if (s && s.fillPercent !== 0 && s.editable) P.clearSkill(tile(id));
+    });
+  const rightClick = (id: string, n: number) =>
+    act((P) => {
+      const s = live(id);
+      if (!s) return;
+      const r = room();
+      const k = r <= 0 ? -1 : n > 0 ? Math.min(n, r) : Math.min(s.maxSkillPoints - s.currentSkillPoints, r);
+      P.onGridTileRightClicked(tile(id), k);
+    });
 
   const setVoc = (v: WodVoc) =>
     act((P, M) => {
@@ -191,8 +265,6 @@ export default function WheelOfDestiny() {
   };
   const modChange = (pos: number, value: number, q: string) => act((P, M) => P.onModChange(pos, value, M.EQuarter[q]));
 
-  const sel = st?.slices[selected];
-  const medInfo = sel ? WOD_MEDIUM[sel.mediumPerkId] : null;
   const presets = st ? WOD_PRESETS[st.voc.toLowerCase()] : null;
 
   // envia para o simulador de dano do sorcerer
@@ -216,7 +288,131 @@ export default function WheelOfDestiny() {
   if (err) return <p className="bad">{err} Tente recarregar a página.</p>;
   if (!st) return <p>Carregando o motor oficial da Wheel...</p>;
 
+  const left = available - st.spent;
   const officialUrl = `https://www.tibia.com/community/?subtopic=wheelofdestinyplanner&code=${st.code}`;
+  const cornerOf = (q: Q) => st.corners.find((c) => QUARTERS[c.id] === q);
+
+  const gemEditor = (c: any) => {
+    const q = QUARTERS[c.id];
+    const vl = c.vesselLevel;
+    if (vl === 0) return <p className="muted">Sem Vessel Resonance: encha as fatias de Vessel Resonance deste domínio para liberar a gema.</p>;
+    return (
+      <div className="space-y-1 mt-1">
+        <select className="w-full" value={c.keyBasicMod1} onChange={(e) => modChange(1, Number(e.target.value), q)}>
+          <option value={-1}>mod básico 1: nenhum</option>
+          {st.basic1.map((m: any) => (
+            <option key={m.id} value={m.id}>
+              {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
+            </option>
+          ))}
+        </select>
+        {vl >= 2 && c.keyBasicMod1 >= 0 && (
+          <select className="w-full" value={c.keyBasicMod2} onChange={(e) => modChange(2, Number(e.target.value), q)}>
+            <option value={-1}>mod básico 2: nenhum</option>
+            {st.basic2.map((m: any) => (
+              <option key={m.id} value={m.id}>
+                {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
+              </option>
+            ))}
+          </select>
+        )}
+        {vl >= 3 && c.keyBasicMod2 >= 0 && (
+          <select className="w-full" value={c.keySupremeMod} onChange={(e) => modChange(3, Number(e.target.value), q)}>
+            <option value={-1}>mod supremo: nenhum</option>
+            {st.supremeAvail.map((id) => (
+              <option key={id} value={id}>
+                {shortName(supremeName(id))}: {supremeEffect(id)}
+              </option>
+            ))}
+          </select>
+        )}
+        {c.hasGem && <p className="muted text-[11px]">Bônus do vessel: +{c.vesselDamageHealingBonus} de dano e cura.</p>}
+      </div>
+    );
+  };
+
+  /** Conteúdo das caixas Seleção e Informação, como no planner oficial. */
+  const detail = (p: Pick, full: boolean) => {
+    if (!p) return null;
+    if (p.kind === "slice") {
+      const s = st.slices[p.id];
+      if (!s) return null;
+      const small = WOD_SMALL[s.smallPerkId];
+      const med = WOD_MEDIUM[s.mediumPerkId];
+      const pct = s.maxSkillPoints ? s.currentSkillPoints / s.maxSkillPoints : 0;
+      return (
+        <div className="space-y-2">
+          <div className="relative h-[18px] border border-[#5f4d41] bg-[#3b2d23] rounded-[2px] overflow-hidden">
+            <div className="absolute inset-y-0 left-0 bg-gradient-to-b from-[#c8a24a] to-[#8a6420] transition-[width] duration-200" style={{ width: `${pct * 100}%` }} />
+            <div className="absolute inset-0 grid place-items-center text-white text-[11px] font-bold [text-shadow:0_1px_1px_#000]">
+              {s.currentSkillPoints}/{s.maxSkillPoints}
+            </div>
+          </div>
+          {!s.unlocked && <div className="bad text-[11px]">Bloqueada: encha uma fatia vizinha mais perto do centro.</div>}
+          <div className={s.currentSkillPoints === 0 ? "opacity-60" : ""}>
+            <div className="font-bold">Dedication Perk</div>
+            <div>
+              {formatPerk(small?.[1] ?? "", s.smallPerkPrimaryEffectValue)} {small?.[0]}
+              {s.smallPerkHasSecondaryEffect ? ` · ${formatPerk("PlusInteger", s.smallPerkSecondaryEffectValue)} Mana` : ""}
+            </div>
+            {full && (
+              <div className="muted text-[11px]">
+                Por ponto: {formatPerk(small?.[1] ?? "", s.smallPerkPrimaryEffectIncrease)} {small?.[0]}
+                {s.smallPerkHasSecondaryEffect ? ` e ${formatPerk("PlusInteger", s.smallPerkSecondaryEffectIncrease)} Mana` : ""}
+              </div>
+            )}
+          </div>
+          {med && (
+            <div className={s.fillPercent < 1 ? "opacity-60" : ""}>
+              <div className="font-bold">Conviction Perk {s.fillPercent < 1 && <span className="font-normal muted">(fatia cheia)</span>}</div>
+              <div>
+                {med[1] === "RomanNumerals" ? "" : `${formatPerk(med[1], s.mediumPerkValue)} `}
+                {med[0]}
+              </div>
+              {med[2] && (
+                <div className="text-[11px]">
+                  I: {med[2]} · II: {med[3]}
+                </div>
+              )}
+              {med[4] && <div className="text-[11px] muted">{med[4]}</div>}
+            </div>
+          )}
+          {full && (
+            <div className="flex flex-wrap gap-1 pt-1">
+              <HoldButton label="« Máx" title="Esvaziar a fatia" danger onFire={() => minusMax(p.id)} />
+              <HoldButton label="− 1" title="Tirar 1 ponto (Shift: 10, Ctrl: 100); segure para repetir" danger onFire={(n) => minus(p.id, n)} />
+              <HoldButton label="+ 1" title="Pôr 1 ponto (Shift: 10, Ctrl: 100); segure para repetir" onFire={(n) => plus(p.id, n)} />
+              <HoldButton label="Máx »" title="Encher a fatia" onFire={() => plusMax(p.id)} />
+            </div>
+          )}
+        </div>
+      );
+    }
+    const c = cornerOf(p.q);
+    if (!c) return null;
+    if (p.kind === "vessel") {
+      const lp = WOD_LARGE[c.largePerkId];
+      return (
+        <div className="space-y-1">
+          <div className="font-bold">Revelation Perk</div>
+          <div className={c.level === 0 ? "opacity-60" : ""}>
+            <b>{lp?.[0]}</b> ({STAGE[c.level]})
+            <div>{lp?.[1]}</div>
+            {full && <div className="text-[11px] muted mt-1">{lp?.[2]}</div>}
+          </div>
+          <div className="text-[11px]">
+            {c.currentSkillPoints} pontos no domínio {Q_PT[p.q].toLowerCase()}.
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-1">
+        <div className="font-bold">Gema · Vessel Resonance {ROMAN[c.vesselLevel] ?? c.vesselLevel}</div>
+        {full ? gemEditor(c) : <div className="muted">{c.hasGem ? "Gema encaixada. Clique para trocar os mods." : "Clique para escolher os mods da gema."}</div>}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-4">
@@ -244,167 +440,96 @@ export default function WheelOfDestiny() {
       </div>
       {msg && <p className="warn text-[12px]">{msg}</p>}
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,560px)_1fr]">
-        <div>
-          <svg viewBox="0 0 522 522" className="w-full max-w-[560px] select-none" onContextMenu={(e) => e.preventDefault()}>
-            <circle cx={C} cy={C} r={R0 + 5 * RW + 2} fill="#1b140f" />
-            {WOD_SLICES.map((g) => {
-              const s = st.slices[g.id];
-              if (!s) return null;
-              const r0 = R0 + g.ring * RW;
-              const r1 = r0 + RW;
-              const color = QUARTER_COLOR[g.q];
-              const full = s.fillPercent >= 1;
-              const isSel = selected === g.id;
-              const mid = ((g.a0 + g.a1) / 2) * (Math.PI / 180);
-              const rm = (r0 + r1) / 2;
-              const med = WOD_MEDIUM[s.mediumPerkId];
-              return (
-                <g
-                  key={g.id}
-                  className="cursor-pointer"
-                  onClick={() => setSelected(g.id)}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    setSelected(g.id);
-                    act((P) => (s.fillPercent > 0 ? P.clearSkill(tile(g.id)) : s.unlocked && P.addToSkill(tile(g.id), Math.min(left, s.maxSkillPoints))));
-                  }}
-                >
-                  <title>{`${med ? shortName(med[0]) : "?"} · ${s.currentSkillPoints}/${s.maxSkillPoints}${s.unlocked ? "" : " (bloqueada)"}`}</title>
-                  <path d={arc(r0, r1, g.a0, g.a1)} fill={s.unlocked ? `${color}55` : "#3a342e"} stroke={isSel ? "#f3d27a" : "#0d0906"} strokeWidth={isSel ? 3 : 1.5} />
-                  {s.fillPercent > 0 && <path d={arc(r0, r0 + (r1 - r0) * s.fillPercent, g.a0, g.a1)} fill={full ? color : `${color}cc`} pointerEvents="none" />}
-                  <text x={C + rm * Math.cos(mid)} y={C + rm * Math.sin(mid) + 3} textAnchor="middle" fontSize={g.ring === 4 ? 11 : 9} fill={s.unlocked ? "#fff" : "#9a9088"} pointerEvents="none">
-                    {s.currentSkillPoints}/{s.maxSkillPoints}
-                  </text>
-                </g>
-              );
-            })}
-            {st.corners.map((c) => {
-              const q = QUARTERS[c.id];
-              const ang = { TL: 225, TR: 315, BL: 135, BR: 45 }[q] * (Math.PI / 180);
-              const x = C + 305 * Math.cos(ang);
-              const y = C + 305 * Math.sin(ang);
-              const lp = WOD_LARGE[c.largePerkId];
-              return (
-                <g key={q}>
-                  <circle cx={x} cy={y} r={24} fill={c.level > 0 ? QUARTER_COLOR[q] : "#3a342e"} stroke="#f3d27a" strokeWidth={c.level > 0 ? 2 : 0.5} />
-                  <text x={x} y={y + 5} textAnchor="middle" fontSize={16} fontWeight="bold" fill="#fff">
-                    {c.level > 0 ? c.level : "-"}
-                  </text>
-                  <title>{`${lp?.[0] ?? ""}: ${STAGE[c.level]} (${c.currentSkillPoints} pontos no domínio)`}</title>
-                </g>
-              );
-            })}
-            <circle cx={C} cy={C} r={R0 - 4} fill="#2a1d14" stroke="#b98a5a" />
-            <text x={C} y={C - 4} textAnchor="middle" fontSize={20} fontWeight="bold" fill="#f3d27a">
-              +{st.gridBonus + st.vesselBonus}
-            </text>
-            <text x={C} y={C + 14} textAnchor="middle" fontSize={9} fill="#e8dcc8">
-              dano e cura
-            </text>
-          </svg>
-          <p className="muted text-[11px]">Clique numa fatia para selecionar. Botão direito enche ou esvazia a fatia. O número no canto é o estágio da revelation do domínio.</p>
-        </div>
-
-        <div className="space-y-3">
-          {sel && (
-            <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
-              <div className="font-bold text-[#3a1a00]">
-                Fatia selecionada · {Q_PT[WOD_SLICES.find((g) => g.id === selected)?.q ?? "TL"]}
-              </div>
-              <div className="text-[12px] mt-1">
-                Pontos: <b>{sel.currentSkillPoints}</b> de {sel.maxSkillPoints} {sel.unlocked ? "" : <span className="bad">(bloqueada)</span>}
-              </div>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {[1, 10, 50].map((n) => (
-                  <button key={n} type="button" className="tc-btn !py-0.5" onClick={() => add(n)}>
-                    +{n}
-                  </button>
-                ))}
-                <button type="button" className="tc-btn !py-0.5" onClick={fill}>
-                  encher
-                </button>
-                {[1, 10].map((n) => (
-                  <button key={n} type="button" className="tc-btn tc-btn-danger !py-0.5" onClick={() => remove(n)}>
-                    −{n}
-                  </button>
-                ))}
-                <button type="button" className="tc-btn tc-btn-danger !py-0.5" onClick={clear}>
-                  esvaziar
-                </button>
-              </div>
-              <div className="text-[12px] mt-2">
-                <b>Dedication:</b> {WOD_SMALL[sel.smallPerkId]?.[0]} {formatPerk(WOD_SMALL[sel.smallPerkId]?.[1] ?? "", sel.smallPerkPrimaryEffectIncrease)} por ponto
-                {sel.smallPerkHasSecondaryEffect ? ` e Mana ${formatPerk("PlusInteger", sel.smallPerkSecondaryEffectIncrease)} por ponto` : ""}
-              </div>
-              {medInfo && (
-                <div className="text-[12px] mt-1">
-                  <b>Conviction (fatia cheia):</b> {medInfo[0]} {medInfo[1] === "RomanNumerals" ? "" : formatPerk(medInfo[1], sel.mediumPerkValue)}
-                  {medInfo[2] && (
-                    <div className="text-[11px]">
-                      I: {medInfo[2]} · II: {medInfo[3]}
-                    </div>
-                  )}
-                  {medInfo[4] && <div className="text-[11px] muted">{medInfo[4]}</div>}
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
-            <div className="font-bold text-[#3a1a00] mb-1">Revelations</div>
-            {st.corners.map((c) => {
-              const lp = WOD_LARGE[c.largePerkId];
-              return (
-                <div key={c.id} className="text-[12px] mb-1">
-                  <b style={{ color: QUARTER_COLOR[QUARTERS[c.id]] }}>●</b> <b>{lp?.[0]}</b>: {STAGE[c.level]} · {c.currentSkillPoints} pontos
-                  {c.level > 0 && <div className="text-[11px] muted">{lp?.[2]}</div>}
-                </div>
-              );
-            })}
+      <div className="rounded-[4px] border-2 border-[#5f4d41] bg-[#d4c0a1] p-1 sm:p-3 -mx-2 sm:mx-0">
+        <div className="grid gap-3 lg:grid-cols-[230px_minmax(0,522px)] 2xl:grid-cols-[230px_522px_minmax(0,1fr)] items-start justify-center">
+          <div className="space-y-3 order-2 lg:order-1">
+            <WodBox title="Seleção" className="lg:min-h-[170px]">
+              {detail(pick, true) ?? <span className="muted">Selecione uma fatia...</span>}
+            </WodBox>
+            <WodBox title="Informação" className="hidden lg:block min-h-[170px]">
+              {detail(hoverPick, false) ?? <span className="muted">Passe o mouse sobre uma fatia...</span>}
+              <div className="muted text-[11px] mt-2">Encha ou esvazie uma fatia com o botão direito (no celular, toque longo).</div>
+            </WodBox>
           </div>
-
-          <div className="border border-[#b98a5a] rounded p-3 bg-white/40 text-[12px]">
-            <div className="font-bold text-[#3a1a00] mb-1">Resumo</div>
-            <div>
-              {st.small.map((s) => (
-                <span key={s.id} className="mr-3">
-                  {WOD_SMALL[s.id]?.[0]} <b>{formatPerk(WOD_SMALL[s.id]?.[1] ?? "", s.value)}</b>
-                </span>
-              ))}
-            </div>
-            {[3, 1, 2, 5, 0, 4].map((cat) => {
-              const items = st.medium.filter((m) => m.category === cat);
-              if (!items.length) return null;
-              return (
-                <div key={cat} className="mt-1">
-                  <span className="muted">{CAT_PT[cat]}: </span>
-                  {items.map((m) => {
-                    const info = WOD_MEDIUM[m.id];
+          <div className="order-1 lg:order-2">
+            <WodCanvas
+              voc={st.voc}
+              slices={st.slices}
+              corners={st.corners}
+              selected={pick}
+              onSelect={setPick}
+              onHover={setHoverPick}
+              onRightClick={rightClick}
+            />
+            <p className="lg:hidden muted text-[11px] text-center mt-1">Toque numa fatia para ver e ajustar os pontos. Toque longo enche ou esvazia a fatia.</p>
+          </div>
+          <div className="order-3 lg:col-span-2 2xl:col-span-1 grid gap-3 sm:grid-cols-2 2xl:grid-cols-1">
+            <WodBox title="Revelation Perks">
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td>Dano e cura</td>
+                    <td className="text-right font-bold">+{st.gridBonus + st.vesselBonus}</td>
+                  </tr>
+                  {st.corners.map((c) => {
+                    const lp = WOD_LARGE[c.largePerkId];
                     return (
-                      <span key={m.id} className="mr-3" title={info?.[2] ? `I: ${info[2]} · II: ${info[3]}` : info?.[4]}>
-                        {shortName(info?.[0] ?? String(m.id))} <b>{formatPerk(info?.[1] ?? "", m.value)}</b>
-                      </span>
+                      <tr key={c.id} className="cursor-pointer" onClick={() => setPick({ kind: "vessel", q: QUARTERS[c.id] as Q })}>
+                        <td>
+                          <b style={{ color: QUARTER_COLOR[QUARTERS[c.id]] }}>●</b> {lp?.[0]}
+                        </td>
+                        <td className="text-right">{c.level > 0 ? STAGE[c.level] : "bloqueada"}</td>
+                      </tr>
                     );
                   })}
-                </div>
-              );
-            })}
-            {(st.gemBasic.length > 0 || st.gemSupreme.length > 0) && (
-              <div className="mt-1">
-                <span className="muted">Gemas: </span>
-                {st.gemBasic.map((g) => (
-                  <span key={`b${g.id}`} className="mr-3">
-                    {WOD_BASIC[g.id]?.[0]} <b>{formatGem(WOD_BASIC[g.id]?.[1] ?? "", g.value)}</b>
-                  </span>
-                ))}
-                {st.gemSupreme.map((g) => (
-                  <span key={`s${g.id}`} className="mr-3">
-                    {shortName(supremeName(g.id))} <b>{supremeEffect(g.id)}</b>
-                  </span>
+                </tbody>
+              </table>
+            </WodBox>
+            <WodBox title="Dedication e Conviction">
+              <div>
+                {st.small.map((s) => (
+                  <div key={s.id} className="flex justify-between gap-2">
+                    <span>{WOD_SMALL[s.id]?.[0]}</span>
+                    <b>{formatPerk(WOD_SMALL[s.id]?.[1] ?? "", s.value)}</b>
+                  </div>
                 ))}
               </div>
-            )}
+              {[3, 1, 2, 5, 0, 4].map((cat) => {
+                const items = st.medium.filter((m) => m.category === cat);
+                if (!items.length) return null;
+                return (
+                  <div key={cat} className="mt-2">
+                    <div className="muted text-[11px]">{CAT_PT[cat]}</div>
+                    {items.map((m) => {
+                      const info = WOD_MEDIUM[m.id];
+                      return (
+                        <div key={m.id} className="flex justify-between gap-2" title={info?.[2] ? `I: ${info[2]} · II: ${info[3]}` : info?.[4]}>
+                          <span>{shortName(info?.[0] ?? String(m.id))}</span>
+                          <b>{formatPerk(info?.[1] ?? "", m.value)}</b>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              {(st.gemBasic.length > 0 || st.gemSupreme.length > 0) && (
+                <div className="mt-2">
+                  <div className="muted text-[11px]">Gemas</div>
+                  {st.gemBasic.map((g) => (
+                    <div key={`b${g.id}`} className="flex justify-between gap-2">
+                      <span>{WOD_BASIC[g.id]?.[0]}</span>
+                      <b>{formatGem(WOD_BASIC[g.id]?.[1] ?? "", g.value)}</b>
+                    </div>
+                  ))}
+                  {st.gemSupreme.map((g) => (
+                    <div key={`s${g.id}`} className="flex justify-between gap-2">
+                      <span>{shortName(supremeName(g.id))}</span>
+                      <b>{supremeEffect(g.id)}</b>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </WodBox>
           </div>
         </div>
       </div>
@@ -414,47 +539,12 @@ export default function WheelOfDestiny() {
         <div className="grid gap-3 md:grid-cols-2">
           {st.corners.map((c) => {
             const q = QUARTERS[c.id];
-            const vl = c.vesselLevel;
             return (
               <div key={q} className="text-[12px]">
                 <div className="font-bold" style={{ color: QUARTER_COLOR[q] }}>
-                  {Q_PT[q]} · Vessel Resonance {["0", "I", "II", "III"][vl] ?? vl}
+                  {Q_PT[q]} · Vessel Resonance {ROMAN[c.vesselLevel] ?? c.vesselLevel}
                 </div>
-                {vl === 0 ? (
-                  <p className="muted">Sem Vessel Resonance: encha as fatias de VR deste domínio para liberar gema.</p>
-                ) : (
-                  <div className="space-y-1 mt-1">
-                    <select className="w-full" value={c.keyBasicMod1} onChange={(e) => modChange(1, Number(e.target.value), q)}>
-                      <option value={-1}>mod básico 1: nenhum</option>
-                      {st.basic1.map((m: any) => (
-                        <option key={m.id} value={m.id}>
-                          {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
-                        </option>
-                      ))}
-                    </select>
-                    {vl >= 2 && c.keyBasicMod1 >= 0 && (
-                      <select className="w-full" value={c.keyBasicMod2} onChange={(e) => modChange(2, Number(e.target.value), q)}>
-                        <option value={-1}>mod básico 2: nenhum</option>
-                        {st.basic2.map((m: any) => (
-                          <option key={m.id} value={m.id}>
-                            {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {vl >= 3 && c.keyBasicMod2 >= 0 && (
-                      <select className="w-full" value={c.keySupremeMod} onChange={(e) => modChange(3, Number(e.target.value), q)}>
-                        <option value={-1}>mod supremo: nenhum</option>
-                        {st.supremeAvail.map((id) => (
-                          <option key={id} value={id}>
-                            {shortName(supremeName(id))}: {supremeEffect(id)}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {c.hasGem && <p className="muted text-[11px]">Bônus do vessel: +{c.vesselDamageHealingBonus} de dano e cura.</p>}
-                  </div>
-                )}
+                {gemEditor(c)}
               </div>
             );
           })}
