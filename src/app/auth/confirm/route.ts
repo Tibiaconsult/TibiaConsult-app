@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 // - code (template padrão do Supabase, exige o mesmo navegador que pediu o link).
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
-  const next = searchParams.get("next") ?? "/meus-chars";
+  const next = searchParams.get("next") ?? "/minha-area";
   const supabase = await createClient();
 
   const token_hash = searchParams.get("token_hash");

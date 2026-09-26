@@ -83,6 +83,7 @@ export const MENU: MenuGroup[] = [
     icon: "account",
     items: [
       { href: "/entrar", label: "Entrar" },
+      { href: "/minha-area", label: "Minha área" },
       { href: "/meus-chars", label: "Meus chars" },
     ],
   },

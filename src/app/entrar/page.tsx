@@ -7,7 +7,7 @@ export const metadata = { title: "Entrar" };
 
 export default async function EntrarPage({ searchParams }: { searchParams: Promise<{ erro?: string; next?: string }> }) {
   const { erro, next } = await searchParams;
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/meus-chars";
+  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/minha-area";
   return (
     <div className="max-w-3xl">
       <h1>Account Login</h1>

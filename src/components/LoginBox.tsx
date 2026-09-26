@@ -25,8 +25,8 @@ export default function LoginBox() {
         <div className="tc-login-muted">…</div>
       ) : email ? (
         <>
-          <Link href="/meus-chars" className="tc-big-button">
-            Meus chars
+          <Link href="/minha-area" className="tc-big-button">
+            Minha área
           </Link>
           <div className="tc-login-muted" title={email}>
             {email}

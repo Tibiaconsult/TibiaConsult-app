@@ -10,7 +10,7 @@ type Mode = "senha" | "link" | "criar";
 /** Versão do texto de /termos aceita no cadastro (fica gravada nos metadados da conta). */
 const TERMS_VERSION = "2026-09-26";
 
-export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
+export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("senha");
   const [email, setEmail] = useState("");
@@ -18,6 +18,15 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [msg, setMsg] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState(false);
+
+  async function resend() {
+    setStatus("sending");
+    const { error } = await createClient().auth.resend({ type: "signup", email, options: { emailRedirectTo: redirectTo() } });
+    if (error) return (setStatus("error"), setMsg(error.message));
+    setStatus("sent");
+    setMsg("Enviamos um novo link de confirmação. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico) e depois entre com a senha.");
+  }
 
   const redirectTo = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
 
@@ -53,6 +62,10 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
       return;
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error && /not confirmed/i.test(error.message)) {
+      setUnconfirmed(true);
+      return (setStatus("error"), setMsg("Seu e-mail ainda não foi confirmado. Clique abaixo para receber o link de confirmação."));
+    }
     if (error) return (setStatus("error"), setMsg(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message));
     router.push(next);
     router.refresh();
@@ -68,7 +81,7 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
             ["link", "Link por e-mail"],
           ] as [Mode, string][]
         ).map(([m, label]) => (
-          <button key={m} type="button" role="tab" aria-selected={mode === m} className={mode === m ? "is-active" : ""} onClick={() => (setMode(m), setStatus("idle"), setMsg(null))}>
+          <button key={m} type="button" role="tab" aria-selected={mode === m} className={mode === m ? "is-active" : ""} onClick={() => (setMode(m), setStatus("idle"), setMsg(null), setUnconfirmed(false))}>
             {label}
           </button>
         ))}
@@ -109,6 +122,11 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
             {status === "sending" ? "Aguarde..." : mode === "senha" ? "Entrar" : mode === "criar" ? "Criar conta" : "Receber link de acesso"}
           </button>
           {msg && <p className={status === "error" ? "bad" : "good"}>{msg}</p>}
+          {unconfirmed && mode === "senha" && (
+            <button type="button" className="tc-btn" onClick={resend} disabled={status === "sending"}>
+              Reenviar e-mail de confirmação
+            </button>
+          )}
           {mode === "senha" && <p className="muted text-[11px]">Entrou antes só pelo link? Use a aba &quot;Link por e-mail&quot; ou crie uma senha na aba &quot;Criar conta&quot; com o mesmo e-mail.</p>}
         </form>
       )}

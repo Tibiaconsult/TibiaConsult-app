@@ -103,12 +103,20 @@ export default async function CharPage({ params, searchParams }: { params: Promi
       {salvo && <p className="on-dark good mb-3">Salvo.</p>}
       {erro && <p className="on-dark bad mb-3">Não foi possível salvar: {erro}</p>}
       <div className="flex flex-wrap gap-3 mb-4">
-        <a className="tc-btn" href={`/simulador?level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
-          Usar este char no simulador de dano
-        </a>
-        <a className="tc-btn" href={`/simulador/set?level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
-          Abrir o set no montador
-        </a>
+        {c.vocation === "sorcerer" ? (
+          <>
+            <a className="tc-btn" href={`/simulador?level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
+              Usar este char no simulador de dano
+            </a>
+            <a className="tc-btn" href={`/simulador/set?level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
+              Abrir o set no montador
+            </a>
+          </>
+        ) : c.vocation !== "monk" ? (
+          <a className="tc-btn" href={`/vocacoes/${c.vocation}?level=${c.level}&ml=${c.magic_level}&skill=${c.skill ?? 0}&atk=${c.weapon_attack ?? 0}`}>
+            Usar este char no simulador de dano
+          </a>
+        ) : null}
         <a className="tc-btn" href={`/planejador/wheel?level=${c.level}`}>
           Planejar a Wheel
         </a>
@@ -140,6 +148,14 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             <label>
               Magic level
               <input name="magic_level" type="number" min={0} max={300} defaultValue={c.magic_level} className="mt-1 w-full" />
+            </label>
+            <label>
+              Skill principal <span className="muted text-[11px]">(melee do knight, distance do paladin)</span>
+              <input name="skill" type="number" min={0} max={300} defaultValue={c.skill ?? 0} className="mt-1 w-full" />
+            </label>
+            <label>
+              Ataque da arma <span className="muted text-[11px]">(knight: físico + elemental; paladin: munição + atk mod)</span>
+              <input name="weapon_attack" type="number" min={0} max={300} defaultValue={c.weapon_attack ?? 0} className="mt-1 w-full" />
             </label>
             <label>
               Mundo

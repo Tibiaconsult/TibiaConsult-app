@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL, Element } from "@/data/spells";
 import { HUNTS } from "@/data/hunts";
 import { VOCATIONS, VocId } from "@/data/vocations";
@@ -27,6 +27,29 @@ export default function VocSimulator({ voc }: { voc: VocId }) {
   const [weights, setWeights] = useState<Record<string, number>>({});
   const [observed, setObserved] = useState("");
   const set = <K extends keyof VocInputs>(k: K, val: VocInputs[K]) => setInp((p) => ({ ...p, [k]: val }));
+
+  // Char vindo de "Meus chars" ou da "Minha área": ?level=&ml=&skill=&atk=
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const u = new URLSearchParams(window.location.search);
+    const n = (k: string) => {
+      const v = Number(u.get(k));
+      return Number.isFinite(v) && v > 0 ? v : null;
+    };
+    const level = n("level");
+    const ml = n("ml");
+    const skill = n("skill");
+    const atk = n("atk");
+    if (level || ml || skill || atk)
+      setInp((p) => ({
+        ...p,
+        level: level ?? p.level,
+        magicLevel: ml ?? p.magicLevel,
+        skill: skill ?? p.skill,
+        ...(atk ? { atkPhysical: atk, atkElemental: 0 } : {}),
+      }));
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const hunt = HUNTS.find((h) => h.id === huntId) ?? null;
   const w = useMemo(() => (hunt ? Object.fromEntries(hunt.creatures.map((c) => [c.name, weights[c.name] ?? c.weight ?? 1])) : null), [hunt, weights]);

@@ -61,6 +61,8 @@ export async function updateChar(form: FormData) {
       vocation: text(form, "vocation") ?? "sorcerer",
       level: int(form, "level", 8, 1, 5000),
       magic_level: int(form, "magic_level", 0, 0, 300),
+      skill: int(form, "skill", 0, 0, 300),
+      weapon_attack: int(form, "weapon_attack", 0, 0, 300),
       world: text(form, "world"),
       wand: text(form, "wand"),
       wand_tier: int(form, "wand_tier", 0, 0, 10),
