@@ -77,7 +77,7 @@ export const MENU: MenuGroup[] = [
     items: [
       { href: "/ferramentas/loot", label: "Divisão de loot" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker" },
-      { href: "/ferramentas/calculadoras", label: "Exp, stamina e bless" },
+      { href: "/ferramentas/calculadoras", label: "Calculadoras (exp, exercise...)" },
       { href: "/ferramentas/imbuements", label: "Imbuements" },
     ],
   },

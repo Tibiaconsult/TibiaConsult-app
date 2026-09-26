@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Box from "@/components/Box";
+import ExerciseCalc from "./ExerciseCalc";
 import { blessEnhanced, blessRegular, expForLevel, staminaAfterOffline, staminaOfflineMinutes, twistOfFate } from "@/lib/calcs";
 
 const fmt = (v: number) => Math.round(v).toLocaleString("pt-BR");
@@ -151,6 +152,7 @@ export default function Calculators() {
   return (
     <div>
       <ExpCalc />
+      <ExerciseCalc />
       <StaminaCalc />
       <BlessCalc />
     </div>
