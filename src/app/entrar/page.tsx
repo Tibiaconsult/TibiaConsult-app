@@ -14,9 +14,13 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
   return (
     <div className="max-w-md">
       <h1>Entrar</h1>
-      <p className="text-sm text-zinc-400 mb-4">Informe seu e-mail. Você recebe um link de acesso, sem senha.</p>
+      <p className="text-sm text-zinc-400 mb-4">
+        Informe seu e-mail. Você recebe um link de acesso, sem senha. Abra o e-mail neste mesmo navegador.
+      </p>
       {erro === "link" && (
-        <p className="text-sm text-red-300 mb-4">O link não pôde ser validado (expirado ou já usado). Peça um novo.</p>
+        <p className="text-sm text-red-300 mb-4">
+          O link não pôde ser validado. Peça um novo aqui e abra o e-mail neste mesmo navegador.
+        </p>
       )}
       <LoginForm />
     </div>
