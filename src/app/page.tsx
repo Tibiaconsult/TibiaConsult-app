@@ -1,22 +1,21 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import Box from "@/components/Box";
 import Boosted from "@/components/Boosted";
 import Rashid from "@/components/Rashid";
 import { NEWS, TICKER, formatDate } from "@/data/news";
-import { TIBIA, itemIcon, spellIcon } from "@/lib/icons";
+import { TIBIA } from "@/lib/icons";
+import type { Voc } from "@/lib/active";
+import { ALL_VOCS } from "@/components/voc-list";
+import HomePanel from "./HomePanel";
 
-const FEATURES = [
-  { href: "/simulador", title: "Dano e DPS por hunt", text: "Min, média e máximo de cada feitiço, ranking de elemento e DPS das rotações no lure da hunt.", icon: spellIcon("energy-wave") },
-  { href: "/simulador/set", title: "Montador de set", text: "Equipe item por slot, com tier e imbuement, e compare dois sets lado a lado.", icon: itemIcon("Soulmantle") },
-  { href: "/planejador/wheel", title: "Wheel of Destiny", text: "Revelations, augments e gemas; o efeito vai direto para o simulador.", icon: spellIcon("Avatar of Storm") },
-  { href: "/simulador/forja", title: "Forja", text: "Custo esperado para chegar a cada tier, fusão normal ou convergência.", icon: itemIcon("Sanguine Coil") },
-  { href: "/rotacoes", title: "Rotações", text: "Combos por elemento e um montador que acusa conflito de cooldown.", icon: spellIcon("hells-core") },
-  { href: "/hunts", title: "Fichas de hunt", text: "Resistência de cada bicho, set, rotação e charms recomendados.", icon: itemIcon("Soulshanks") },
-];
-
-export default function Home() {
+export default async function Home() {
+  // vocação guardada no cookie: o painel já abre nela, sem piscar a escolha de vocação
+  const saved = (await cookies()).get("tc-voc")?.value;
+  const initialVoc = ALL_VOCS.some(([id]) => id === saved) ? (saved as Voc) : null;
   return (
     <div>
+      <HomePanel initialVoc={initialVoc} />
       <Box title="Hoje no Tibia">
         <div className="flex flex-wrap gap-6 items-center">
           <Boosted />
@@ -42,7 +41,7 @@ export default function Home() {
       </Box>
 
       <Box title="Notícias">
-        {NEWS.map((n, i) => (
+        {NEWS.slice(0, 3).map((n, i) => (
           <article key={i} className="tc-news-item">
             <div className="tc-news-headline">
               <small>{formatDate(n.date)}</small> · {n.title}
@@ -70,22 +69,11 @@ export default function Home() {
             </div>
           </article>
         ))}
+        <Link href="/novidades" className="tc-btn">
+          Todas as novidades
+        </Link>
       </Box>
 
-      <Box title="Ferramentas">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {FEATURES.map((f) => (
-            <Link key={f.href} href={f.href} className="flex gap-3 items-start border border-[#b98a5a] rounded p-3 bg-white/40 hover:bg-white/70 no-underline">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {f.icon && <img src={f.icon} alt="" width={38} height={38} className="sprite shrink-0" />}
-              <span>
-                <span className="block font-bold text-[#3a1a00] text-[14px]">{f.title}</span>
-                <span className="block text-[12px] mt-1">{f.text}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
-      </Box>
     </div>
   );
 }

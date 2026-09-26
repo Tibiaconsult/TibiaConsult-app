@@ -28,6 +28,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // o antigo planejador "Wheel: efeitos" virou o ajuste da Wheel dentro do simulador; ?wheel= segue junto
+  async redirects() {
+    return [{ source: "/planejador/wheel/efeitos", destination: "/simulador?voc=sorcerer", permanent: true }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

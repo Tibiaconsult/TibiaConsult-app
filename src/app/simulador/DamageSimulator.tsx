@@ -12,6 +12,7 @@ import { DEFAULT_MODIFIERS, RotationStep, effectiveElements, manaPerCycle, valid
 import { SetChoice, computeSet, decodeSet, encodeSet, recommendedSet } from "@/lib/set";
 import { WheelConfig, decodeWheel, defaultWheel, encodeWheel, wheelEffects } from "@/lib/wheel";
 import { spellIcon } from "@/lib/icons";
+import WheelEffectsEditor from "./WheelEffectsEditor";
 
 const ELEMENTS: Element[] = ["fire", "energy", "death", "ice", "earth", "physical", "holy"];
 const SORC_ELEMENTS: Element[] = ["fire", "energy", "death"];
@@ -113,6 +114,7 @@ export default function DamageSimulator() {
   const [useSet, setUseSet] = useState(true);
   const [setChoice, setSetChoice] = useState<SetChoice>(recommendedSet);
   const [useWheel, setUseWheel] = useState(true);
+  const [wheelOpen, setWheelOpen] = useState(false);
   const [wheel, setWheel] = useState<WheelConfig>(() => defaultWheel());
   const [useProf, setUseProf] = useState(true);
   const [prof, setProf] = useState<{ wand: number; level: number; picks: number[] }>({ wand: 0, level: 7, picks: [0, 0, 0, 0, 0, 0, 0] });
@@ -306,7 +308,7 @@ export default function DamageSimulator() {
   }
 
   const shareUrl = () => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({ voc: "sorcerer" });
     params.set("level", String(level));
     params.set("ml", String(baseML));
     if (useSet) params.set("set", decodeURIComponent(encodeSet(setChoice)));
@@ -372,9 +374,12 @@ export default function DamageSimulator() {
               flat +{wfx.flatBonus} · LoD {wfx.lordOfDestruction} · Beam Mastery {wfx.beamMastery} · Focus a cada {focusCd} s
             </div>
           )}
-          <a className="text-[11px] font-bold" href={`/planejador/wheel/efeitos?wheel=${encodeWheel(wheel)}`}>
-            editar no planejador
-          </a>
+          <span className="flex flex-wrap gap-x-3 text-[11px] font-bold">
+            <button type="button" className="underline" onClick={() => (setUseWheel(true), setWheelOpen((o) => !o))}>
+              {wheelOpen ? "fechar o ajuste" : "ajustar aqui"}
+            </button>
+            <Link href={`/planejador/wheel?voc=sorcerer&level=${level}`}>montar a roda completa</Link>
+          </span>
         </div>
         <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
           <label className="flex items-center gap-2 font-bold">
@@ -390,6 +395,17 @@ export default function DamageSimulator() {
           </a>
         </div>
       </div>
+
+      {wheelOpen && useWheel && (
+        <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
+          <div className="font-bold mb-2">Wheel of Destiny: o que mexe no dano</div>
+          <WheelEffectsEditor value={wheel} onChange={setWheel} level={level} />
+          <p className="muted text-[11px] mt-2">
+            Aqui entram só pontos por domínio, augments e gemas. Para a roda inteira, com slices, HP e mana, use o{" "}
+            <Link href={`/planejador/wheel?voc=sorcerer&level=${level}`}>planejador da Wheel</Link>: o botão de enviar ao simulador traz tudo para cá.
+          </p>
+        </div>
+      )}
 
       <details className="border border-[#b98a5a] rounded p-3 bg-white/40">
         <summary className="cursor-pointer font-bold">Ajustes manuais (somam às fontes acima)</summary>

@@ -201,7 +201,7 @@ export default function ComboBuilder({ voc }: { voc: VocId }) {
           Ver cooldowns de {v.promoted}
         </Link>
         {voc !== "monk" && (
-          <Link className="tc-btn" href={`/vocacoes/${voc}#simulador`}>
+          <Link className="tc-btn" href={`/simulador?voc=${voc}`}>
             Simular o dano de {v.promoted}
           </Link>
         )}

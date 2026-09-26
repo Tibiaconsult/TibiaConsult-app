@@ -6,7 +6,7 @@ import { spellIcon } from "@/lib/icons";
 export const metadata = { title: "Master Sorcerer" };
 
 const SECTIONS = [
-  { href: "/simulador", title: "Simulador de dano e DPS", text: "Dano por feitiço contra a hunt, ranking de elemento, DPS das rotações, com set, Wheel e proficiência.", icon: "energy-wave" },
+  { href: "/simulador?voc=sorcerer", title: "Simulador de dano e DPS", text: "Dano por feitiço contra a hunt, ranking de elemento, DPS das rotações, com set, Wheel e proficiência.", icon: "energy-wave" },
   { href: "/rotacoes", title: "Rotações por elemento", text: "Energia, fogo e death com as stances de 06/2026, burst e montador de rotação própria.", icon: "hells-core" },
   { href: "/cooldowns", title: "Feitiços e cooldowns", text: "Base, mana, cooldown, grupo secundário e área de cada feitiço e runa.", icon: "great-energy-beam" },
   { href: "/gemas", title: "Gemas", text: "Mods básicos e supremos por domínio da Wheel e builds sugeridas.", icon: "death-echo" },

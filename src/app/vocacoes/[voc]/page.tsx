@@ -4,7 +4,6 @@ import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
 import { ELEMENT_LABEL } from "@/data/spells";
 import { VOCATIONS, VOC_IDS, VocId } from "@/data/vocations";
-import VocSimulator from "./VocSimulator";
 import EquipmentBySlot from "./EquipmentBySlot";
 import WeaponUpgrades from "@/components/WeaponUpgrades";
 
@@ -59,21 +58,24 @@ export default async function VocationPage({
       </Box>
 
       <div id="simulador" className="scroll-mt-20" />
-      {v.id === "monk" ? (
-        <Box title="Simulador de dano">
+      <Box title="Simulador de dano e rotação">
+        {v.id === "monk" ? (
           <p className="text-[12px]">
-            O simulador do monk ainda não está disponível. O dano das magias de
-            monk depende de um fator próprio de cada magia, somado ao ataque da
-            arma e ao fist fighting, e esse fator não é público. Em vez de
-            chutar, a página mostra as magias, a Harmony e a Wheel com os
-            números conferidos.
+            O simulador do monk ainda não está disponível: o dano das magias de monk depende de um fator próprio de cada magia, e esse fator não é
+            público. Em vez de chutar, esta página mostra as magias, a Harmony e a Wheel com os números conferidos.
           </p>
-        </Box>
-      ) : (
-        <Box title="Simulador de dano e rotação">
-          <VocSimulator voc={v.id} />
-        </Box>
-      )}
+        ) : (
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-[12px] flex-1 min-w-[220px]">
+              O simulador de todas as vocações fica numa página só: magias contra a hunt, rotação que mais causa dano, Wheel e calibração por hit
+              real. Abre já em {v.promoted} e, com login, no level do seu char.
+            </p>
+            <Link className="tc-btn" href={`/simulador?voc=${v.id}`}>
+              Abrir o simulador de {v.promoted}
+            </Link>
+          </div>
+        )}
+      </Box>
 
       <Box title="Magias de ataque e cooldowns">
         <p className="mb-2 text-[12px]">

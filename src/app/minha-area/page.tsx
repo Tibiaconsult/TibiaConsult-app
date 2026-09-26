@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Box from "@/components/Box";
-import { HUNTS } from "@/data/hunts";
-import { HUNT_RECS, RecVoc } from "@/data/hunt-recs";
+import { huntsFor } from "@/lib/hunt-level";
+import { comboHref, setHref, simHref, wheelHref } from "@/lib/char-links";
 import { BESTIARY } from "@/data/bestiary";
 import { WHEEL_MILESTONES } from "@/data/wheel-milestones";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
@@ -15,20 +15,6 @@ export const dynamic = "force-dynamic";
 
 const KIND_LABEL: Record<string, string> = { bug: "Bug", inconsistencia: "Dado errado", hunt: "Hunt", funcionalidade: "Funcionalidade", outro: "Outro" };
 const STATUS_LABEL: Record<string, string> = { novo: "recebida", lido: "lida", feito: "feita", descartado: "não será feita" };
-
-function huntsFor(voc: string, level: number) {
-  const v = voc as RecVoc;
-  const withRec = HUNTS.map((h) => ({ h, min: HUNT_RECS[h.id]?.solo[v] })).filter((x): x is { h: (typeof HUNTS)[number]; min: number } => typeof x.min === "number");
-  const ok = withRec.filter((x) => x.min <= level).sort((a, b) => b.min - a.min);
-  const next = withRec.filter((x) => x.min > level).sort((a, b) => a.min - b.min)[0] ?? null;
-  return { ok: ok.slice(0, 4), next };
-}
-
-function simLink(c: { vocation: string; level: number; magic_level: number; skill?: number | null; weapon_attack?: number | null }) {
-  if (c.vocation === "sorcerer") return `/simulador?level=${c.level}&ml=${c.magic_level}`;
-  if (c.vocation === "monk") return null;
-  return `/vocacoes/${c.vocation}?level=${c.level}&ml=${c.magic_level}&skill=${c.skill ?? 0}&atk=${c.weapon_attack ?? 0}`;
-}
 
 export default async function MinhaAreaPage() {
   if (!hasSupabaseEnv()) redirect("/entrar");
@@ -68,7 +54,7 @@ export default async function MinhaAreaPage() {
       {(chars ?? []).map((c) => {
         const { ok, next } = huntsFor(c.vocation, c.level);
         const milestone = WHEEL_MILESTONES.find((m) => m.level > c.level);
-        const sim = simLink(c);
+        const sim = simHref(c);
         const done = doneBy.get(c.id) ?? 0;
         return (
           <Box key={c.id} title={`${c.name} · ${VOCATIONS[c.vocation] ?? c.vocation} · level ${c.level}`}>
@@ -84,7 +70,10 @@ export default async function MinhaAreaPage() {
                         <Link href={`/hunts?h=${h.id}`} className="font-bold">
                           {h.name}
                         </Link>{" "}
-                        <span className="muted">({min}+)</span>
+                        <span className="muted">({min}+)</span>{" "}
+                        <Link href={`/hunts/preparar?h=${h.id}&voc=${c.vocation}`} className="text-[11px]">
+                          preparar
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -122,13 +111,13 @@ export default async function MinhaAreaPage() {
                   <UseCharButton
                     char={{ id: c.id, name: c.name, vocation: c.vocation, level: c.level, magic_level: c.magic_level, skill: c.skill ?? null, world: c.world ?? null }}
                   />
-                  <Link className="tc-btn" href={c.wheel_code ? `/planejador/wheel?code=${encodeURIComponent(c.wheel_code)}&level=${c.level}` : `/planejador/wheel?voc=${c.vocation}&level=${c.level}`}>
+                  <Link className="tc-btn" href={wheelHref(c)}>
                     {c.wheel_code ? "Abrir a roda salva" : "Montar a roda"}
                   </Link>
-                  <Link className="tc-btn" href={c.set_code ? `/simulador/set?${c.set_code}` : `/simulador/set?voc=${c.vocation}`}>
+                  <Link className="tc-btn" href={setHref(c)}>
                     {c.set_code ? "Abrir o set salvo" : "Montar o set"}
                   </Link>
-                  <Link className="tc-btn" href={c.combo_code ? `/rotacoes?${c.vocation === "sorcerer" ? "" : `voc=${c.vocation}&`}${c.combo_code.replace(/^voc=[a-z]+&/, "")}#montador` : `/rotacoes?voc=${c.vocation}#montador`}>
+                  <Link className="tc-btn" href={comboHref(c)}>
                     {c.combo_code ? "Abrir o combo salvo" : "Montar um combo"}
                   </Link>
                   {sim && (

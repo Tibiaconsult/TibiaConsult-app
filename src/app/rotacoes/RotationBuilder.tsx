@@ -151,7 +151,7 @@ export default function RotationBuilder() {
           Ver cooldowns
         </a>
         <SaveToChar voc="sorcerer" field="combo_code" value={`combo=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? ""}`} what="a rotação" />
-        <a className="tc-btn" href={`/simulador?rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
+        <a className="tc-btn" href={`/simulador?voc=sorcerer&rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
           Calcular o dano desta rotação
         </a>
       </div>

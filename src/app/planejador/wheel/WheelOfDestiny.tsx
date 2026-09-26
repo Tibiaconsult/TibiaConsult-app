@@ -315,7 +315,7 @@ export default function WheelOfDestiny() {
       focusMastery: st.medium.some((m) => m.id === 23),
       gems: st.corners.filter((c) => c.keySupremeMod >= 0 && SUP_MAP[c.keySupremeMod]).map((c) => ({ supreme: SUP_MAP[c.keySupremeMod], grade: 1 as const })),
     };
-    return `/simulador?level=${level}&wheel=${encodeWheel(w)}`;
+    return `/simulador?voc=sorcerer&level=${level}&wheel=${encodeWheel(w)}`;
   }, [st, level, extra]);
 
   if (err) return <p className="bad">{err} Tente recarregar a página.</p>;
