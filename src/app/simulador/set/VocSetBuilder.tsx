@@ -1,6 +1,7 @@
 "use client";
 
 import SaveToChar from "@/components/SaveToChar";
+import { Build, SlotPick, decodeBuild, encodeBuild } from "@/lib/vocbuild";
 import { useEffect, useMemo, useState } from "react";
 import { HUNTS } from "@/data/hunts";
 import { IMBUEMENTS, IMBUE_TIER } from "@/data/imbuements";
@@ -74,12 +75,6 @@ const imbueIcon = (id: string, tier: number) => {
   return d ? wikiImage(`${IMBUE_TIER[tier]} ${d.name}`, "png") : "";
 };
 
-interface SlotPick {
-  item: string | null;
-  tier: number;
-  imbues: { id: string; tier: number }[];
-}
-type Build = Record<string, SlotPick>;
 const EMPTY: SlotPick = { item: null, tier: 0, imbues: [] };
 type Row = EquipRow & { dur?: string };
 
@@ -135,18 +130,8 @@ function compute(voc: Voc, build: Build, rows: Row[]): Totals {
   return { res, sk, arm, extras, forge };
 }
 
-const encode = (b: Build) => btoa(unescape(encodeURIComponent(JSON.stringify(b))));
-const decode = (s: string | null): Build | null => {
-  if (!s) return null;
-  try {
-    const raw = JSON.parse(decodeURIComponent(escape(atob(s)))) as Record<string, Partial<SlotPick>>;
-    const out: Build = {};
-    for (const [k, v] of Object.entries(raw)) out[k] = { item: v.item ?? null, tier: v.tier ?? 0, imbues: v.imbues ?? [] };
-    return out;
-  } catch {
-    return null;
-  }
-};
+const encode = encodeBuild;
+const decode = decodeBuild;
 
 /** Casa do inventário com o sprite animado do item (GIF da TibiaWiki), tier e imbuements. */
 function InvSlot({ label, pick, selected, dim, onClick }: { label: string; pick: SlotPick | undefined; selected: boolean; dim: boolean; onClick: () => void }) {
@@ -208,6 +193,8 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
       setCompare(true);
     }
     if (Number(u.get("level")) > 0) setLevel(Number(u.get("level")));
+    const h = u.get("hunt");
+    if (h && HUNTS.some((x) => x.id === h)) setHuntId(h);
   }, [voc]);
   /* eslint-enable react-hooks/set-state-in-effect */
 

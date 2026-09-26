@@ -74,7 +74,7 @@ export default function ProficiencyPlanner() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <a className="tc-btn" href={`/simulador?prof=${code}`}>
+        <a className="tc-btn" href={`/simulador?voc=sorcerer&prof=${code}`}>
           Usar esta proficiência no simulador de dano
         </a>
         <button

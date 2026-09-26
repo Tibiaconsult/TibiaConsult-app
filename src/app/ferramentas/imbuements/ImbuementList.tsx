@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ItemSprite } from "@/components/Icons";
 import { IMBUEMENTS, IMBUE_CLEAR, IMBUE_GOLD, IMBUE_HOURS, IMBUE_TIER } from "@/data/imbuements";
 
@@ -11,6 +11,21 @@ type Pick = { tier: number; qty: number };
 export default function ImbuementList() {
   const [q, setQ] = useState("");
   const [cart, setCart] = useState<Record<string, Pick>>({});
+
+  // ?sel=id:nível:quantidade,... (nível 0 Basic, 1 Intricate, 2 Powerful), vindo do "Preparar para esta hunt"
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("sel");
+    if (!raw) return;
+    const next: Record<string, Pick> = {};
+    for (const part of raw.split(",")) {
+      const [id, tier, qty] = part.split(":");
+      if (!IMBUEMENTS.some((x) => x.id === id)) continue;
+      next[id] = { tier: Math.min(2, Math.max(0, Number(tier) || 0)), qty: Math.min(20, Math.max(1, Number(qty) || 1)) };
+    }
+    if (Object.keys(next).length) setCart(next);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const shown = IMBUEMENTS.filter((i) => {
     const t = q.trim().toLowerCase();

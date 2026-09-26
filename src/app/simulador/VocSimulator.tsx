@@ -6,6 +6,7 @@ import { HUNTS } from "@/data/hunts";
 import { VOCATIONS, VocId } from "@/data/vocations";
 import { VocInputs, defaultInputs, flatBonus, simulateRotation, spellDamage, usable } from "@/lib/vocsim";
 import { levelBonus } from "@/lib/damage";
+import { getActive } from "@/lib/active";
 
 const fmt = (v: number) => Math.round(v).toLocaleString("pt-BR");
 const WEAPON_ELEMENTS: Element[] = ["physical", "fire", "energy", "ice", "earth", "death", "holy"];
@@ -26,9 +27,11 @@ export default function VocSimulator({ voc }: { voc: VocId }) {
   const [huntId, setHuntId] = useState("");
   const [weights, setWeights] = useState<Record<string, number>>({});
   const [observed, setObserved] = useState("");
+  const [copied, setCopied] = useState(false);
   const set = <K extends keyof VocInputs>(k: K, val: VocInputs[K]) => setInp((p) => ({ ...p, [k]: val }));
 
-  // Char vindo de "Meus chars" ou da "Minha área": ?level=&ml=&skill=&atk=
+  // Char vindo do link (?level=&ml=&skill=&atk=, da Minha área ou de um link compartilhado) ou, sem ele, o char ativo da vocação.
+  // ?hunt= abre a hunt já escolhida (ficha de hunt e "Preparar para esta hunt"); ?targets= e ?stance= também valem.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const u = new URLSearchParams(window.location.search);
@@ -36,19 +39,26 @@ export default function VocSimulator({ voc }: { voc: VocId }) {
       const v = Number(u.get(k));
       return Number.isFinite(v) && v > 0 ? v : null;
     };
-    const level = n("level");
-    const ml = n("ml");
-    const skill = n("skill");
+    const ch = getActive().char;
+    const own = ch && ch.vocation === voc ? ch : null;
+    const level = n("level") ?? own?.level ?? null;
+    const ml = n("ml") ?? (own?.magic_level || null);
+    const skill = n("skill") ?? (own?.skill || null);
     const atk = n("atk");
-    if (level || ml || skill || atk)
-      setInp((p) => ({
-        ...p,
-        level: level ?? p.level,
-        magicLevel: ml ?? p.magicLevel,
-        skill: skill ?? p.skill,
-        ...(atk ? { atkPhysical: atk, atkElemental: 0 } : {}),
-      }));
-  }, []);
+    const targets = n("targets");
+    const stance = u.get("stance");
+    setInp((p) => ({
+      ...p,
+      level: level ?? p.level,
+      magicLevel: ml ?? p.magicLevel,
+      skill: skill ?? p.skill,
+      ...(atk ? { atkPhysical: atk, atkElemental: 0 } : {}),
+      ...(targets ? { targets } : {}),
+      ...(stance && v.stances.some((s) => s.name === stance) ? { stance } : {}),
+    }));
+    const h = u.get("hunt");
+    if (h && HUNTS.some((x) => x.id === h)) setHuntId(h);
+  }, [voc, v]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const hunt = HUNTS.find((h) => h.id === huntId) ?? null;
@@ -285,6 +295,33 @@ export default function VocSimulator({ voc }: { voc: VocId }) {
             zerar
           </button>
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3 items-center">
+        <button
+          type="button"
+          className="tc-btn"
+          onClick={async () => {
+            const p = new URLSearchParams({ voc, level: String(inp.level), ml: String(inp.magicLevel), targets: String(inp.targets), stance: inp.stance });
+            if (skillBased) p.set("skill", String(inp.skill));
+            if (huntId) p.set("hunt", huntId);
+            const url = `${window.location.origin}/simulador?${p.toString()}`;
+            try {
+              await navigator.clipboard.writeText(url);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            } catch {
+              window.prompt("Copie o link:", url);
+            }
+          }}
+        >
+          {copied ? "Link copiado" : "Copiar link da simulação"}
+        </button>
+        {huntId && (
+          <a className="tc-btn" href={`/hunts/preparar?h=${huntId}&voc=${voc}`}>
+            Preparar para esta hunt
+          </a>
+        )}
       </div>
 
       <ul className="list-disc pl-5 text-[11px] muted space-y-0.5">

@@ -16,7 +16,7 @@ export default function WheelPage() {
         <WheelOfDestiny />
       </Box>
       <p className="on-dark text-[11px]">
-        Prefere ajustar só os efeitos no dano do sorcerer, sem montar a roda? Use o <Link href="/planejador/wheel/efeitos">planejador simplificado</Link>.
+        Prefere ajustar só os efeitos no dano do sorcerer, sem montar a roda? Isso fica no próprio <Link href="/simulador?voc=sorcerer">simulador de dano</Link>, em &quot;ajustar aqui&quot;.
       </p>
     </div>
   );

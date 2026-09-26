@@ -105,7 +105,7 @@ export default async function CharPage({ params, searchParams }: { params: Promi
       <div className="flex flex-wrap gap-3 mb-4">
         {c.vocation === "sorcerer" ? (
           <>
-            <a className="tc-btn" href={`/simulador?level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
+            <a className="tc-btn" href={`/simulador?voc=sorcerer&level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
               Usar este char no simulador de dano
             </a>
             <a className="tc-btn" href={`/simulador/set?voc=sorcerer&level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
@@ -113,7 +113,7 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             </a>
           </>
         ) : c.vocation !== "monk" ? (
-          <a className="tc-btn" href={`/vocacoes/${c.vocation}?level=${c.level}&ml=${c.magic_level}&skill=${c.skill ?? 0}&atk=${c.weapon_attack ?? 0}`}>
+          <a className="tc-btn" href={`/simulador?voc=${c.vocation}&level=${c.level}&ml=${c.magic_level}&skill=${c.skill ?? 0}&atk=${c.weapon_attack ?? 0}`}>
             Usar este char no simulador de dano
           </a>
         ) : null}

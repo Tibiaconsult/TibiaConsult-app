@@ -232,7 +232,7 @@ export const HIGH_HUNTS: Hunt[] = [
     floors: ["Área: Roaming Dread, Cyclursus, Crypt Mage."],
     creatures: [
       { ...c("Roaming Dread", 14500, 10350, 4.39, [100, 118, 100, 109, 109, 109, 109], "A TibiaWiki ainda não lista."), weight: 1 },
-      { ...c("Cyclursus", 13500, 11775, 5.12, [100, 112, 103, 103, 103, 103, 103], "A TibiaWiki ainda não lista."), weight: 1 },
+      { ...c("Cyclursus", 13500, 11775, 5.12, [100, 112, 103, 103, 103, 103, 103], "Reduz a skill se houver mais de um jogador perto. A TibiaWiki ainda não lista os ataques."), weight: 1 },
       { ...c("Crypt Mage", 14000, 14200, 4.87, [100, 109, 100, 100, 100, 100, 100], "A TibiaWiki ainda não lista."), weight: 1 },
     ],
     element: "DEATH: 109 a 118% nos bichos. Fogo: 100 a 109%. Energia: 100 a 109%.",
@@ -248,7 +248,7 @@ export const HIGH_HUNTS: Hunt[] = [
     creatures: [
       { ...c("Crypt Fiend", 30000, 19070, 4.39, [106, 100, 103, 91, 109, 85, 112], "A TibiaWiki ainda não lista."), weight: 1 },
       { ...c("Creepy Crawler", 27000, 22380, 6.6, [94, 97, 106, 94, 112, 88, 112], "Feared Fear (2 seconds)."), weight: 1 },
-      { ...c("Crypt Construct", 25000, 19730, 5.36, [106, 92, 92, 88, 106, 82, 109], "A TibiaWiki ainda não lista."), weight: 1 },
+      { ...c("Crypt Construct", 25000, 19730, 5.36, [106, 92, 92, 88, 106, 82, 109], "Cura em área de 10.000 a 13.250 em si mesmo (incomum). A TibiaWiki ainda não lista os ataques."), weight: 1 },
     ],
     element: "FOGO: 106 a 112% nos bichos. Energia: 82 a 88%. Death: 92 a 100%. O elemento que mais entra é terra (109 a 112%), bom para charm e para outras vocações.",
     set: SET_FOGO,

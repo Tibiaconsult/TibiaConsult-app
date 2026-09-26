@@ -14,6 +14,14 @@ export default function HuntSheet({ h }: { h: Hunt }) {
   const rec = HUNT_RECS[h.id];
   return (
     <div>
+      <div className="flex flex-wrap gap-2 mb-3">
+        <Link className="tc-btn" href={`/hunts/preparar?h=${h.id}`}>
+          Preparar para esta hunt
+        </Link>
+        <Link className="tc-btn" href={`/simulador?hunt=${h.id}`}>
+          Simular o dano nesta hunt
+        </Link>
+      </div>
       <p>{h.access}</p>
       <ul className="list-disc pl-5 mt-2">
         {h.floors.map((f) => (
@@ -98,8 +106,7 @@ export default function HuntSheet({ h }: { h: Hunt }) {
           </ul>
           {h.warning && <p className="warn mt-3">{h.warning}</p>}
           <p className="mt-3 text-[12px]">
-            <Link href={`/simulador?hunt=${h.id}`}>Simular o dano de sorcerer nesta hunt</Link> · para druid, knight e paladin, escolha a hunt no
-            simulador da <Link href="/vocacoes">vocação</Link>.
+            <Link href={`/hunts/preparar?h=${h.id}`}>Preparar para esta hunt</Link>: set, imbuements, combo e charm já montados para a sua vocação.
           </p>
         </div>
       </div>

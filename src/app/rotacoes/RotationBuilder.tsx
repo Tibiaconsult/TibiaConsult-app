@@ -1,6 +1,8 @@
 "use client";
 
 import SaveToChar from "@/components/SaveToChar";
+import ComboPlayer from "@/components/ComboPlayer";
+import { spellIcon } from "@/lib/icons";
 import { useEffect, useMemo, useState } from "react";
 import { SPELLS, spellById, ELEMENT_LABEL, Element } from "@/data/spells";
 import {
@@ -151,7 +153,7 @@ export default function RotationBuilder() {
           Ver cooldowns
         </a>
         <SaveToChar voc="sorcerer" field="combo_code" value={`combo=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? ""}`} what="a rotação" />
-        <a className="tc-btn" href={`/simulador?rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
+        <a className="tc-btn" href={`/simulador?voc=sorcerer&rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
           Calcular o dano desta rotação
         </a>
       </div>
@@ -165,6 +167,11 @@ export default function RotationBuilder() {
           ))}
         </ul>
       )}
+
+      <div>
+        <div className="font-bold mb-1">Ver a rotação animada</div>
+        <ComboPlayer steps={steps.map((s) => ({ t: s.t, id: s.spellId, name: spellById(s.spellId)?.name ?? s.spellId, icon: spellIcon(s.spellId) }))} />
+      </div>
     </div>
   );
 }

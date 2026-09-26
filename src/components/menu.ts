@@ -64,7 +64,10 @@ export const MENU: MenuGroup[] = [
     icon: "charactertrade",
     items: [
       { href: "/hunts", label: "Hunts", keywords: "fichas de hunt respawn cacar party" },
+      { href: "/hunts/preparar", label: "Preparar para a hunt", keywords: "preparar set imbuements combo charm sair para cacar" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker", keywords: "bestiario charm criaturas" },
+      { href: "/ferramentas/charms", label: "Charms", keywords: "charm planner pontos echoes zap enflame low blow dodge" },
+      { href: "/ferramentas/bosstiary", label: "Bosstiary Tracker", keywords: "boss bosses bosstiary boss points loot slot prowess mastery" },
       { href: "/ferramentas/imbuements", label: "Imbuements", keywords: "imbuir materiais lista de compras" },
       { href: "/ferramentas/loot", label: "Divisão de loot", keywords: "party hunt analyser split transferencia" },
     ],
@@ -74,7 +77,7 @@ export const MENU: MenuGroup[] = [
     label: "Calcular",
     icon: "gameguides",
     items: [
-      { href: "/simulador", label: "Dano e DPS (sorcerer)", keywords: "simulador dano dps" },
+      { href: "/simulador", label: "Dano e DPS", keywords: "simulador dano dps rotacao calibrar druid knight paladin sorcerer" },
       { href: "/simulador/forja", label: "Forja", keywords: "tier fusao convergencia exaltation" },
       { href: "/simulador/gemas", label: "Gemas: custo", keywords: "sage gem grade fragmentos" },
       { href: "/simulador/mana", label: "Magic Shield e mana", keywords: "utamo sustain potion" },

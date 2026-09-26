@@ -1,6 +1,7 @@
 "use client";
 
 import SaveToChar from "@/components/SaveToChar";
+import ComboPlayer from "@/components/ComboPlayer";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL } from "@/data/spells";
@@ -201,7 +202,7 @@ export default function ComboBuilder({ voc }: { voc: VocId }) {
           Ver cooldowns de {v.promoted}
         </Link>
         {voc !== "monk" && (
-          <Link className="tc-btn" href={`/vocacoes/${voc}#simulador`}>
+          <Link className="tc-btn" href={`/simulador?voc=${voc}`}>
             Simular o dano de {v.promoted}
           </Link>
         )}
@@ -221,6 +222,12 @@ export default function ComboBuilder({ voc }: { voc: VocId }) {
             ))}
           </ul>
         ))}
+      {steps.length > 0 && (
+        <div>
+          <div className="font-bold mb-1">Ver o combo animado</div>
+          <ComboPlayer steps={steps.map((s) => ({ t: s.t, id: s.spellId, name: byId(s.spellId)?.name ?? s.spellId, icon: byId(s.spellId) ? icon(byId(s.spellId)!.icon) : null }))} />
+        </div>
+      )}
       <p className="muted text-[10px]">
         Regras: trava do grupo de ataque de cada magia (2 s na maioria), cooldown próprio de cada magia e grupo secundário. &quot;Encaixar nos
         cooldowns&quot; mantém a ordem e põe cada magia no primeiro segundo livre. Cooldowns e grupos: TibiaWiki, consulta em 26/09/2026.
