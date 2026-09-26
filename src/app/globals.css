@@ -828,7 +828,7 @@ p.on-dark {
     z-index: 45;
     background: rgba(5, 17, 34, 0.97);
     border-top: 2px solid #7a5a12;
-    padding: 4px 2px calc(4px + env(safe-area-inset-bottom));
+    padding: 4px max(2px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(2px, env(safe-area-inset-left));
   }
   .tc-mobilenav a {
     display: flex;
@@ -843,11 +843,23 @@ p.on-dark {
     color: #ffd700;
   }
   body {
-    padding-bottom: 64px;
+    /* altura da barra de baixo + tracinho do iPhone + folga para o fim da página não ficar escondido */
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
   .tc-feedback-fab {
-    bottom: 72px;
+    bottom: calc(76px + env(safe-area-inset-bottom));
     padding: 5px 9px;
     font-size: 11px;
+  }
+}
+
+/* iPhone: respeita o notch em cima e as laterais em paisagem (viewport-fit=cover) */
+@media (max-width: 760px) {
+  .tc-sidebar {
+    padding-top: calc(6px + env(safe-area-inset-top));
+  }
+  .tc-page {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
   }
 }

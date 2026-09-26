@@ -21,6 +21,8 @@ export const viewport: Viewport = {
   themeColor: "#0d3b1c",
   width: "device-width",
   initialScale: 1,
+  // ocupa a tela toda no iPhone; as margens do notch e do tracinho entram pelo env(safe-area-inset-*) no CSS
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
