@@ -10,6 +10,11 @@ import { WOD_BASIC, WOD_LARGE, WOD_MEDIUM, WOD_SMALL, formatGem, formatPerk, sho
 import { WOD_PRESETS } from "@/data/wod-presets";
 import { WheelConfig, encodeWheel } from "@/lib/wheel";
 import WodCanvas, { Pick, Q } from "./WodCanvas";
+import GemEditor from "./GemEditor";
+import { GEM_ITEM } from "@/data/gem-data";
+import { WodIcon } from "@/components/WodIcons";
+import { wikiImage } from "@/lib/md5";
+import type { WodVocId } from "@/data/wod-vocs";
 import { Voc as ActiveVoc, getActive, setActiveVoc, useActive } from "@/lib/active";
 
 const VOC_PT: Record<WodVoc, string> = { Knight: "Knight", Paladin: "Paladin", Sorcerer: "Sorcerer", Druid: "Druid", Monk: "Monk" };
@@ -56,9 +61,9 @@ interface State {
 }
 
 /** Caixa no estilo das caixas "Selection" e "Information" do planner oficial. */
-function WodBox({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
+function WodBox({ title, children, className = "", id }: { title: string; children: ReactNode; className?: string; id?: string }) {
   return (
-    <div className={`border-2 border-[#5f4d41] rounded-[3px] bg-[#f1e0c6] shadow-[0_2px_4px_rgba(0,0,0,.35)] ${className}`}>
+    <div id={id} className={`border-2 border-[#5f4d41] rounded-[3px] bg-[#f1e0c6] shadow-[0_2px_4px_rgba(0,0,0,.35)] ${className}`}>
       <div className="bg-gradient-to-b from-[#6f5b4d] to-[#4e3d31] text-white font-bold text-[12px] px-2 py-1 border-b-2 border-[#3b2d23]">{title}</div>
       <div className="p-2 text-[12px] text-[#3a2a1a]">{children}</div>
     </div>
@@ -320,44 +325,17 @@ export default function WheelOfDestiny() {
   const officialUrl = `https://www.tibia.com/community/?subtopic=wheelofdestinyplanner&code=${st.code}`;
   const cornerOf = (q: Q) => st.corners.find((c) => QUARTERS[c.id] === q);
 
-  const gemEditor = (c: any) => {
-    const q = QUARTERS[c.id];
-    const vl = c.vesselLevel;
-    if (vl === 0) return <p className="muted">Sem Vessel Resonance: encha as fatias de Vessel Resonance deste domínio para liberar a gema.</p>;
-    return (
-      <div className="space-y-1 mt-1">
-        <select className="w-full" value={c.keyBasicMod1} onChange={(e) => modChange(1, Number(e.target.value), q)}>
-          <option value={-1}>mod básico 1: nenhum</option>
-          {st.basic1.map((m: any) => (
-            <option key={m.id} value={m.id}>
-              {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
-            </option>
-          ))}
-        </select>
-        {vl >= 2 && c.keyBasicMod1 >= 0 && (
-          <select className="w-full" value={c.keyBasicMod2} onChange={(e) => modChange(2, Number(e.target.value), q)}>
-            <option value={-1}>mod básico 2: nenhum</option>
-            {st.basic2.map((m: any) => (
-              <option key={m.id} value={m.id}>
-                {m.effects.map((e: any) => `${WOD_BASIC[e.id]?.[0]} ${formatGem(WOD_BASIC[e.id]?.[1] ?? "", e.value)}`).join(" / ")}
-              </option>
-            ))}
-          </select>
-        )}
-        {vl >= 3 && c.keyBasicMod2 >= 0 && (
-          <select className="w-full" value={c.keySupremeMod} onChange={(e) => modChange(3, Number(e.target.value), q)}>
-            <option value={-1}>mod supremo: nenhum</option>
-            {st.supremeAvail.map((id) => (
-              <option key={id} value={id}>
-                {shortName(supremeName(id))}: {supremeEffect(id)}
-              </option>
-            ))}
-          </select>
-        )}
-        {c.hasGem && <p className="muted text-[11px]">Bônus do vessel: +{c.vesselDamageHealingBonus} de dano e cura.</p>}
-      </div>
-    );
-  };
+  const gemEditor = (c: any) => (
+    <GemEditor
+      key={`${st.voc}-${c.id}`}
+      c={c}
+      voc={st.voc.toLowerCase() as WodVocId}
+      basic1={st.basic1}
+      basic2={st.basic2}
+      supremeAvail={st.supremeAvail}
+      modChange={(pos, value) => modChange(pos, value, QUARTERS[c.id])}
+    />
+  );
 
   /** Conteúdo das caixas Seleção e Informação, como no planner oficial. */
   const detail = (p: Pick, full: boolean) => {
@@ -436,8 +414,8 @@ export default function WheelOfDestiny() {
     }
     return (
       <div className="space-y-1">
-        <div className="font-bold">Gema · Vessel Resonance {ROMAN[c.vesselLevel] ?? c.vesselLevel}</div>
-        {full ? gemEditor(c) : <div className="muted">{c.hasGem ? "Gema encaixada. Clique para trocar os mods." : "Clique para escolher os mods da gema."}</div>}
+        <div className="font-bold">Gema do vessel · Vessel Resonance {c.vesselLevel ? ROMAN[c.vesselLevel] : "nenhum"}</div>
+        {full ? gemEditor(c) : <div className="muted">{c.hasGem ? "Gema encaixada. Clique no encaixe para trocar." : "Clique no encaixe para escolher a gema."}</div>}
       </div>
     );
   };
@@ -471,7 +449,7 @@ export default function WheelOfDestiny() {
       <div className="rounded-[4px] border-2 border-[#5f4d41] bg-[#d4c0a1] p-1 sm:p-3 -mx-2 sm:mx-0">
         <div className="grid gap-3 lg:grid-cols-[230px_minmax(0,522px)] 2xl:grid-cols-[230px_522px_minmax(0,1fr)] items-start justify-center">
           <div className="space-y-3 order-2 lg:order-1">
-            <WodBox title="Seleção" className="lg:min-h-[170px]">
+            <WodBox title="Seleção" className="lg:min-h-[170px]" id="wod-selecao">
               {detail(pick, true) ?? <span className="muted">Selecione uma fatia...</span>}
             </WodBox>
             <WodBox title="Informação" className="hidden lg:block min-h-[170px]">
@@ -564,15 +542,38 @@ export default function WheelOfDestiny() {
 
       <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
         <div className="font-bold text-[#3a1a00] mb-2">Gemas nos vessels</div>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {st.corners.map((c) => {
             const q = QUARTERS[c.id];
+            const n = (c.keyBasicMod1 >= 0 ? 1 : 0) + (c.keyBasicMod2 >= 0 ? 1 : 0) + (c.keySupremeMod >= 0 ? 1 : 0);
+            const gemName = n ? `${["Lesser ", "", "Greater "][n - 1]}${GEM_ITEM[st.voc.toLowerCase() as WodVocId]} Gem` : null;
             return (
-              <div key={q} className="text-[12px]">
+              <div key={q} className="text-[12px] border rounded p-2 bg-white/50" style={{ borderColor: QUARTER_COLOR[q] }}>
                 <div className="font-bold" style={{ color: QUARTER_COLOR[q] }}>
-                  {Q_PT[q]} · Vessel Resonance {ROMAN[c.vesselLevel] ?? c.vesselLevel}
+                  {Q_PT[q]}
                 </div>
-                {gemEditor(c)}
+                <div className="muted text-[11px]">Vessel Resonance {c.vesselLevel ? ROMAN[c.vesselLevel] : "nenhum"}</div>
+                <div className="flex items-center gap-1 my-1 min-h-[34px]">
+                  {gemName ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={wikiImage(gemName)} alt={gemName} title={gemName} width={32} height={32} style={{ imageRendering: "pixelated" }} />
+                  ) : (
+                    <span className="muted text-[11px]">sem gema</span>
+                  )}
+                  {c.keyBasicMod1 >= 0 && <WodIcon sheet="basic" index={c.keyBasicMod1} size={26} />}
+                  {c.keyBasicMod2 >= 0 && <WodIcon sheet="basic" index={c.keyBasicMod2} size={26} />}
+                  {c.keySupremeMod >= 0 && <WodIcon sheet="supreme" index={c.keySupremeMod} size={26} title={supremeName(c.keySupremeMod)} />}
+                </div>
+                <button
+                  type="button"
+                  className="tc-btn !py-0.5"
+                  onClick={() => {
+                    setPick({ kind: "socket", q: q as Q });
+                    document.getElementById("wod-selecao")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }}
+                >
+                  {gemName ? "trocar a gema" : "encaixar gema"}
+                </button>
               </div>
             );
           })}

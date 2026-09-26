@@ -4,7 +4,7 @@ import VocTabs from "@/components/VocTabs";
 import { ALL_VOCS } from "@/components/voc-list";
 import { WodIcon } from "@/components/WodIcons";
 import { GEM_BUILDS, GEM_RULES } from "@/data/gems";
-import { BASIC_MODS, GEM_ITEM, GEM_RECS, GEM_TIERS, GRADE_MULT, GemRec } from "@/data/gem-data";
+import { basicModsFor, GEM_ITEM, GEM_RECS, GEM_TIERS, GRADE_MULT, GemRec } from "@/data/gem-data";
 import { WOD_BASIC, WOD_LARGE, formatGem, supremeEffect, supremeName } from "@/data/wod-strings";
 import { WOD_DOMAINS, WOD_SUPREME } from "@/data/wod-vocs";
 import { pageVoc } from "@/lib/active-server";
@@ -40,6 +40,7 @@ export default async function GemasPage({ searchParams }: { searchParams: Promis
   const domains = WOD_DOMAINS[voc];
   const supIds = WOD_SUPREME[voc];
   const recs = GEM_RECS[voc];
+  const BASIC_MODS = basicModsFor(voc);
   const recSup = (r: GemRec) => supIds.filter((id) => r.supreme?.(supremeName(id), supremeEffect(id, 0)));
   const wheelVoc = voc[0].toUpperCase() + voc.slice(1);
 
@@ -220,7 +221,7 @@ export default async function GemasPage({ searchParams }: { searchParams: Promis
         <p className="muted text-[10px] mt-1">Lista, ícones e valores do planner oficial do tibia.com. Nos mods de cooldown, subir o grau só soma Momentum.</p>
       </Box>
 
-      <Box title="Mods básicos (iguais para as cinco vocações)">
+      <Box title={`Mods básicos de ${label}`}>
         <div className="overflow-x-auto">
           <table>
             <thead>
@@ -254,7 +255,7 @@ export default async function GemasPage({ searchParams }: { searchParams: Promis
         </div>
         <p className="muted text-[10px] mt-1">
           Encaixe 1 aceita vida, mana, capacidade (puros ou com uma resistência), resistência elemental e Mitigation; o encaixe 2 só resistências.
-          Valores do grau IV lidos do motor oficial; graus I a III pela proporção oficial (grau IV = +50% sobre o I). Penalidades não mudam com o grau.
+          A lista é a mesma para as cinco vocações; vida, mana e capacidade mudam por vocação. Valores do grau IV lidos do motor oficial; graus I a III pela proporção oficial (grau IV = +50% sobre o I). Penalidades não mudam com o grau.
         </p>
       </Box>
 

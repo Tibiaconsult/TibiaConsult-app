@@ -8,6 +8,7 @@ import { WHEEL_MILESTONES } from "@/data/wheel-milestones";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { VOCATIONS } from "../meus-chars/vocations";
 import UseCharButton from "./UseCharButton";
+import LogoutButton from "@/components/LogoutButton";
 
 export const metadata = { title: "Minha área" };
 export const dynamic = "force-dynamic";
@@ -48,9 +49,7 @@ export default async function MinhaAreaPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1>Minha área</h1>
-        <form action="/auth/sair" method="post">
-          <button className="tc-btn">sair ({user.email})</button>
-        </form>
+        <LogoutButton className="tc-btn" label={`sair (${user.email})`} />
       </div>
       <p className="on-dark mb-4">
         Tudo aqui é só seu: nenhuma outra conta vê seus chars, seu bestiário ou suas sugestões. O resto do site continua aberto para explorar

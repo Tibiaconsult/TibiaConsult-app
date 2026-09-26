@@ -1,5 +1,6 @@
 // Gemas da Wheel of Destiny: itens por vocação (TibiaWiki, página Gem), mods básicos com posição e valor do grau IV
-// (motor oficial do planner do tibia.com, getAvailableBasicModsPos1/Pos2, lido em 26/09/2026; iguais para as cinco vocações)
+// (motor oficial do planner do tibia.com, getAvailableBasicModsPos1/Pos2, lido em 26/09/2026). A lista é a mesma para as cinco
+// vocações; os valores de vida, mana e capacidade mudam por vocação (VOC_POOL abaixo). Os valores de P1/P2 são os do sorcerer.
 // e recomendações do TibiaPal (tibiapal.com/wheels, consulta em 26/09/2026).
 
 import type { WodVocId } from "./wod-vocs";
@@ -50,6 +51,24 @@ export const BASIC_MODS: BasicMod[] = (() => {
   }
   return [...map.values()];
 })();
+
+/** Valor no grau IV de vida (10), mana (11) e capacidade (12) por vocação: [mod puro, mod combinado com resistência]. */
+const VOC_POOL: Record<WodVocId, Record<number, [number, number]>> = {
+  sorcerer: { 10: [150, 75], 11: [900, 450], 12: [300, 150] },
+  druid: { 10: [150, 75], 11: [900, 450], 12: [300, 150] },
+  knight: { 10: [450, 225], 11: [150, 75], 12: [750, 375] },
+  paladin: { 10: [300, 150], 11: [450, 225], 12: [600, 300] },
+  monk: { 10: [300, 150], 11: [300, 150], 12: [700, 375] },
+};
+
+/** Mods básicos com os valores da vocação. */
+export function basicModsFor(voc: WodVocId): BasicMod[] {
+  const pool = VOC_POOL[voc];
+  return BASIC_MODS.map((m) => ({
+    ...m,
+    effects: m.effects.map(([id, v]): [number, number] => (pool[id] ? [id, m.effects.length > 1 ? pool[id][1] : pool[id][0]] : [id, v])),
+  }));
+}
 
 export interface GemRec {
   label: string;

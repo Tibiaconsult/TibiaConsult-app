@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { safeNext } from "@/lib/safe-next";
 import Box from "@/components/Box";
 import { hasSupabaseEnv } from "@/lib/supabase/server";
 import LoginForm from "./LoginForm";
@@ -7,10 +8,10 @@ export const metadata = { title: "Entrar" };
 
 export default async function EntrarPage({ searchParams }: { searchParams: Promise<{ erro?: string; next?: string }> }) {
   const { erro, next } = await searchParams;
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/minha-area";
+  const nextPath = safeNext(next, "/minha-area");
   return (
     <div className="max-w-3xl">
-      <h1>Account Login</h1>
+      <h1>Entrar na conta</h1>
       <div className="grid gap-4 md:grid-cols-[1fr_260px]">
         <Box title="Entrar no TibiaConsult">
           {!hasSupabaseEnv() ? (
@@ -18,7 +19,7 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
           ) : (
             <>
               {erro === "link" && <p className="bad mb-3">O link não pôde ser validado. Peça um novo e abra o e-mail neste mesmo navegador.</p>}
-              <LoginForm next={safeNext} />
+              <LoginForm next={nextPath} />
             </>
           )}
         </Box>

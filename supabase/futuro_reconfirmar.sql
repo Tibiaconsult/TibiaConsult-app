@@ -7,3 +7,8 @@ update auth.users u
  where u.created_at >= '2026-09-26 19:07:00+00'
    and u.email_confirmed_at is not null
    and not exists (select 1 from public.admins a where a.user_id = u.id);
+
+-- Ao religar a verificação do char por código (desligada em 009 e fechada em 011):
+-- grant execute on function public.start_verify(uuid) to authenticated;
+-- grant execute on function public.check_verify(uuid) to authenticated;
+-- e recolocar startVerify/checkVerify em src/app/meus-chars/actions.ts (histórico do git, commit 8440cb3).

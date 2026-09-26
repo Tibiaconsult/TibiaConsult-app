@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import LogoutButton from "./LogoutButton";
 
 export default function LoginBox() {
   const [email, setEmail] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export default function LoginBox() {
           <div className="tc-login-muted" title={email}>
             {email}
           </div>
+          <LogoutButton className="tc-login-muted underline hover:text-[#ffd700] cursor-pointer" label="sair da conta" />
         </>
       ) : (
         <>
