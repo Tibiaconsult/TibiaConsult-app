@@ -117,7 +117,7 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             Usar este char no simulador de dano
           </a>
         ) : null}
-        <a className="tc-btn" href={`/planejador/wheel?level=${c.level}`}>
+        <a className="tc-btn" href={`/planejador/wheel?level=${c.level}&voc=${c.vocation.charAt(0).toUpperCase() + c.vocation.slice(1)}${c.wheel_code && /^[KPSDM][A-Za-z0-9_-]{8,}$/.test(c.wheel_code) ? `&code=${c.wheel_code}` : ""}`}>
           Planejar a Wheel
         </a>
       </div>

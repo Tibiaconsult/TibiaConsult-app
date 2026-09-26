@@ -364,7 +364,7 @@ export default function DamageSimulator() {
               flat +{wfx.flatBonus} · LoD {wfx.lordOfDestruction} · Beam Mastery {wfx.beamMastery} · Focus a cada {focusCd} s
             </div>
           )}
-          <a className="text-[11px] font-bold" href={`/planejador/wheel?wheel=${encodeWheel(wheel)}`}>
+          <a className="text-[11px] font-bold" href={`/planejador/wheel/efeitos?wheel=${encodeWheel(wheel)}`}>
             editar no planejador
           </a>
         </div>
