@@ -26,30 +26,19 @@ export default function LoginForm() {
   }
 
   if (status === "sent") {
-    return <div className="card text-sm text-green-300">Link enviado. Abra o e-mail e clique para entrar.</div>;
+    return <p className="good">Link enviado. Abra o e-mail (olhe também o lixo eletrônico) e clique para entrar.</p>;
   }
 
   return (
-    <form onSubmit={submit} className="card space-y-3">
-      <label className="block text-sm text-zinc-300">
+    <form onSubmit={submit} className="space-y-3">
+      <label className="block">
         E-mail
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded bg-zinc-800 px-3 py-2"
-          placeholder="voce@exemplo.com"
-        />
+        <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full" placeholder="voce@exemplo.com" />
       </label>
-      <button
-        type="submit"
-        disabled={status === "sending"}
-        className="rounded bg-amber-500/20 text-amber-200 px-4 py-2 hover:bg-amber-500/30 disabled:opacity-50"
-      >
+      <button type="submit" disabled={status === "sending"} className="tc-btn disabled:opacity-50">
         {status === "sending" ? "Enviando..." : "Receber link de acesso"}
       </button>
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="bad">{error}</p>}
     </form>
   );
 }

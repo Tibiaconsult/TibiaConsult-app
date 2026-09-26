@@ -1,45 +1,299 @@
 @import "tailwindcss";
 
+/* Tema inspirado no tibia.com: fundo azul-escuro com artwork, caixas de pergaminho,
+   bordas marrons, barras de título verdes com letra dourada e botões azuis.
+   Texturas hotlinkadas de static.tibia.com com fallback em cor sólida. */
+
 :root {
-  --background: #0b0b0f;
-  --foreground: #e7e5e4;
+  --bg: #051122;
+  --parchment: #fff2db;
+  --parchment-dark: #debb9d;
+  --border-brown: #793d03;
+  --border-dark: #5a2800;
+  --ink: #5a2800;
+  --ink-strong: #3a1a00;
+  --gold: #f6d372;
+  --green-dark: #0f3a1e;
+  --green: #1b5a2d;
+  --blue: #1a3f8f;
+  --red: #8b1a1a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --font-title: var(--font-medieval), "Times New Roman", serif;
+}
+
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--ink);
+  font-family: Verdana, Arial, "Times New Roman", sans-serif;
+  font-size: 13px;
+  background:
+    url("https://static.tibia.com/images/global/header/background-artwork.webp") center top / 1600px auto no-repeat,
+    var(--bg);
+  min-height: 100vh;
+}
+
+/* Cabeçalho */
+.tc-header {
+  background: linear-gradient(#0d3b1c, #0a2c15);
+  border-bottom: 3px solid #7a5a12;
+  box-shadow: inset 0 -2px 0 #2c7a3b, 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.tc-logo {
+  font-family: var(--font-title);
+  font-size: 30px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  text-shadow: 0 2px 0 #4a2e00, 0 0 12px rgba(246, 211, 114, 0.35);
+}
+
+.tc-menu a {
+  display: inline-block;
+  padding: 5px 12px;
+  font: bold 12px Arial, sans-serif;
+  color: #ffe9a8;
+  text-decoration: none;
+  border: 1px solid #7a5a12;
+  border-radius: 3px;
+  background: linear-gradient(#2b6a3a, #133f22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.tc-menu a:hover {
+  background: linear-gradient(#3b8a4c, #1a552d);
+  color: #fff6d0;
+}
+
+/* Barra de título estilo tibia.com */
+.tc-title {
+  font-family: var(--font-title);
+  color: var(--gold);
+  font-size: 22px;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  background:
+    url("https://static.tibia.com/images/global/content/title-background-green.gif") repeat-x left top,
+    linear-gradient(#1f6b33, #0f3a1e);
+  border: 2px solid #4a2e00;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  text-shadow: 0 2px 0 #1a0f00;
+}
+
+/* Caixa de pergaminho */
+.tc-box {
+  background:
+    url("https://static.tibia.com/images/global/content/scroll.gif") repeat,
+    var(--parchment);
+  border: 2px solid var(--border-brown);
+  box-shadow: inset 0 0 0 1px #c9a071, 0 3px 8px rgba(0, 0, 0, 0.6);
+  border-radius: 0 0 6px 6px;
+  padding: 14px 16px;
+  color: var(--ink);
+}
+
+.tc-box + .tc-title,
+.tc-panel + .tc-panel {
+  margin-top: 18px;
+}
+
+.tc-panel {
+  margin-bottom: 18px;
 }
 
 h1 {
-  @apply text-2xl font-semibold text-amber-200 mb-4;
+  font-family: var(--font-title);
+  color: var(--gold);
+  font-size: 30px;
+  margin: 4px 0 14px;
+  text-shadow: 0 2px 0 #1a0f00, 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
 h2 {
-  @apply text-lg font-semibold text-amber-100 mt-8 mb-3;
+  font-family: var(--font-title);
+  color: var(--ink-strong);
+  font-size: 19px;
+  margin: 18px 0 8px;
+  border-bottom: 1px solid #b98a5a;
+  padding-bottom: 3px;
+}
+
+.tc-box h2:first-child,
+.tc-box > h2.mt-0 {
+  margin-top: 0;
+}
+
+p,
+li {
+  line-height: 1.45;
+}
+
+a {
+  color: #0b3d91;
 }
 
 table {
-  @apply w-full text-sm border-collapse;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
 }
 
 th {
-  @apply text-left text-zinc-400 font-medium border-b border-zinc-800 px-2 py-1;
+  text-align: left;
+  color: #fff2db;
+  background: linear-gradient(#5a2800, #3a1a00);
+  border: 1px solid #3a1a00;
+  padding: 4px 6px;
+  font-weight: bold;
 }
 
 td {
-  @apply border-b border-zinc-900 px-2 py-1 align-top;
+  border: 1px solid #c9a071;
+  padding: 4px 6px;
+  vertical-align: top;
+  color: var(--ink);
 }
 
+tbody tr:nth-child(odd) td {
+  background: rgba(222, 187, 157, 0.35);
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Botões */
+.tc-btn,
+button.tc-btn,
+input[type="submit"].tc-btn {
+  display: inline-block;
+  padding: 5px 16px;
+  font: bold 12px Arial, sans-serif;
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid #0a1f4d;
+  border-radius: 3px;
+  background: linear-gradient(#3b6fd8, #1a3f8f);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 0 #0a1f4d;
+}
+
+.tc-btn:hover {
+  background: linear-gradient(#5386f0, #2a52b0);
+}
+
+.tc-btn-danger {
+  background: linear-gradient(#b23a3a, #7a1a1a);
+  border-color: #4a0a0a;
+}
+
+.tc-btn-danger:hover {
+  background: linear-gradient(#d04a4a, #9a2a2a);
+}
+
+input,
+select,
+textarea {
+  background: #fffaf0;
+  color: var(--ink-strong);
+  border: 1px solid #b98a5a;
+  border-radius: 3px;
+  padding: 5px 8px;
+  font: 12px Verdana, Arial, sans-serif;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #d9a93a;
+  outline-offset: 0;
+}
+
+label {
+  color: var(--ink);
+}
+
+/* Utilidades que as páginas já usam */
 .card {
-  @apply rounded-lg border border-zinc-800 bg-zinc-900/60 p-4;
+  background:
+    url("https://static.tibia.com/images/global/content/scroll.gif") repeat,
+    var(--parchment);
+  border: 2px solid var(--border-brown);
+  box-shadow: inset 0 0 0 1px #c9a071, 0 3px 8px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  padding: 14px 16px;
+  color: var(--ink);
 }
 
 .tag {
-  @apply inline-block rounded px-2 py-0.5 text-xs font-medium;
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.tag-fire {
+  background: #f2a24a;
+  color: #4a1a00;
+}
+.tag-energy {
+  background: #c9a2f0;
+  color: #2a0a4a;
+}
+.tag-death {
+  background: #6b6b6b;
+  color: #fff;
+}
+.tag-ice {
+  background: #a8d8f0;
+  color: #0a2a4a;
+}
+.tag-earth {
+  background: #a8d89a;
+  color: #0a3a0a;
+}
+.tag-physical {
+  background: #d0c4b0;
+  color: #3a2a1a;
+}
+.tag-holy {
+  background: #f6e28a;
+  color: #4a3a00;
+}
+
+.muted {
+  color: #8a5a2a;
+}
+
+.good {
+  color: #1a6b2d;
+  font-weight: bold;
+}
+
+.bad {
+  color: #a01a1a;
+  font-weight: bold;
+}
+
+.warn {
+  color: #a35a00;
+  font-weight: bold;
+}
+
+/* Texto claro sobre o fundo escuro (fora das caixas) */
+.on-dark {
+  color: #e8dcc0;
+}
+
+.on-dark a {
+  color: #f6d372;
 }
