@@ -43,8 +43,8 @@ export const MENU: MenuGroup[] = [
     icon: "library",
     items: [
       { href: "/cooldowns", label: "Cooldowns" },
-      { href: "/gemas", label: "Gemas do sorc" },
-      { href: "/equipamento", label: "Equipamento do sorc" },
+      { href: "/gemas", label: "Gemas" },
+      { href: "/equipamento", label: "Equipamento" },
       { href: "/hunts", label: "Hunts" },
     ],
   },

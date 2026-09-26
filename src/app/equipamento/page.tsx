@@ -1,12 +1,42 @@
 import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
 import WeaponUpgrades from "@/components/WeaponUpgrades";
+import VocTabs, { ALL_VOCS, parseVoc } from "@/components/VocTabs";
 import { IMBUEMENTS, SLOTS } from "@/data/equipment";
+import EquipmentBySlot from "../vocacoes/[voc]/EquipmentBySlot";
+import Link from "next/link";
 
-export default function EquipamentoPage() {
+export const metadata = { title: "Equipamento" };
+
+export default async function EquipamentoPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
+  const voc = parseVoc((await searchParams).voc);
+  if (voc !== "sorcerer") {
+    const label = ALL_VOCS.find(([id]) => id === voc)?.[1] ?? "";
+    return (
+      <div>
+        <h1>Equipamento por slot</h1>
+        <VocTabs base="/equipamento" current={voc} />
+        <Box title={`Itens de ${label}`}>
+          <p className="mb-3 text-[12px]">
+            <Link className="tc-btn !py-0.5" href={`/simulador/set?v=${voc}`}>
+              Montar set de {label}
+            </Link>{" "}
+            <Link className="tc-btn !py-0.5" href="/ferramentas/imbuements">
+              Imbuements e materiais
+            </Link>
+          </p>
+          <EquipmentBySlot voc={voc} />
+        </Box>
+        <Box title="Arma comum x Grand Sanguine e Stellar Moonsilver">
+          <WeaponUpgrades voc={voc} />
+        </Box>
+      </div>
+    );
+  }
   return (
     <div>
       <h1>Equipamento por slot</h1>
+      <VocTabs base="/equipamento" current={voc} />
       <p className="on-dark mb-4">
         Só itens com magic level que sorcerer usa. Classe 4 aceita tier até 10 na forja. Itens marcados com ★ são a escolha padrão para 800+.
       </p>
