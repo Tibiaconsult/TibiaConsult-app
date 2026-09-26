@@ -16,29 +16,37 @@ export interface DamageInputs {
   magicLevel: number;
   /** ML elemental extra (fire ML, energy ML, death ML) */
   elementalML: Partial<Record<Element, number>>;
-  /** stance ativa */
   stance: Element | null;
-  /** estágio do Lord of Destruction 0..3 */
   lordOfDestruction: 0 | 1 | 2 | 3;
-  /** bônus total de base damage por feitiço (wheel + gema + proficiência), em fração: 0.10 = +10% */
+  /** bônus de base damage por feitiço, em fração (0.10 = +10%) */
   basePowerBonus: Record<string, number>;
-  /** bônus de dano flat das revelations (+4/+9/+20 somados) */
+  /** dano flat somado (revelations +4/+9/+20, perks de proficiência) */
   flatBonus: number;
-  /** crit chance geral (fração) além dos 5% intrínsecos */
+  /** crit chance geral extra (fração), além dos 5% intrínsecos */
   critChance: number;
-  /** crit extra geral (fração) além dos 10% intrínsecos */
+  /** crit extra geral (fração), além dos 10% intrínsecos */
   critExtra: number;
-  /** elemental pierce (fração), ex.: 0.08 da Aura of Exposed Weakness */
+  /** crit chance extra por feitiço (fração) */
+  spellCritChance?: Record<string, number>;
+  /** crit extra por feitiço (fração) */
+  spellCritExtra?: Record<string, number>;
+  /** crit extra por elemento do feitiço (fração) */
+  elementCritExtra?: Partial<Record<Element, number>>;
+  /** crit chance por elemento do feitiço (fração) */
+  elementCritChance?: Partial<Record<Element, number>>;
+  /** elemental pierce geral (fração), ex.: 0,08 da Aura of Exposed Weakness */
   pierce: number;
+  /** pierce extra por elemento (fração), ex.: proficiência */
+  elementPierce?: Partial<Record<Element, number>>;
+  /** Onslaught: chance (fração) de +60% de dano */
+  onslaught?: number;
   /** multiplicador de calibração (1 = fórmula pura) */
   calibration: number;
 }
 
 export interface Target {
   name: string;
-  /** sensibilidade por elemento em fração: 1 = 100% */
   sensitivity: Record<Element, number>;
-  /** mitigação em fração, ex.: 0.0354 */
   mitigation: number;
 }
 
@@ -50,7 +58,6 @@ export interface DamageResult {
   min: number;
   max: number;
   avg: number;
-  /** média esperada já com crit, sensibilidade e mitigação */
   expected: number;
   sensitivity: number;
 }
@@ -58,37 +65,37 @@ export interface DamageResult {
 export function effectiveSensitivity(base: number, pierce: number): number {
   if (base <= 0) return 0;
   let inc = pierce;
-  if (base > 1) inc = Math.ceil(pierce * 100 / 2) / 100;
+  if (base > 1) inc = Math.ceil((pierce * 100) / 2) / 100;
   return Math.min(base * 2, base + inc);
 }
 
 export function computeDamage(spell: Spell, element: Element | null, inp: DamageInputs, target?: Target): DamageResult {
   const bp0 = spell.base ?? 0;
   let bpMult = 1 + (inp.basePowerBonus[spell.id] ?? 0);
-  // Stance: +4% base em feitiço natural de fogo; LoD soma +2/3/4%.
   if (inp.stance === "fire" && spell.element === "fire") bpMult += 0.04 + [0, 0.02, 0.03, 0.04][inp.lordOfDestruction];
   const bp = bp0 * bpMult;
 
-  const elementalML = element ? inp.elementalML[element] ?? 0 : 0;
+  const elementalML = element ? (inp.elementalML[element] ?? 0) : 0;
   const totalML = inp.magicLevel + elementalML;
   const avgRaw = (levelBonus(inp.level) + totalML * Math.sqrt(0.4 * bp) + bp / 6 + inp.flatBonus) * inp.calibration;
   const min = Math.floor(avgRaw * 0.88);
   const max = Math.floor(avgRaw * 1.12);
 
-  // Crit esperado
-  let critChance = 0.05 + inp.critChance;
-  let critExtra = 0.1 + inp.critExtra;
+  let critChance = 0.05 + inp.critChance + (inp.spellCritChance?.[spell.id] ?? 0) + (element ? (inp.elementCritChance?.[element] ?? 0) : 0);
+  let critExtra = 0.1 + inp.critExtra + (inp.spellCritExtra?.[spell.id] ?? 0) + (element ? (inp.elementCritExtra?.[element] ?? 0) : 0);
   if (inp.stance === "energy" && spell.element === "energy") critChance += 0.04 + [0, 0.02, 0.03, 0.04][inp.lordOfDestruction];
   if (inp.stance === "death" && spell.element === "death") critExtra += 0.3 + [0, 0.15, 0.255, 0.3][inp.lordOfDestruction];
   critChance = Math.min(1, critChance);
   const critMult = 1 + critChance * critExtra;
+  const onslaughtMult = 1 + (inp.onslaught ?? 0) * 0.6;
 
   let sens = 1;
   let mit = 0;
   if (target && element) {
-    sens = effectiveSensitivity(target.sensitivity[element] ?? 1, inp.pierce);
+    const pierce = inp.pierce + (inp.elementPierce?.[element] ?? 0);
+    sens = effectiveSensitivity(target.sensitivity[element] ?? 1, pierce);
     mit = target.mitigation;
   }
-  const expected = avgRaw * critMult * sens * (1 - mit);
+  const expected = avgRaw * critMult * onslaughtMult * sens * (1 - mit);
   return { element, totalML, basePower: bp, avgRaw, min, max, avg: Math.round(avgRaw), expected, sensitivity: sens };
 }

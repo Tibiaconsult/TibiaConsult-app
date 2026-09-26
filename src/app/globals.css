@@ -39,36 +39,362 @@ body {
   min-height: 100vh;
 }
 
-/* Cabeçalho */
-.tc-header {
-  background: linear-gradient(#0d3b1c, #0a2c15);
-  border-bottom: 3px solid #7a5a12;
-  box-shadow: inset 0 -2px 0 #2c7a3b, 0 4px 10px rgba(0, 0, 0, 0.6);
+/* ===== Layout em 3 colunas, como o tibia.com ===== */
+.tc-page {
+  display: grid;
+  grid-template-columns: 184px minmax(0, 1fr) 184px;
+  gap: 14px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 150px 12px 12px;
 }
 
-.tc-logo {
+.tc-content {
+  min-width: 0;
+}
+
+.tc-footer {
+  text-align: center;
+  font-size: 11px;
+  padding: 16px;
+  opacity: 0.85;
+}
+
+/* Coluna esquerda */
+.tc-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tc-side-logo {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  margin-top: -130px;
+  padding: 18px 6px 12px;
+}
+
+.tc-side-logo span {
+  display: block;
   font-family: var(--font-title);
   font-size: 30px;
-  letter-spacing: 1px;
+  line-height: 1;
   color: var(--gold);
-  text-shadow: 0 2px 0 #4a2e00, 0 0 12px rgba(246, 211, 114, 0.35);
+  text-shadow: 0 3px 0 #4a2e00, 0 0 14px rgba(0, 0, 0, 0.9), 0 0 24px rgba(246, 211, 114, 0.35);
 }
 
-.tc-menu a {
+.tc-side-logo small {
   display: inline-block;
-  padding: 5px 12px;
-  font: bold 12px Arial, sans-serif;
-  color: #ffe9a8;
-  text-decoration: none;
+  margin-top: 6px;
+  font: bold 10px Arial, sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #e8dcc0;
+  background: rgba(5, 17, 34, 0.75);
   border: 1px solid #7a5a12;
-  border-radius: 3px;
-  background: linear-gradient(#2b6a3a, #133f22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 2px 8px;
 }
 
-.tc-menu a:hover {
-  background: linear-gradient(#3b8a4c, #1a552d);
-  color: #fff6d0;
+.tc-login-box {
+  background: linear-gradient(#2a2a2a, #111);
+  border: 2px solid #5b5b5b;
+  outline: 1px solid #000;
+  border-radius: 3px;
+  padding: 8px;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.tc-big-button {
+  display: block;
+  font: bold 20px Arial, sans-serif;
+  color: #ffd700;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #000;
+  background: linear-gradient(#3a7bff, #1236b8 55%, #0a2378);
+  border: 2px solid #c9a64a;
+  outline: 1px solid #000;
+  border-radius: 3px;
+  padding: 3px 4px;
+}
+
+.tc-big-button:hover {
+  background: linear-gradient(#5a92ff, #1f4fd8 55%, #0e2f9e);
+}
+
+.tc-login-muted {
+  margin-top: 4px;
+  font-size: 10px;
+  color: #cfc6b0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tc-mobile-toggle {
+  display: none;
+}
+
+.tc-side-menu {
+  background: #1b1b1b;
+  border: 2px solid #5b5b5b;
+  outline: 1px solid #000;
+  border-radius: 3px;
+  padding: 4px 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.tc-menu-group + .tc-menu-group {
+  margin-top: 2px;
+}
+
+.tc-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 34px;
+  padding: 0 6px 0 2px;
+  background-color: #3a3a3a;
+  background-size: 100% 100%;
+  border: 1px solid #000;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tc-menu-button img {
+  width: 30px;
+  height: 30px;
+  image-rendering: pixelated;
+}
+
+.tc-menu-button span {
+  flex: 1;
+  font-family: var(--font-title);
+  font-size: 17px;
+  color: #e4dccb;
+  text-shadow: 0 1px 0 #000, 0 0 4px #000;
+}
+
+.tc-menu-button b {
+  font: bold 13px Arial, sans-serif;
+  color: #9fe29f;
+  background: #0d3b1c;
+  border: 1px solid #000;
+  width: 14px;
+  height: 14px;
+  line-height: 12px;
+  text-align: center;
+}
+
+.tc-menu-button:hover span,
+.tc-menu-button.is-open span {
+  color: #fff3c4;
+}
+
+.tc-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 4px;
+  background: #0e2a1a;
+  border: 1px solid #000;
+  border-top: none;
+}
+
+.tc-submenu a {
+  display: block;
+  padding: 3px 10px 3px 18px;
+  font: bold 12px Verdana, Arial, sans-serif;
+  color: #d9d2c2;
+  text-decoration: none;
+  position: relative;
+}
+
+.tc-submenu a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tc-submenu a.is-active {
+  color: #fff;
+}
+
+.tc-arrow {
+  position: absolute;
+  left: 7px;
+  color: #ffd700;
+}
+
+/* Coluna direita */
+.tc-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tc-themebox {
+  border: 2px solid #5b5b5b;
+  outline: 1px solid #000;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+  background: #1b1b1b;
+}
+
+.tc-themebox-title {
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: var(--gold);
+  text-align: center;
+  padding: 4px 6px;
+  background: linear-gradient(#8b1a1a, #5a0e0e);
+  border-bottom: 1px solid #000;
+  text-shadow: 0 1px 0 #000;
+}
+
+.tc-themebox-body {
+  padding: 8px;
+  color: #e4dccb;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.tc-quick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  color: #ffe9a8;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.tc-quick:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.tc-quick img {
+  image-rendering: pixelated;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid #444;
+}
+
+/* Notícias (página de boas-vindas) */
+.tc-news-item {
+  margin-bottom: 14px;
+}
+
+.tc-news-headline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  color: #fff;
+  font: bold 13px Verdana, Arial, sans-serif;
+  background:
+    url("https://static.tibia.com/images/global/content/newsheadline_background.gif") repeat-x left center,
+    linear-gradient(#8b1a1a, #5a0e0e);
+  border: 1px solid #3a0000;
+}
+
+.tc-news-headline small {
+  font-weight: normal;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.tc-dropcap {
+  float: left;
+  margin: 2px 6px 0 0;
+  image-rendering: auto;
+}
+
+.tc-ticker li {
+  display: flex;
+  gap: 8px;
+  padding: 3px 6px;
+  border-bottom: 1px solid #d8b98f;
+}
+
+.tc-ticker li:nth-child(odd) {
+  background: rgba(222, 187, 157, 0.45);
+}
+
+.sprite {
+  image-rendering: pixelated;
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.55), rgba(222, 187, 157, 0.25) 70%);
+  border: 1px solid #b98a5a;
+  border-radius: 3px;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 1100px) {
+  .tc-page {
+    grid-template-columns: 184px minmax(0, 1fr);
+  }
+  .tc-right {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    background-size: 900px auto;
+  }
+  .tc-page {
+    grid-template-columns: 1fr;
+    padding-top: 12px;
+  }
+  .tc-side-logo {
+    margin-top: 0;
+    padding: 8px;
+  }
+  .tc-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(5, 17, 34, 0.94);
+    border-bottom: 2px solid #7a5a12;
+    padding: 6px;
+    margin: -12px -12px 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px;
+  }
+  .tc-side-logo span {
+    font-size: 22px;
+  }
+  .tc-side-logo small {
+    display: none;
+  }
+  .tc-login-box {
+    display: none;
+  }
+  .tc-mobile-toggle {
+    display: block;
+    font: bold 13px Arial, sans-serif;
+    color: #ffd700;
+    background: linear-gradient(#3a7bff, #1236b8 55%, #0a2378);
+    border: 2px solid #c9a64a;
+    border-radius: 3px;
+    padding: 6px 12px;
+  }
+  .tc-side-menu {
+    display: none;
+    grid-column: 1 / -1;
+  }
+  .tc-side-menu.is-open {
+    display: block;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  .tc-box {
+    padding: 10px;
+  }
 }
 
 /* Barra de título estilo tibia.com */
