@@ -39,7 +39,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
     <div>
       <h1>Ranking de XP</h1>
       <p className="on-dark mb-4">
-        Quanto cada char da turma ganhou de experiência. Só entram chars cadastrados, verificados pelo dono e com a opção de aparecer ligada.
+        Quanto cada char da turma ganhou de experiência. Só entram chars cadastrados no site cujo dono ligou a opção de aparecer.
       </p>
       <Box title={`Ranking ${period.label.toLowerCase()}`}>
         <div className="flex flex-wrap gap-2 mb-3">
@@ -51,7 +51,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
         </div>
         {rows.length === 0 ? (
           <p className="text-[13px]">
-            Ninguém no ranking ainda. Verifique seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a opção de aparecer.
+            Ninguém no ranking ainda. Cadastre seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a opção de aparecer.
           </p>
         ) : (
           <div className="overflow-x-auto">

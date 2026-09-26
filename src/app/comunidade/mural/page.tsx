@@ -28,16 +28,15 @@ export default async function MuralPage() {
     <div>
       <h1>Caixão e Vela Preta</h1>
       <p className="on-dark mb-4">
-        O mural das mortes da nossa turma. Só aparecem chars cadastrados no site, verificados pelo dono e com a opção de aparecer no mural
-        ligada. As mortes vêm do tibia.com, que mostra as dos últimos 30 dias; daqui para a frente o mural guarda todas.
+        O mural das mortes da nossa turma. Só aparecem chars cadastrados no site cujo dono ligou a opção de aparecer no mural. As mortes vêm do tibia.com, que mostra as dos últimos 30 dias; daqui para a frente o mural guarda todas.
       </p>
       <section className="tc-panel">
         <div className="tc-title">🕯️ Descansem em paz 🕯️</div>
         <div className="tc-box" style={{ background: "#1b1410", color: "#e8dcc8" }}>
           {deaths.length === 0 ? (
             <p className="text-[13px]">
-              Nenhuma vela acesa por enquanto. Quer entrar no mural? Verifique seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a
-              opção de aparecer.
+              Nenhuma vela acesa por enquanto. Quer entrar no mural? Cadastre seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a opção
+              de aparecer.
             </p>
           ) : (
             <ul className="space-y-2">

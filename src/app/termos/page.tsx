@@ -50,8 +50,8 @@ export default function TermosPage() {
             <li>Level, experiência e mortes dos chars cadastrados, lidos do tibia.com pela API pública do TibiaData.</li>
           </ul>
           <p>
-            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você verificar um
-            char e ligar &quot;Mostrar no mural e no ranking&quot;, o nome, mundo, vocação, level, XP ganha e mortes desse char ficam visíveis
+            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você ligar
+            &quot;Mostrar no mural e no ranking&quot; num char, o nome, mundo, vocação, level, XP ganha e mortes desse char ficam visíveis
             para todos no mural Caixão e Vela Preta e no ranking de XP. Desligar a opção tira o char das duas páginas. O administrador do site pode ver os dados para manutenção e suporte. Não vendemos nem repassamos
             dados a ninguém.
           </p>
