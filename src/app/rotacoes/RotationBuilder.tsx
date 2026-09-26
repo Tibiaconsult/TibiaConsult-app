@@ -1,6 +1,8 @@
 "use client";
 
 import SaveToChar from "@/components/SaveToChar";
+import ComboPlayer from "@/components/ComboPlayer";
+import { spellIcon } from "@/lib/icons";
 import { useEffect, useMemo, useState } from "react";
 import { SPELLS, spellById, ELEMENT_LABEL, Element } from "@/data/spells";
 import {
@@ -165,6 +167,11 @@ export default function RotationBuilder() {
           ))}
         </ul>
       )}
+
+      <div>
+        <div className="font-bold mb-1">Ver a rotação animada</div>
+        <ComboPlayer steps={steps.map((s) => ({ t: s.t, id: s.spellId, name: spellById(s.spellId)?.name ?? s.spellId, icon: spellIcon(s.spellId) }))} />
+      </div>
     </div>
   );
 }
