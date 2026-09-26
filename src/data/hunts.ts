@@ -4,6 +4,10 @@ export interface Creature {
   name: string;
   hp: number;
   exp: number;
+  /** mitigação em %, da Bestiary */
+  mitigation?: number;
+  /** peso relativo no lure (quantos aparecem em relação aos outros) */
+  weight?: number;
   /** dano recebido por elemento, em % */
   taken: { physical: number; death: number; holy: number; ice: number; fire: number; energy: number; earth: number };
   attacks: string;
@@ -59,5 +63,35 @@ export const HUNTS: Hunt[] = [
       "Prey de dano na Freakish (7.020 exp) e na Flimsy.",
     ],
     warning: "Spawn de level 300 a 500: no 896 o exp por hora tende a ser baixo. Faz sentido para bestiário (4 × 50 charm points), Stone Skin Amulet ou task.",
+  },
+  {
+    id: "nimmersatt",
+    name: "Dragolisks (Nimmersatt's Breeding Ground)",
+    city: "Zao",
+    access: "20 Years a Cook Quest. Entrada pelo Ominous Trashcan no Temple of Equilibrium (Zao). Recomendado 400+, ML 110. TibiaPal lista o andar -7 e o andar do boss (-6) como hunt solo de 600+.",
+    floors: ["Todos os andares: Dragolisk, Mega Dragon e Wardragon (a proporção varia por andar)."],
+    creatures: [
+      { name: "Dragolisk", hp: 6180, exp: 4650, mitigation: 3.36, weight: 3, taken: { physical: 85, death: 110, holy: 115, ice: 105, fire: 60, energy: 100, earth: 110 }, attacks: "Melee; a TibiaWiki ainda não lista os feitiços." },
+      { name: "Mega Dragon", hp: 7920, exp: 7180, mitigation: 3.13, weight: 1, taken: { physical: 100, death: 80, holy: 110, ice: 80, fire: 80, energy: 110, earth: 110 }, attacks: "Ataca à distância; a TibiaWiki ainda não lista os feitiços." },
+      { name: "Wardragon", hp: 6960, exp: 5340, mitigation: 3.5, weight: 2, taken: { physical: 100, death: 85, holy: 105, ice: 110, fire: 60, energy: 105, earth: 110 }, attacks: "Melee; a TibiaWiki ainda não lista os feitiços." },
+    ],
+    element: "ENERGIA para sorcerer: 100 a 110% nos três. Death ajuda só no Dragolisk (110%) e cai para 80 a 85% nos outros. Fogo é ruim (60 a 80%). Terra seria o melhor (110% nos três), mas o sorc só tem Stone Shower.",
+    set: [
+      { slot: "Wand", item: "Sanguine Coil", why: "energy ML +1" },
+      { slot: "Elmo", item: "Moonsilver Nimbus Hat ou Arcanomancer Regalia", why: "ML" },
+      { slot: "Armadura", item: "Norcferatu Bloodhide (energy ML +6) ou Soulmantle", why: "em energia a Bloodhide rende mais" },
+      { slot: "Pernas", item: "Soulshanks ou Stoic Iks Faulds", why: "Faulds dá +7% base nos beams" },
+      { slot: "Botas", item: "Sanguine Boots", why: "Energy Wave +8% crit extra" },
+      { slot: "Spellbook", item: "Arcanomancer Folio ou Stag Spellbook", why: "ML +5" },
+      { slot: "Amuleto", item: "Enchanted Flamingo Amulet of Destruction", why: "energy ML +1" },
+      { slot: "Anel", item: "Charged Arcanomancer Sigil", why: "energy ML +1" },
+    ],
+    play: [
+      "Master of Thunder + Aura of Exposed Weakness. Rotação de energia: Energy Wave, Great Energy Beam, Great Fire Wave convertida, Lightning.",
+      "Rage of the Skies no lure cheio; Ultimate Energy Strike logo depois com o +35% do Focus Mastery.",
+      "Nada de fogo natural: Hell's Core e Great Fire Wave só valem convertidos, e Hell's Core não converte.",
+      "Charms: Zap (energia) nos três; Poison (terra, 110%) empata ou passa o Zap e não depende de spell.",
+    ],
+    warning: "Os feitiços dos bichos ainda não constam na TibiaWiki: proteções a definir depois de uma sessão de teste.",
   },
 ];
