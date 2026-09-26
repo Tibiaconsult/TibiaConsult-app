@@ -1,4 +1,6 @@
-// Árvores de proficiência das wands (um perk por nível). Fonte: TibiaWiki, páginas de cada wand, 26/09/2026.
+// Árvores de proficiência das wands (um perk por nível). Fonte: TibiaWiki, Weapon Proficiency Tables, 26/09/2026.
+// A ordem importa: links compartilhados guardam o índice (0 Sanguine, 1 Moonsilver, 2 Grand Sanguine, 3 Stellar Moonsilver).
+// Grand Sanguine e Stellar Moonsilver são itens diferentes das versões comuns: mesmos atributos-base, perks mais fortes.
 
 import type { Element } from "@/data/spells";
 
@@ -25,7 +27,7 @@ export interface WandTree {
 
 export const PROFICIENCY: WandTree[] = [
   {
-    wand: "Sanguine Coil / Grand Sanguine Coil",
+    wand: "Sanguine Coil",
     levels: [
       [{ label: "+1 Magic Level", ml: 1 }],
       [
@@ -84,6 +86,68 @@ export const PROFICIENCY: WandTree[] = [
         { label: "+4% death pierce", pierce: { death: 0.04 } },
       ],
       [{ label: "+6% de dano contra alvos abaixo de 30% de vida", situational: true }],
+    ],
+  },
+  {
+    wand: "Grand Sanguine Coil",
+    levels: [
+      [{ label: "+1 Magic Level", ml: 1 }],
+      [
+        { label: "+10% crit extra em feitiços e runas de energia", elemCritExtra: { energy: 0.1 } },
+        { label: "+10% crit extra em feitiços e runas de fogo", elemCritExtra: { fire: 0.1 } },
+        { label: "+7% crit extra", critExtra: 0.07 },
+      ],
+      [
+        { label: "+8% base no Energy Wave", spellBase: { "energy-wave": 0.08 } },
+        { label: "+25% crit extra no Hell's Core", spellCritExtra: { "hells-core": 0.25 } },
+        { label: "+3% de dano contra bosses e Sinister Embraced", situational: true },
+      ],
+      [
+        { label: "+8% do Magic Level como dano extra nos feitiços", mlAsFlatPct: 0.08 },
+        { label: "+6% base no Hell's Core", spellBase: { "hells-core": 0.06 } },
+      ],
+      [
+        { label: "+2 Energy Magic Level", eml: { energy: 2 } },
+        { label: "+2 Fire Magic Level", eml: { fire: 2 } },
+      ],
+      [
+        { label: "+2% crit chance em feitiços e runas de energia", elemCritChance: { energy: 0.02 } },
+        { label: "+2% crit chance em feitiços e runas de fogo", elemCritChance: { fire: 0.02 } },
+        { label: "+10% crit extra", critExtra: 0.1 },
+      ],
+      [{ label: "+3% crit chance", critChance: 0.03 }],
+    ],
+  },
+  {
+    wand: "Stellar Moonsilver Channeler",
+    levels: [
+      [{ label: "+12% crit extra", critExtra: 0.12 }],
+      [
+        { label: "+3% de dano contra Humans", situational: true },
+        { label: "+1 Magic Level", ml: 1 },
+        { label: "+6% crit extra", critExtra: 0.06 },
+      ],
+      [
+        { label: "+7,5% base no Great Fire Wave", spellBase: { "great-fire-wave": 0.075 } },
+        { label: "1% de chance de míssil de death (300% do level)", situational: true },
+        { label: "+7,5% base no Death Echo", spellBase: { "death-echo": 0.075 } },
+      ],
+      [
+        { label: "+12,5% crit extra em feitiços e runas de fogo", elemCritExtra: { fire: 0.125 } },
+        { label: "+2 Magic Level", ml: 2 },
+        { label: "+12,5% crit extra em feitiços e runas de death", elemCritExtra: { death: 0.125 } },
+      ],
+      [
+        { label: "+2,5% crit chance no Great Fire Wave", spellCritChance: { "great-fire-wave": 0.025 } },
+        { label: "+2,5% crit chance na Sudden Death", spellCritChance: { "sudden-death": 0.025 } },
+        { label: "+2,5% crit chance no Death Echo", spellCritChance: { "death-echo": 0.025 } },
+      ],
+      [
+        { label: "+4% fire pierce", pierce: { fire: 0.04 } },
+        { label: "+12% crit extra", critExtra: 0.12 },
+        { label: "+4% death pierce", pierce: { death: 0.04 } },
+      ],
+      [{ label: "+9% de dano contra alvos abaixo de 30% de vida", situational: true }],
     ],
   },
 ];

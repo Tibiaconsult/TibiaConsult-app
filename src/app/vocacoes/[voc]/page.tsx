@@ -5,6 +5,7 @@ import { ELEMENT_LABEL } from "@/data/spells";
 import { VOCATIONS, VOC_IDS, VocId } from "@/data/vocations";
 import VocSimulator from "./VocSimulator";
 import EquipmentBySlot from "./EquipmentBySlot";
+import WeaponUpgrades from "@/components/WeaponUpgrades";
 
 export function generateStaticParams() {
   return VOC_IDS.map((voc) => ({ voc }));
@@ -259,6 +260,10 @@ export default async function VocationPage({
           <p className="muted text-[11px] mt-2">{v.weaponNote}</p>
         </Box>
       )}
+
+      <Box title="Arma comum x Grand Sanguine e Stellar Moonsilver">
+        <WeaponUpgrades voc={v.id} />
+      </Box>
 
       <Box title="Equipamento por slot">
         <EquipmentBySlot voc={v.id} />

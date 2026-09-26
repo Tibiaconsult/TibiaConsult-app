@@ -98,7 +98,9 @@ export interface SetTotals extends ItemStats {
 
 export function findItem(slot: SlotId, name: string | null): Item | undefined {
   if (!name) return undefined;
-  return SLOTS.find((s) => s.id === slot)?.items.find((i) => i.name === name);
+  // nome antigo, de quando as duas versões estavam juntas
+  const n = name === "Sanguine Coil / Grand Sanguine Coil" ? "Sanguine Coil" : name;
+  return SLOTS.find((s) => s.id === slot)?.items.find((i) => i.name === n);
 }
 
 export function emptySet(): SetChoice {
@@ -139,7 +141,7 @@ export function computeSet(set: SetChoice): SetTotals {
 /** Set recomendado para o Master Sorcerer 800+ (ponto de partida do comparador). */
 export function recommendedSet(): SetChoice {
   const s = emptySet();
-  s.wand = { item: "Sanguine Coil / Grand Sanguine Coil", tier: 0, imbues: [{ kind: "epiphany", level: 3 }, { kind: "void", level: 3 }] };
+  s.wand = { item: "Sanguine Coil", tier: 0, imbues: [{ kind: "epiphany", level: 3 }, { kind: "void", level: 3 }] };
   s.helmet = { item: "Moonsilver Nimbus Hat", tier: 0, imbues: [{ kind: "epiphany", level: 3 }, { kind: "void", level: 3 }] };
   s.armor = { item: "Soulmantle", tier: 0, imbues: [{ kind: "vampirism", level: 3 }, { kind: "lichshroud", level: 3 }] };
   s.legs = { item: "Soulshanks", tier: 0, imbues: [] };

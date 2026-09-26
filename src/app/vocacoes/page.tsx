@@ -13,7 +13,7 @@ export default function VocacoesPage() {
       <p className="on-dark mb-4">Escolha a vocação para ver magias, cooldowns, Wheel, gemas, armas e o simulador de dano com rotação automática.</p>
       <Box title="Escolha a vocação">
         <div className="grid gap-3 sm:grid-cols-2">
-          <Link href="/simulador" className="border border-[#b98a5a] rounded p-3 bg-white/40 block hover:bg-white/70">
+          <Link href="/vocacoes/sorcerer" className="border border-[#b98a5a] rounded p-3 bg-white/40 block hover:bg-white/70">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://static.tibia.com/images/library/${EMBLEM.sorcerer}.png`} alt="" width={32} height={32} className="inline-block align-middle mr-2" />
             <b>Master Sorcerer</b>

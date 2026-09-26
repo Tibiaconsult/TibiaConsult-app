@@ -30,6 +30,7 @@ export const MENU: MenuGroup[] = [
     icon: "community",
     items: [
       { href: "/vocacoes", label: "Todas" },
+      { href: "/vocacoes/sorcerer", label: "Master Sorcerer" },
       { href: "/vocacoes/druid", label: "Elder Druid" },
       { href: "/vocacoes/knight", label: "Elite Knight" },
       { href: "/vocacoes/paladin", label: "Royal Paladin" },

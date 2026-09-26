@@ -1,5 +1,6 @@
 import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
+import WeaponUpgrades from "@/components/WeaponUpgrades";
 import { IMBUEMENTS, SLOTS } from "@/data/equipment";
 
 export default function EquipamentoPage() {
@@ -48,6 +49,9 @@ export default function EquipamentoPage() {
           </div>
         </Box>
       ))}
+      <Box title="Sanguine Coil x Grand Sanguine Coil e Moonsilver x Stellar Moonsilver">
+        <WeaponUpgrades voc="sorcerer" />
+      </Box>
       <Box title="Imbuements">
         <table>
           <tbody>

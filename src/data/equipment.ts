@@ -29,7 +29,8 @@ export const SLOTS: Slot[] = [
     items: [
       { name: "Moonsilver Channeler", level: 1000, ml: "+6", extras: "death ML +1", protection: "energy +7%", cls: 4, source: "Phosphorus (Make Believe)", best: true },
       { name: "Stellar Moonsilver Channeler", level: 1000, ml: "+6", extras: "death ML +1", protection: "energy +7% (wiki)", cls: 4, source: "craft: Soultainter + Sanguine Coil + Channeler T0 + Auric Moon Sigil" },
-      { name: "Sanguine Coil / Grand Sanguine Coil", level: 600, ml: "+4", extras: "fire ML +1, energy ML +1, crit extra +5%, life leech 2%, mana leech 1%", protection: "earth +7%", cls: 4, source: "Bag You Covet (Rotten Blood)", best: true },
+      { name: "Grand Sanguine Coil", level: 600, ml: "+4", extras: "fire ML +1, energy ML +1, crit extra +5%, life leech 2%, mana leech 1%. Mesmos atributos da Sanguine Coil, mas a proficiência é mais forte (Energy Wave +8% base, Hell's Core +25% crit extra e +6% base, 8% do ML como dano extra, +3% crit chance)", protection: "earth +7%", cls: 4, source: "Bag You Covet (Rotten Blood, sob Bakragore's Burden)", best: true },
+      { name: "Sanguine Coil", level: 600, ml: "+4", extras: "fire ML +1, energy ML +1, crit extra +5%, life leech 2%, mana leech 1%", protection: "earth +7%", cls: 4, source: "Bag You Covet (Rotten Blood)" },
       { name: "Crypt Bile", level: 450, ml: "+4", protection: "fire +6%", cls: 4 },
       { name: "Soultainter", level: 400, ml: "+4", extras: "aceita imbuement Strike", protection: "death +12%", cls: 4, source: "Bag You Desire (Soul War)" },
       { name: "Amber Wand", level: 330, ml: "+2", extras: "energy ML +2", protection: "ice +6%", cls: 4 },

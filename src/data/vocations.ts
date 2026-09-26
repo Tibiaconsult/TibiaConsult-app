@@ -274,7 +274,7 @@ const KNIGHT: VocationData = {
     { name: "Soulcrusher", level: 400, hands: "Uma", kind: "Clava", attack: "6 + 46 gelo", bonus: "club +4" },
   ],
   weaponNote:
-    "O elemento da arma define o elemento das magias: escolha a arma pelo ponto fraco da hunt. A versão Grand da Sanguine tem os mesmos números da comum na TibiaWiki; a diferença fica nos augments da peça. Escudo de referência: Soulbastion (defesa 55, físico e death +10%).",
+    "O elemento da arma define o elemento das magias: escolha a arma pelo ponto fraco da hunt. Grand Sanguine e Stellar Moonsilver são itens diferentes das versões comuns: mesmo ataque, mas proficiência mais forte (veja a tabela abaixo). Escudo de referência: Soulbastion (defesa 55, físico e death +10%).",
   tips: [
     "Solo: Fierce Berserk a cada 6 s, Front Sweep entre eles e Annihilation no alvo mais forte.",
     "Arma de duas mãos dobra o bônus de dano do Combat Mastery; escudo dobra a redução de dano.",
