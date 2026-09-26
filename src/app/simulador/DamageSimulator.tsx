@@ -101,7 +101,9 @@ export default function DamageSimulator() {
       const d = computeDamage(sp, el, rotInputs, target);
       const isArea = !/strike|lightning|sudden/.test(sp.id);
       const hits = isArea ? areaTargets : 1;
-      const dmg = d.expected * hits;
+      // Death Echo: o eco repete 50% do dano após 1 s
+      const echo = sp.id === "death-echo" ? 1.5 : 1;
+      const dmg = d.expected * hits * echo;
       total += dmg;
       return { sp, el, d, hits, dmg };
     });
@@ -285,6 +287,7 @@ export default function DamageSimulator() {
                     <td>{el && <span className={`tag tag-${el}`}>{ELEMENT_LABEL[el]}</span>}</td>
                     <td>
                       {Math.round(d.expected)} × {hits}
+                      {sp.id === "death-echo" && " × 1,5 (eco)"}
                     </td>
                     <td className="font-bold">{Math.round(dmg)}</td>
                   </tr>
