@@ -81,7 +81,7 @@ export default function ProficiencyPlanner() {
           type="button"
           className="tc-btn"
           onClick={async () => {
-            const u = `${window.location.origin}/planejador/proficiencia?prof=${code}`;
+            const u = `${window.location.origin}/planejador/proficiencia/wand?prof=${code}`;
             try {
               await navigator.clipboard.writeText(u);
               setCopied(true);

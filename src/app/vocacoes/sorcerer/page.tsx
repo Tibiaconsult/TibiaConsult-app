@@ -12,7 +12,7 @@ const SECTIONS = [
   { href: "/gemas", title: "Gemas", text: "Mods básicos e supremos por domínio da Wheel e builds sugeridas.", icon: "death-echo" },
   { href: "/equipamento", title: "Equipamento", text: "Melhor peça por slot, imbuements e a diferença entre as versões das wands.", icon: "great-fire-wave" },
   { href: "/planejador/wheel", title: "Wheel of Destiny", text: "A roda completa com o motor do tibia.com, gemas e builds prontas.", icon: "rage-of-the-skies" },
-  { href: "/planejador/proficiencia", title: "Proficiência da wand", text: "Árvores da Sanguine, Grand Sanguine, Moonsilver e Stellar Moonsilver.", icon: "ultimate-energy-strike" },
+  { href: "/planejador/proficiencia/wand", title: "Proficiência da wand", text: "Árvores da Sanguine, Grand Sanguine, Moonsilver e Stellar Moonsilver, com efeito no simulador.", icon: "ultimate-energy-strike" },
   { href: "/simulador/set", title: "Montador de set", text: "Bônus total do set, comparação entre dois sets e envio para o simulador.", icon: "strong-flame-strike" },
   { href: "/simulador/mana", title: "Magic Shield e mana", text: "Escudo, poções e sustentação por minuto.", icon: "Magic Shield" },
 ];

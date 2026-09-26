@@ -55,7 +55,7 @@ export const MENU: MenuGroup[] = [
       { href: "/simulador/set", label: "Set", keywords: "montador equipamento inventario itens" },
       { href: "/planejador/wheel", label: "Wheel of Destiny", keywords: "roda de habilidade wheel wod pontos" },
       { href: "/rotacoes", label: "Rotações e combos", keywords: "combo rotacao sequencia magias" },
-      { href: "/planejador/proficiencia", label: "Proficiência da wand", keywords: "proficiency perks sanguine coil" },
+      { href: "/planejador/proficiencia", label: "Proficiência e catalisadores", keywords: "proficiency perks catalyst catalisador dust po evolucao arma" },
     ],
   },
   {

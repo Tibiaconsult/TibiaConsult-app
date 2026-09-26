@@ -6,6 +6,8 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "Proficiência de arma das cinco vocações: árvore de cada arma com os ícones do jogo, perk sugerido, catalisadores e a evolução com Dust.", href: "/planejador/proficiencia" },
+  { date: "2026-09-26", text: "Gemas por vocação: as gemas de cada uma, mods com ícones oficiais, graus I a IV, custos de fragmento e sugestão do TibiaPal.", href: "/gemas" },
   { date: "2026-09-26", text: "Mais 16 hunts: Warzones 7 a 9 (Too Hot to Handle), os sete Grounds de Ferumbras, Cobra Bastion, Issavi e Upper Roshamuul.", href: "/hunts" },
   { date: "2026-09-26", text: "19 hunts de level alto: as 5 áreas do Soul War, Gnomprona, Rotten Blood, Radiant Ascendancy e Skyhold, Forsaken e Unhallowed Crypt, Bloodfire Gorge, Bulltaurs e as alas da Secret Library.", href: "/hunts" },
   { date: "2026-09-26", text: "Barra no topo: escolha a vocação (e o seu char) uma vez e o site todo abre nela. Busca rápida por hunt, magia, item e criatura.", href: "/minha-area" },

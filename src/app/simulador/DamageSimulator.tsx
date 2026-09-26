@@ -385,7 +385,7 @@ export default function DamageSimulator() {
               {PROFICIENCY[prof.wand].wand.split("/")[0]} nível {prof.level} · ML +{pfx.ml} · crit extra +{Math.round(pfx.critExtra * 100)}%
             </div>
           )}
-          <a className="text-[11px] font-bold" href={`/planejador/proficiencia?prof=${prof.wand}-${prof.level}-${prof.picks.join("-")}`}>
+          <a className="text-[11px] font-bold" href={`/planejador/proficiencia/wand?prof=${prof.wand}-${prof.level}-${prof.picks.join("-")}`}>
             editar no planejador
           </a>
         </div>

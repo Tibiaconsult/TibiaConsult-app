@@ -67,7 +67,7 @@ export const SUPREME: Mod[] = [
 ];
 
 export const GEM_RULES = [
-  "Lesser Sage Gem: 1 mod básico (influenced). Sage Gem: 2 básicos (Archfoe co-op). Greater Sage Gem: 2 básicos + 1 supremo (fiendish).",
+  "Gema lesser: 1 mod básico (criaturas influenciadas). Regular: 2 básicos (Archfoe co-op). Greater: 2 básicos + 1 supremo (fiendish). O nome muda por vocação (Guardian, Marksman, Sage, Mystic e Spiritualist).",
   "Revelar: 125k lesser, 1kk regular, 6kk greater. Girar afinidade de domínio: 125k / 250k / 500k. Até 225 gemas reveladas.",
   "Uma gema por domínio, quatro no total. Vessel Resonance I libera o mod 1, II o mod 2, III o supremo.",
   "Casamento gema × VR: lesser em VR I = +1 dano e cura; regular em VR II = +1; greater em VR III = +2.",
