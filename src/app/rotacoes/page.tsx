@@ -5,7 +5,8 @@ import { spellById } from "@/data/spells";
 import { manaPerCycle } from "@/lib/rotation";
 import RotationBuilder from "./RotationBuilder";
 import ComboBuilder from "./ComboBuilder";
-import VocTabs, { parseVoc } from "@/components/VocTabs";
+import VocTabs from "@/components/VocTabs";
+import { pageVoc } from "@/lib/active-server";
 import { VOCATIONS } from "@/data/vocations";
 
 export const metadata = { title: "Rotações e combos" };
@@ -42,7 +43,7 @@ function Timeline({ steps }: { steps: { t: number; spellId: string; note?: strin
 }
 
 export default async function RotacoesPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
-  const voc = parseVoc((await searchParams).voc);
+  const voc = await pageVoc(await searchParams);
   if (voc !== "sorcerer") {
     const v = VOCATIONS[voc];
     return (

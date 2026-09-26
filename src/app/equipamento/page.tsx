@@ -1,7 +1,9 @@
 import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
 import WeaponUpgrades from "@/components/WeaponUpgrades";
-import VocTabs, { ALL_VOCS, parseVoc } from "@/components/VocTabs";
+import VocTabs from "@/components/VocTabs";
+import { ALL_VOCS } from "@/components/voc-list";
+import { pageVoc } from "@/lib/active-server";
 import { IMBUEMENTS, SLOTS } from "@/data/equipment";
 import EquipmentBySlot from "../vocacoes/[voc]/EquipmentBySlot";
 import Link from "next/link";
@@ -9,7 +11,7 @@ import Link from "next/link";
 export const metadata = { title: "Equipamento" };
 
 export default async function EquipamentoPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
-  const voc = parseVoc((await searchParams).voc);
+  const voc = await pageVoc(await searchParams);
   if (voc !== "sorcerer") {
     const label = ALL_VOCS.find(([id]) => id === voc)?.[1] ?? "";
     return (
@@ -18,7 +20,7 @@ export default async function EquipamentoPage({ searchParams }: { searchParams: 
         <VocTabs base="/equipamento" current={voc} />
         <Box title={`Itens de ${label}`}>
           <p className="mb-3 text-[12px]">
-            <Link className="tc-btn !py-0.5" href={`/simulador/set?v=${voc}`}>
+            <Link className="tc-btn !py-0.5" href={`/simulador/set?voc=${voc}`}>
               Montar set de {label}
             </Link>{" "}
             <Link className="tc-btn !py-0.5" href="/ferramentas/imbuements">
@@ -41,7 +43,7 @@ export default async function EquipamentoPage({ searchParams }: { searchParams: 
         Só itens com magic level que sorcerer usa. Classe 4 aceita tier até 10 na forja. Itens marcados com ★ são a escolha padrão para 800+.
       </p>
       {SLOTS.map((slot) => (
-        <Box key={slot.id} title={`${slot.name} · forja: ${slot.forgePerk}`}>
+        <Box key={slot.id} id={slot.id} title={`${slot.name} · forja: ${slot.forgePerk}`}>
           <p className="mb-2">{slot.advice}</p>
           <div className="overflow-x-auto">
             <table>

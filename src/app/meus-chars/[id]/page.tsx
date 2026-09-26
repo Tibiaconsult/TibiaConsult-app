@@ -108,7 +108,7 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             <a className="tc-btn" href={`/simulador?level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
               Usar este char no simulador de dano
             </a>
-            <a className="tc-btn" href={`/simulador/set?level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
+            <a className="tc-btn" href={`/simulador/set?voc=sorcerer&level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
               Abrir o set no montador
             </a>
           </>

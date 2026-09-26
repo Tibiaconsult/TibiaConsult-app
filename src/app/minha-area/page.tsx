@@ -7,6 +7,7 @@ import { BESTIARY } from "@/data/bestiary";
 import { WHEEL_MILESTONES } from "@/data/wheel-milestones";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { VOCATIONS } from "../meus-chars/vocations";
+import UseCharButton from "./UseCharButton";
 
 export const metadata = { title: "Minha área" };
 export const dynamic = "force-dynamic";
@@ -119,6 +120,18 @@ export default async function MinhaAreaPage() {
               <div>
                 <h2 className="mt-0">Atalhos</h2>
                 <div className="flex flex-col gap-2 items-start">
+                  <UseCharButton
+                    char={{ id: c.id, name: c.name, vocation: c.vocation, level: c.level, magic_level: c.magic_level, skill: c.skill ?? null, world: c.world ?? null }}
+                  />
+                  <Link className="tc-btn" href={c.wheel_code ? `/planejador/wheel?code=${encodeURIComponent(c.wheel_code)}&level=${c.level}` : `/planejador/wheel?voc=${c.vocation}&level=${c.level}`}>
+                    {c.wheel_code ? "Abrir a roda salva" : "Montar a roda"}
+                  </Link>
+                  <Link className="tc-btn" href={c.set_code ? `/simulador/set?${c.set_code}` : `/simulador/set?voc=${c.vocation}`}>
+                    {c.set_code ? "Abrir o set salvo" : "Montar o set"}
+                  </Link>
+                  <Link className="tc-btn" href={c.combo_code ? `/rotacoes?${c.vocation === "sorcerer" ? "" : `voc=${c.vocation}&`}${c.combo_code.replace(/^voc=[a-z]+&/, "")}#montador` : `/rotacoes?voc=${c.vocation}#montador`}>
+                    {c.combo_code ? "Abrir o combo salvo" : "Montar um combo"}
+                  </Link>
                   {sim && (
                     <Link className="tc-btn" href={sim}>
                       Simular o dano deste char
@@ -127,16 +140,9 @@ export default async function MinhaAreaPage() {
                   <Link className="tc-btn" href={`/meus-chars/${c.id}`}>
                     Editar char, set e Wheel
                   </Link>
-                  {c.vocation === "sorcerer" && (
-                    <Link className="tc-btn" href="/rotacoes">
-                      Rotações do sorcerer
-                    </Link>
-                  )}
-                  {c.vocation !== "sorcerer" && c.vocation !== "monk" && (
-                    <Link className="tc-btn" href={`/vocacoes/${c.vocation}`}>
-                      Página da vocação
-                    </Link>
-                  )}
+                  <Link className="tc-btn" href={`/vocacoes/${c.vocation}`}>
+                    Página da vocação
+                  </Link>
                 </div>
                 {(!c.skill || !c.weapon_attack) && (c.vocation === "knight" || c.vocation === "paladin") && (
                   <p className="text-[11px] mt-2 warn">Preencha skill e ataque da arma no char para o simulador acertar o dano.</p>

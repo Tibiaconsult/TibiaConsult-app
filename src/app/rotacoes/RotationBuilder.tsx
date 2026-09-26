@@ -1,5 +1,6 @@
 "use client";
 
+import SaveToChar from "@/components/SaveToChar";
 import { useEffect, useMemo, useState } from "react";
 import { SPELLS, spellById, ELEMENT_LABEL, Element } from "@/data/spells";
 import {
@@ -35,7 +36,17 @@ export default function RotationBuilder() {
   // ?add= vem do botão "+ combo" da página de Cooldowns
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    const add = new URLSearchParams(window.location.search).get("add");
+    const u = new URLSearchParams(window.location.search);
+    // ?combo= vem da rotação salva no char (Minha área)
+    const saved = (u.get("combo") ?? "")
+      .split(",")
+      .map((p) => p.split(":"))
+      .filter((p) => p.length === 2 && spellById(p[1]))
+      .map(([t, spellId]) => ({ t: Number(t), spellId }));
+    if (saved.length) setSteps(saved);
+    const st = u.get("stance");
+    if (st === "fire" || st === "energy" || st === "death") setMods((m) => ({ ...m, stance: st }));
+    const add = u.get("add");
     if (add && spellById(add)) setSteps((prev) => [...prev, { t: prev.reduce((m, s) => Math.max(m, s.t), -2) + 2, spellId: add }]);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
@@ -139,6 +150,7 @@ export default function RotationBuilder() {
         <a className="tc-btn" href="/cooldowns">
           Ver cooldowns
         </a>
+        <SaveToChar voc="sorcerer" field="combo_code" value={`combo=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? ""}`} what="a rotação" />
         <a className="tc-btn" href={`/simulador?rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
           Calcular o dano desta rotação
         </a>

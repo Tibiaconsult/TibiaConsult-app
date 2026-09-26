@@ -87,7 +87,7 @@ export default function ImbuementList() {
         {shown.map((i) => {
           const pick = cart[i.id];
           return (
-            <div key={i.id} className={`border rounded p-3 ${pick ? "border-[#5a7d2a] bg-[#eef3e0]" : "border-[#b98a5a] bg-white/40"}`}>
+            <div key={i.id} id={i.id} className={`scroll-mt-24 border rounded p-3 ${pick ? "border-[#5a7d2a] bg-[#eef3e0]" : "border-[#b98a5a] bg-white/40"}`}>
               <div className="flex justify-between gap-2">
                 <div>
                   <div className="font-bold text-[#3a1a00] text-[14px]">{i.name}</div>

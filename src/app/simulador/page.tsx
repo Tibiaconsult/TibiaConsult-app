@@ -1,15 +1,19 @@
 import Box from "@/components/Box";
 import DamageSimulator from "./DamageSimulator";
+import OtherVocHint from "./OtherVocHint";
+
+export const metadata = { title: "Dano e DPS" };
 
 export default function SimuladorPage() {
   return (
     <div>
-      <h1>Simulador de dano e DPS</h1>
+      <h1>Simulador de dano e DPS (Master Sorcerer)</h1>
       <p className="on-dark mb-4">
         Informe o char, a stance e o alvo. O simulador calcula min, média e máximo de cada feitiço, aplica crit, resistência e mitigação do
         bicho, e dá o dano por ciclo e por minuto de cada rotação.
       </p>
       <Box title="Simulador">
+        <OtherVocHint />
         <DamageSimulator />
       </Box>
       <Box title="Sobre a fórmula">

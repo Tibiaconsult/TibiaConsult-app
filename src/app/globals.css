@@ -775,3 +775,79 @@ p.on-dark {
     animation: none;
   }
 }
+
+/* Barra do topo: busca, vocação ativa e char ativo */
+.tc-activebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  background: rgba(5, 17, 34, 0.78);
+  border: 1px solid rgba(246, 211, 114, 0.35);
+  border-radius: 4px;
+  position: relative;
+  z-index: 30;
+}
+.tc-voc-chip {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #444;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0.55;
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+.tc-voc-chip img {
+  image-rendering: pixelated;
+}
+.tc-voc-chip:hover {
+  opacity: 0.9;
+}
+.tc-voc-chip.is-active {
+  opacity: 1;
+  border-color: #ffd700;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+/* Atalhos fixos no rodapé do celular */
+.tc-mobilenav {
+  display: none;
+}
+@media (max-width: 760px) {
+  .tc-mobilenav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    background: rgba(5, 17, 34, 0.97);
+    border-top: 2px solid #7a5a12;
+    padding: 4px 2px calc(4px + env(safe-area-inset-bottom));
+  }
+  .tc-mobilenav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    font: bold 10px Arial, sans-serif;
+    color: #cfc2a3;
+    text-decoration: none;
+  }
+  .tc-mobilenav a.is-active {
+    color: #ffd700;
+  }
+  body {
+    padding-bottom: 64px;
+  }
+  .tc-feedback-fab {
+    bottom: 72px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+}

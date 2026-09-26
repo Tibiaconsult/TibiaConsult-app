@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { setActiveVoc, useActive } from "@/lib/active";
 import Box from "@/components/Box";
 import { wikiImage } from "@/lib/md5";
 import { SKILL_LABEL, Skill, Voc, exerciseNeeded } from "@/lib/exercise";
@@ -30,7 +31,8 @@ const PREFIX: Record<string, string> = { regular: "", durable: "Durable ", lasti
 const sprite = (w: WType, tier = "regular") => wikiImage(`${PREFIX[tier]}Exercise ${w}`);
 
 export default function ExerciseCalc() {
-  const [voc, setVoc] = useState<Voc>("sorcerer");
+  const { voc: activeVoc, char } = useActive();
+  const voc: Voc = activeVoc ?? "sorcerer";
   const [weapon, setWeapon] = useState<WType>("Wand");
   const [current, setCurrent] = useState(114);
   const [pctLeft, setPctLeft] = useState(100);
@@ -46,9 +48,21 @@ export default function ExerciseCalc() {
   const dummyName = dummy ? (voc === "monk" ? "Monk Exercise Dummy" : "Demon Exercise Dummy") : "Exercise Dummy";
 
   const changeVoc = (v: Voc) => {
-    setVoc(v);
+    setActiveVoc(v);
     setWeapon(W_BY_VOC[v][0]);
   };
+
+  // char ativo: o skill atual sai do cadastro (ML para rod e wand; skill principal para o resto)
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!char) return;
+    const cur = sk === "magic" ? char.magic_level : char.skill;
+    if (cur && cur > 0) {
+      setCurrent(cur);
+      setTarget(cur + 1);
+    }
+  }, [char, sk]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return (
     <Box title="Exercise weapons">

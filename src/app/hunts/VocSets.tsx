@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { setActiveVoc, useActive } from "@/lib/active";
 import { ItemSprite } from "@/components/Icons";
 import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS } from "@/data/hunt-recs";
@@ -16,10 +17,13 @@ const TABS: [Tab, string][] = [
 ];
 
 export default function VocSets({ h }: { h: Hunt }) {
-  const [tab, setTab] = useState<Tab>("sorcerer");
+  // a aba segue a vocação ativa (barra do topo); o level parte do char ativo, se for dessa vocação
+  const { voc, char } = useActive();
+  const tab: Tab = voc ?? "sorcerer";
+  const setTab = (t: Tab) => setActiveVoc(t);
   const [levels, setLevels] = useState<Record<string, number>>({});
   const rec = HUNT_RECS[h.id];
-  const level = levels[tab] ?? Math.max(rec?.solo[tab] ?? 800, 800);
+  const level = levels[tab] ?? (char?.vocation === tab ? char.level : Math.max(rec?.solo[tab] ?? 800, 800));
   const auto = suggestSet(h, tab, level);
 
   return (

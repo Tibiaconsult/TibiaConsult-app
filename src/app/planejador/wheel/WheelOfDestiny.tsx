@@ -3,12 +3,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // os botões só leem os refs do motor no clique; o lint confunde isso com leitura durante o render
 /* eslint-disable react-hooks/refs */
+import SaveToChar from "@/components/SaveToChar";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CODE_PREFIX, QUARTER_COLOR, QUARTERS, VOC_NAMES, WodVoc, loadWodEngine, plain } from "@/lib/wod-engine";
 import { WOD_BASIC, WOD_LARGE, WOD_MEDIUM, WOD_SMALL, formatGem, formatPerk, shortName, supremeEffect, supremeName } from "@/data/wod-strings";
 import { WOD_PRESETS } from "@/data/wod-presets";
 import { WheelConfig, encodeWheel } from "@/lib/wheel";
 import WodCanvas, { Pick, Q } from "./WodCanvas";
+import { Voc as ActiveVoc, getActive, setActiveVoc, useActive } from "@/lib/active";
 
 const VOC_PT: Record<WodVoc, string> = { Knight: "Knight", Paladin: "Paladin", Sorcerer: "Sorcerer", Druid: "Druid", Monk: "Monk" };
 const Q_PT: Record<string, string> = { TL: "Superior esquerdo", TR: "Superior direito", BL: "Inferior esquerdo", BR: "Inferior direito" };
@@ -152,9 +154,16 @@ export default function WheelOfDestiny() {
         const u = new URLSearchParams(window.location.search);
         const code = u.get("code");
         const lv = Number(u.get("level"));
+        // ?voc= aceita "knight" ou "Knight"; sem código nem vocação no link, usa a vocação ativa (barra do topo)
+        const cap = (x: string) => (x ? x[0].toUpperCase() + x.slice(1).toLowerCase() : "") as WodVoc;
+        const vocParam = cap(u.get("voc") ?? "");
+        const active = getActive();
+        const fromActive = active.voc ? cap(active.voc) : null;
+        const explicit = (code && CODE_PREFIX[code[0]]) || (VOC_NAMES.includes(vocParam) ? vocParam : null);
+        const voc: WodVoc = explicit || fromActive || "Sorcerer";
+        if (explicit) setActiveVoc(explicit.toLowerCase() as ActiveVoc);
         if (lv > 0) setLevel(lv);
-        const vocParam = (u.get("voc") ?? "") as WodVoc;
-        const voc: WodVoc = (code && CODE_PREFIX[code[0]]) || (VOC_NAMES.includes(vocParam) ? vocParam : "Sorcerer");
+        else if (active.char && cap(active.char.vocation) === voc) setLevel(active.char.level);
         planner.current = new M.SkillwheelPlanner(M.EActiveVocation[voc]);
         if (code && !planner.current.updateByCode(code)) setMsg("O código da URL não é válido.");
         read();
@@ -169,6 +178,20 @@ export default function WheelOfDestiny() {
       }
     };
   }, [read]);
+
+  // vocação trocada na barra do topo: a roda troca junto
+  const activeVoc = useActive().voc;
+  useEffect(() => {
+    if (!st || !activeVoc || st.voc.toLowerCase() === activeVoc || !planner.current) return;
+    const v = (activeVoc[0].toUpperCase() + activeVoc.slice(1)) as WodVoc;
+    try {
+      planner.current.setVocation(engine.current.EActiveVocation[v]);
+    } catch {
+      // motor ainda carregando
+    }
+    read();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeVoc]);
 
   // mantém a URL com o código atual, para compartilhar
   useEffect(() => {
@@ -240,15 +263,20 @@ export default function WheelOfDestiny() {
       P.onGridTileRightClicked(tile(id), k);
     });
 
-  const setVoc = (v: WodVoc) =>
+  const setVoc = (v: WodVoc) => {
+    setActiveVoc(v.toLowerCase() as ActiveVoc);
     act((P, M) => {
       P.setVocation(M.EActiveVocation[v]);
     });
+  };
   const loadCode = (code: string) =>
     act((P, M) => {
       const c = code.trim().replace(/^.*code=/, "").split("&")[0];
       const voc = CODE_PREFIX[c[0]];
-      if (voc) P.setVocation(M.EActiveVocation[voc]);
+      if (voc) {
+        P.setVocation(M.EActiveVocation[voc]);
+        setActiveVoc(voc.toLowerCase() as ActiveVoc);
+      }
       if (!P.updateByCode(c)) throw new Error("Código inválido.");
     });
   const resetAll = () => {
@@ -570,6 +598,7 @@ export default function WheelOfDestiny() {
             zerar
           </button>
         </div>
+        <SaveToChar voc={st.voc.toLowerCase() as ActiveVoc} field="wheel_code" value={st.code} what="a roda" />
         <div className="flex flex-wrap gap-2">
           <input value={importCode} onChange={(e) => setImportCode(e.target.value)} placeholder="cole um código ou link do planner do tibia.com" className="flex-1 min-w-[240px]" />
           <button type="button" className="tc-btn" onClick={() => importCode && loadCode(importCode)}>

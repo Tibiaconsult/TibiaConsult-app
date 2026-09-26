@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Box from "@/components/Box";
 import { SpellIcon } from "@/components/Icons";
-import VocTabs, { parseVoc } from "@/components/VocTabs";
+import VocTabs from "@/components/VocTabs";
+import { pageVoc } from "@/lib/active-server";
 import { SPELLS, SUPPORT_SPELLS, ELEMENT_LABEL, SECONDARY_GROUP_LABEL } from "@/data/spells";
 import { VOCATIONS } from "@/data/vocations";
 
@@ -34,7 +35,7 @@ function SorcererTables() {
             </thead>
             <tbody>
               {SPELLS.map((s) => (
-                <tr key={s.id}>
+                <tr key={s.id} id={`spell-${s.id}`} className="scroll-mt-24 target:bg-[#f3d9a0]">
                   <td className="font-bold">
                     <SpellIcon id={s.id} />
                     {s.name}
@@ -94,7 +95,7 @@ function SorcererTables() {
 }
 
 export default async function CooldownsPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
-  const voc = parseVoc((await searchParams).voc);
+  const voc = await pageVoc(await searchParams);
   const v = voc === "sorcerer" ? null : VOCATIONS[voc];
   return (
     <div>
@@ -129,7 +130,7 @@ export default async function CooldownsPage({ searchParams }: { searchParams: Pr
                 </thead>
                 <tbody>
                   {v.spells.map((s) => (
-                    <tr key={s.id}>
+                    <tr key={s.id} id={`spell-${s.id}`} className="scroll-mt-24 target:bg-[#f3d9a0]">
                       <td className="font-bold">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`https://static.tibia.com/images/library/${s.icon}.png`} alt="" width={22} height={22} className="inline-block align-middle mr-1" />

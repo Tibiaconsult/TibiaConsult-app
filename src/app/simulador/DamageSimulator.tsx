@@ -1,5 +1,6 @@
 "use client";
 
+import { getActive } from "@/lib/active";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL, Element, SPELLS, spellById } from "@/data/spells";
@@ -134,6 +135,13 @@ export default function DamageSimulator() {
     const p = new URLSearchParams(window.location.search);
     if (p.get("level")) setLevel(num(p.get("level")!, 896));
     if (p.get("ml")) setBaseML(num(p.get("ml")!, 114));
+    // sem level no link: usa o char ativo, se for sorcerer
+    const ch = getActive().char;
+    if (!p.get("level") && ch?.vocation === "sorcerer") {
+      setLevel(ch.level);
+      if (ch.magic_level > 0) setBaseML(ch.magic_level);
+      setWheel((x) => ({ ...x, level: ch.level }));
+    }
     const s = decodeSet(p.get("set"));
     if (s) setSetChoice(s);
     const w = decodeWheel(p.get("wheel"));
@@ -351,7 +359,7 @@ export default function DamageSimulator() {
               ML +{setTotals.ml} · fire +{setTotals.eml.fire ?? 0} · energy +{setTotals.eml.energy ?? 0} · death +{setTotals.eml.death ?? 0} · crit extra +{setTotals.critExtra}%
             </div>
           )}
-          <a className="text-[11px] font-bold" href={`/simulador/set?level=${level}&ml=${baseML}&a=${encodeSet(setChoice)}`}>
+          <a className="text-[11px] font-bold" href={`/simulador/set?voc=sorcerer&level=${level}&ml=${baseML}&a=${encodeSet(setChoice)}`}>
             editar no montador de set
           </a>
         </div>

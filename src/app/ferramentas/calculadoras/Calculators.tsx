@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { setActiveVoc, useActive } from "@/lib/active";
 import Box from "@/components/Box";
 import ExerciseCalc from "./ExerciseCalc";
 import VocPicker from "./VocPicker";
@@ -40,7 +41,17 @@ function ExpCalc() {
   const [pct, setPct] = useState(0);
   const [target, setTarget] = useState(900);
   const [perHour, setPerHour] = useState(5000000);
-  const [voc, setVoc] = useState<StatVoc>("sorcerer");
+  const { voc: activeVoc, char } = useActive();
+  const voc: StatVoc = activeVoc ?? "sorcerer";
+  const setVoc = (v: StatVoc) => setActiveVoc(v);
+  // char ativo: level atual e meta de +10 levels
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!char) return;
+    setLevel(char.level);
+    setTarget(char.level + 10);
+  }, [char]);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const now = vocStats(voc, level);
   const then = vocStats(voc, Math.max(level, target));
   const cur = expForLevel(level) + (expForLevel(level + 1) - expForLevel(level)) * (pct / 100);

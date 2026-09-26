@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { BESTIARY, CHARMS, CHARMS_VERY_RARE, CLASSES, DIFFICULTIES, KILLS, KILLS_VERY_RARE } from "@/data/bestiary";
 import { creatureIcon } from "@/lib/icons";
+import { getActive } from "@/lib/active";
 import { createClient } from "@/lib/supabase/client";
 
 const DIFF_PT = ["Inofensiva", "Trivial", "Fácil", "Média", "Difícil", "Desafiadora"];
@@ -41,6 +42,17 @@ export default function BestiaryTracker({ chars, logged }: { chars: { id: string
   const [status, setStatus] = useState<"todas" | "feitas" | "faltam">("todas");
   const [limit, setLimit] = useState(PAGE);
   const online = logged && Boolean(charId);
+
+  // ?q= vem da busca do topo; o char ativo (barra do topo) abre selecionado
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const u = new URLSearchParams(window.location.search).get("q");
+    if (u) setQ(u);
+    const active = getActive().char;
+    if (active && chars.some((c) => c.id === active.id)) setCharId(active.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {

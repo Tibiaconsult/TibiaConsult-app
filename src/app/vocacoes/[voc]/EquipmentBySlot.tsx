@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ItemSprite } from "@/components/Icons";
 import { SLOT_ORDER, VOC_EQUIPMENT } from "@/data/voc-equipment";
 import { AMMO, JEWELRY } from "@/data/voc-extras";
@@ -12,6 +12,14 @@ export default function EquipmentBySlot({ voc }: { voc: string }) {
   const rows = [...base, ...[...JEWELRY, ...AMMO].filter((r) => (r.vocs.length === 0 || r.vocs.includes(voc)) && !names.has(r.name))];
   const slots = [...SLOT_ORDER, "Munição"].filter((s) => rows.some((r) => r.slot === s));
   const [slot, setSlot] = useState(slots[0] ?? "");
+  // ?slot= vem da busca do topo
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const s = new URLSearchParams(window.location.search).get("slot");
+    if (s && slots.includes(s)) setSlot(s);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const [level, setLevel] = useState(0);
   const shown = rows.filter((r) => r.slot === slot && (!level || r.level <= level)).sort((a, b) => b.level - a.level || a.name.localeCompare(b.name));
 

@@ -1,5 +1,6 @@
 "use client";
 
+import SaveToChar from "@/components/SaveToChar";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL } from "@/data/spells";
@@ -195,6 +196,7 @@ export default function ComboBuilder({ voc }: { voc: VocId }) {
         >
           {copied ? "Link copiado" : "Copiar link do combo"}
         </button>
+        {steps.length > 0 && <SaveToChar voc={voc} field="combo_code" value={`voc=${voc}&combo=${encodeCombo(steps)}`} what="o combo" />}
         <Link className="tc-btn" href={`/cooldowns?voc=${voc}`}>
           Ver cooldowns de {v.promoted}
         </Link>

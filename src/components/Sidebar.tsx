@@ -5,105 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { TIBIA } from "@/lib/icons";
 import LoginBox from "./LoginBox";
+import { MENU } from "./menu";
 
-export interface MenuGroup {
-  id: string;
-  label: string;
-  icon: string;
-  items: { href: string; label: string }[];
-}
-
-export const MENU: MenuGroup[] = [
-  {
-    id: "noticias",
-    label: "Notícias",
-    icon: "news",
-    items: [
-      { href: "/", label: "Bem-vindo" },
-      { href: "/novidades", label: "Novidades" },
-      { href: "/feedback", label: "Reportar ou sugerir" },
-    ],
-  },
-  {
-    id: "vocacoes",
-    label: "Vocações",
-    icon: "community",
-    items: [
-      { href: "/vocacoes", label: "Todas" },
-      { href: "/vocacoes/sorcerer", label: "Master Sorcerer" },
-      { href: "/vocacoes/druid", label: "Elder Druid" },
-      { href: "/vocacoes/knight", label: "Elite Knight" },
-      { href: "/vocacoes/paladin", label: "Royal Paladin" },
-      { href: "/vocacoes/monk", label: "Exalted Monk" },
-    ],
-  },
-  {
-    id: "biblioteca",
-    label: "Biblioteca",
-    icon: "library",
-    items: [
-      { href: "/cooldowns", label: "Cooldowns" },
-      { href: "/gemas", label: "Gemas" },
-      { href: "/equipamento", label: "Equipamento" },
-      { href: "/hunts", label: "Hunts" },
-    ],
-  },
-  {
-    id: "simuladores",
-    label: "Simuladores",
-    icon: "gameguides",
-    items: [
-      { href: "/simulador", label: "Dano e DPS" },
-      { href: "/simulador/set", label: "Set" },
-      { href: "/simulador/forja", label: "Forja" },
-      { href: "/simulador/gemas", label: "Gemas: custo" },
-      { href: "/simulador/mana", label: "Magic Shield e mana" },
-    ],
-  },
-  {
-    id: "planejadores",
-    label: "Planejadores",
-    icon: "abouttibia",
-    items: [
-      { href: "/rotacoes", label: "Rotações e combos" },
-      { href: "/planejador/wheel", label: "Wheel of Destiny" },
-      { href: "/planejador/proficiencia", label: "Proficiência" },
-    ],
-  },
-  {
-    id: "ferramentas",
-    label: "Ferramentas",
-    icon: "charactertrade",
-    items: [
-      { href: "/ferramentas/loot", label: "Divisão de loot" },
-      { href: "/ferramentas/bestiario", label: "Bestiary Tracker" },
-      { href: "/ferramentas/calculadoras", label: "Calculadoras (exp, exercise...)" },
-      { href: "/ferramentas/imbuements", label: "Imbuements" },
-    ],
-  },
-  {
-    id: "comunidade",
-    label: "Comunidade",
-    icon: "forum",
-    items: [
-      { href: "/comunidade/mural", label: "Caixão e Vela Preta" },
-      { href: "/comunidade/ranking", label: "Ranking de XP" },
-    ],
-  },
-  {
-    id: "conta",
-    label: "Conta",
-    icon: "account",
-    items: [
-      { href: "/entrar", label: "Entrar" },
-      { href: "/minha-area", label: "Minha área" },
-      { href: "/meus-chars", label: "Meus chars" },
-    ],
-  },
-];
+export { MENU } from "./menu";
 
 function groupOf(path: string): string {
-  let best = "noticias";
+  let best = "inicio";
   let len = -1;
   for (const g of MENU)
     for (const i of g.items) {

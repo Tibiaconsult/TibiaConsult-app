@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Box from "@/components/Box";
-import VocTabs, { ALL_VOCS, parseVoc } from "@/components/VocTabs";
+import VocTabs from "@/components/VocTabs";
+import { ALL_VOCS } from "@/components/voc-list";
+import { pageVoc } from "@/lib/active-server";
 import { BASIC_SLOT1, BASIC_SLOT2, GEM_BUILDS, GEM_RULES, Mod } from "@/data/gems";
 import { WOD_PRESETS } from "@/data/wod-presets";
 import { WOD_LARGE, supremeEffect, supremeName } from "@/data/wod-strings";
@@ -43,7 +45,7 @@ function ModTable({ mods }: { mods: Mod[] }) {
 }
 
 export default async function GemasPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
-  const voc = parseVoc((await searchParams).voc);
+  const voc = await pageVoc(await searchParams);
   const label = ALL_VOCS.find(([id]) => id === voc)?.[1] ?? "";
   const domains = WOD_DOMAINS[voc];
   const supreme: Mod[] = WOD_SUPREME[voc].map((id) => ({

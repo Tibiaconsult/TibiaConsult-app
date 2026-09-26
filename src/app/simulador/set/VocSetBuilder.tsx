@@ -1,5 +1,6 @@
 "use client";
 
+import SaveToChar from "@/components/SaveToChar";
 import { useEffect, useMemo, useState } from "react";
 import { HUNTS } from "@/data/hunts";
 import { IMBUEMENTS, IMBUE_TIER } from "@/data/imbuements";
@@ -8,6 +9,7 @@ import { AMMO, ExtraRow, JEWELRY } from "@/data/voc-extras";
 import { itemIcon } from "@/lib/icons";
 import { wikiImage } from "@/lib/md5";
 import { EL_PT, suggestSet } from "@/lib/huntset";
+import { getActive } from "@/lib/active";
 import { AMPLIFICATION, MOMENTUM, ONSLAUGHT, RUSE, TRANSCENDENCE } from "@/lib/set";
 
 export type Voc = "druid" | "knight" | "paladin" | "monk";
@@ -195,7 +197,9 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const u = new URLSearchParams(window.location.search);
-    if (u.get("v") !== voc) return;
+    const ch = getActive().char;
+    if (ch && ch.vocation === voc) setLevel(ch.level);
+    if ((u.get("voc") ?? u.get("v")) !== voc) return;
     const sa = decode(u.get("a") ?? u.get("s"));
     const sb = decode(u.get("b"));
     if (sa) setA(sa);
@@ -211,7 +215,8 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
   const syncUrl = (na: Build, nb: Build, cmp: boolean) => {
     try {
       const u = new URL(window.location.href);
-      u.searchParams.set("v", voc);
+      u.searchParams.set("voc", voc);
+      u.searchParams.delete("v");
       u.searchParams.delete("s");
       u.searchParams.set("level", String(level));
       u.searchParams.set("a", encode(na));
@@ -261,7 +266,7 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
 
   const shareUrl = () => {
     const u = new URL(window.location.href);
-    u.search = `?v=${voc}&level=${level}&a=${encode(a)}${compare ? `&b=${encode(b)}` : ""}`;
+    u.search = `?voc=${voc}&level=${level}&a=${encode(a)}${compare ? `&b=${encode(b)}` : ""}`;
     return u.toString();
   };
 
@@ -539,6 +544,9 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
           >
             {copied ? "Link copiado" : "Copiar link para compartilhar"}
           </button>
+          <div>
+            <SaveToChar voc={voc} field="set_code" value={`voc=${voc}&level=${level}&a=${encode(a)}`} what="o set A" />
+          </div>
         </div>
       </div>
       <p className="muted text-[10px]">

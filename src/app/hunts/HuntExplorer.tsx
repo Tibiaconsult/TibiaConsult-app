@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Box from "@/components/Box";
 import { HUNTS, Hunt } from "@/data/hunts";
+import { getActive } from "@/lib/active";
 import { HUNT_RECS, REC_VOC_LABEL, RecVoc, SHARE_BONUS } from "@/data/hunt-recs";
 import HuntSheet from "./HuntSheet";
 
@@ -39,6 +40,10 @@ export default function HuntExplorer() {
   useEffect(() => {
     const h = new URLSearchParams(window.location.search).get("h");
     if (h && HUNTS.some((x) => x.id === h)) setSelected(h);
+    // filtro solo parte da vocação e do level ativos (barra do topo)
+    const a = getActive();
+    if (a.voc) setVoc(a.voc);
+    if (a.char) setLevel(a.char.level);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 

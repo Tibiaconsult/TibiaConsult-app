@@ -6,6 +6,11 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "Barra no topo: escolha a vocação (e o seu char) uma vez e o site todo abre nela. Busca rápida por hunt, magia, item e criatura.", href: "/minha-area" },
+  { date: "2026-09-26", text: "Salvar no char: roda, set e combo ficam guardados e abrem com um clique na Minha área.", href: "/minha-area" },
+  { date: "2026-09-26", text: "Cooldowns, gemas, equipamento e combos para as cinco vocações.", href: "/cooldowns" },
+  { date: "2026-09-26", text: "Montador de set para todas as vocações, com sprites animados, forja e imbuements.", href: "/simulador/set" },
+  { date: "2026-09-26", text: "Wheel of Destiny desenhada como no tibia.com.", href: "/planejador/wheel" },
   { date: "2026-09-26", text: "Imbuements com os materiais de cada nível e lista de compras somada.", href: "/ferramentas/imbuements" },
   { date: "2026-09-26", text: "Hoje no Tibia: criatura e boss boostados e a cidade do Rashid.", href: "/" },
   { date: "2026-09-26", text: "Fichas de hunt com set sugerido para druid, knight, paladin e monk.", href: "/hunts" },

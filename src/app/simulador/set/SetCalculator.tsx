@@ -1,5 +1,6 @@
 "use client";
 
+import SaveToChar from "@/components/SaveToChar";
 import { useEffect, useMemo, useState } from "react";
 import { SLOTS } from "@/data/equipment";
 import { itemIcon } from "@/lib/icons";
@@ -302,6 +303,7 @@ export default function SetCalculator() {
         >
           {copied ? "Link copiado" : "Copiar link para compartilhar"}
         </button>
+        <SaveToChar voc="sorcerer" field="set_code" value={`voc=sorcerer&level=${level}&ml=${baseML}&a=${encodeSet(setA)}`} what="o set A" />
       </div>
 
       {ta.augments.length > 0 && (
