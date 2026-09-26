@@ -53,6 +53,19 @@ body {
   min-width: 0;
 }
 
+/* Em telas largas de PC, o conteúdo usa mais espaço. */
+@media (min-width: 1500px) {
+  .tc-page {
+    max-width: 1560px;
+    grid-template-columns: 200px minmax(0, 1fr) 200px;
+  }
+}
+@media (min-width: 1900px) {
+  .tc-page {
+    max-width: 1800px;
+  }
+}
+
 .tc-footer {
   text-align: center;
   font-size: 11px;

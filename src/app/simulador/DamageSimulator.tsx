@@ -546,7 +546,7 @@ export default function DamageSimulator() {
       <p className="muted text-[11px]">Mesma wave (base 150) em cada elemento, sem stance, ponderada pelo peso de cada bicho e pela mitigação.</p>
 
       <h2>DPS das rotações neste grupo</h2>
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
         {allStats.map(({ id, name, stance: st, stats }, i) => (
           <div key={id} className="border border-[#b98a5a] rounded p-3 bg-white/40" style={i === 0 ? { outline: "2px solid #1a6b2d" } : undefined}>
             <div className="font-bold text-[#3a1a00] text-[14px]">
@@ -555,23 +555,25 @@ export default function DamageSimulator() {
             <div className="muted text-[11px] mb-2">
               stance {ELEMENT_LABEL[st]} · ciclo de {stats.cycleSeconds} s{id === "death" && " · supõe o augment T1 do Death Echo"}
             </div>
-            <table>
-              <tbody>
-                {stats.detail.map(({ sp, el, expected, hits, echo, dmg }, j) => (
-                  <tr key={j}>
-                    <td>
-                      <SpellName id={sp.id} />
-                    </td>
-                    <td>{el && <span className={`tag tag-${el}`}>{ELEMENT_LABEL[el]}</span>}</td>
-                    <td className="whitespace-nowrap">
-                      {fmt(expected)} × {hits}
-                      {echo > 1 && " × 1,5"}
-                    </td>
-                    <td className="font-bold">{fmt(dmg)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <tbody>
+                  {stats.detail.map(({ sp, el, expected, hits, echo, dmg }, j) => (
+                    <tr key={j}>
+                      <td>
+                        <SpellName id={sp.id} />
+                        <div className="muted text-[10px] whitespace-nowrap">
+                          {fmt(expected)} × {hits}
+                          {echo > 1 && " × 1,5"}
+                        </div>
+                      </td>
+                      <td className="w-px">{el && <span className={`tag tag-${el}`}>{ELEMENT_LABEL[el]}</span>}</td>
+                      <td className="font-bold text-right w-px whitespace-nowrap">{fmt(dmg)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div className="mt-2 text-[12px] space-y-0.5">
               <div>
                 DPS do ciclo: <span className="font-bold">{fmt(stats.cycleDps)}</span>
