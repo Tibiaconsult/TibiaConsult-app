@@ -6,6 +6,7 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "Bestiary Tracker: as 833 criaturas, com charm points e progresso salvo por char.", href: "/ferramentas/bestiario" },
   { date: "2026-09-26", text: "Elder Druid, Elite Knight e Royal Paladin: magias, Wheel, gemas, armas e simulador com rotação automática.", href: "/vocacoes" },
   { date: "2026-09-26", text: "Hunts novas: Ingol (surface e subsolo), Norcferatu e Falcon Bastion.", href: "/hunts" },
   { date: "2026-09-26", text: "Divisão de loot a partir do Party Hunt Analyser, com os comandos de transferência prontos.", href: "/ferramentas/loot" },

@@ -72,7 +72,10 @@ export const MENU: MenuGroup[] = [
     id: "ferramentas",
     label: "Ferramentas",
     icon: "charactertrade",
-    items: [{ href: "/ferramentas/loot", label: "Divisão de loot" }],
+    items: [
+      { href: "/ferramentas/loot", label: "Divisão de loot" },
+      { href: "/ferramentas/bestiario", label: "Bestiary Tracker" },
+    ],
   },
   {
     id: "conta",
