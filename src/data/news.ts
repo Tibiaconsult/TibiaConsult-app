@@ -6,6 +6,9 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "Elder Druid, Elite Knight e Royal Paladin: magias, Wheel, gemas, armas e simulador com rotação automática.", href: "/vocacoes" },
+  { date: "2026-09-26", text: "Hunts novas: Ingol (surface e subsolo), Norcferatu e Falcon Bastion.", href: "/hunts" },
+  { date: "2026-09-26", text: "Divisão de loot a partir do Party Hunt Analyser, com os comandos de transferência prontos.", href: "/ferramentas/loot" },
   { date: "2026-09-26", text: "Novo layout no estilo do tibia.com, com menu lateral e ícones de itens e feitiços.", href: "/" },
   { date: "2026-09-26", text: "Simuladores novos: set com comparador, forja, custo de gemas e Magic Shield com mana.", href: "/simulador/set" },
   { date: "2026-09-26", text: "Planejadores de Wheel of Destiny e de proficiência da wand ligados ao simulador de dano.", href: "/planejador/wheel" },
@@ -14,6 +17,16 @@ export const TICKER: { date: string; text: string; href?: string }[] = [
 ];
 
 export const NEWS: NewsEntry[] = [
+  {
+    date: "2026-09-26",
+    title: "Chegaram Druid, Knight e Paladin",
+    body: [
+      "Agora o site cobre quatro vocações. Cada uma tem página própria com as stances de junho de 2026, todas as magias de ataque com base, cooldown e grupo, a Wheel of Destiny, os mods supremos de gema e as armas de ponta.",
+      "O simulador dessas vocações monta a rotação sozinho: a cada 2 segundos ele usa a magia pronta que dá mais dano, contra a hunt e o número de bichos que você escolher. Knight e paladin usam skill e ataque da arma; calibre com um hit real para acertar o seu char.",
+      "Os números já seguem o patch de 07/07/2026, que mexeu em Blood Rage, Sharpshooter, Divine Caldera, Divine Barrage, Strong Ice Wave e nos Forked Spells.",
+    ],
+    href: "/vocacoes",
+  },
   {
     date: "2026-09-26",
     title: "Bem-vindo ao TibiaConsult",

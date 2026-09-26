@@ -25,13 +25,24 @@ export const MENU: MenuGroup[] = [
     ],
   },
   {
+    id: "vocacoes",
+    label: "Vocações",
+    icon: "community",
+    items: [
+      { href: "/vocacoes", label: "Todas" },
+      { href: "/vocacoes/druid", label: "Elder Druid" },
+      { href: "/vocacoes/knight", label: "Elite Knight" },
+      { href: "/vocacoes/paladin", label: "Royal Paladin" },
+    ],
+  },
+  {
     id: "biblioteca",
     label: "Biblioteca",
     icon: "library",
     items: [
-      { href: "/cooldowns", label: "Cooldowns" },
-      { href: "/gemas", label: "Gemas" },
-      { href: "/equipamento", label: "Equipamento" },
+      { href: "/cooldowns", label: "Cooldowns do sorc" },
+      { href: "/gemas", label: "Gemas do sorc" },
+      { href: "/equipamento", label: "Equipamento do sorc" },
       { href: "/hunts", label: "Hunts" },
     ],
   },
@@ -103,7 +114,7 @@ export default function Sidebar() {
     <aside className="tc-sidebar">
       <Link href="/" className="tc-side-logo">
         <span>TibiaConsult</span>
-        <small>Master Sorcerer</small>
+        <small>Consultoria de Tibia</small>
       </Link>
 
       <LoginBox />
