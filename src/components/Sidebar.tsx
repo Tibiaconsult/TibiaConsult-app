@@ -14,7 +14,16 @@ export interface MenuGroup {
 }
 
 export const MENU: MenuGroup[] = [
-  { id: "noticias", label: "Notícias", icon: "news", items: [{ href: "/", label: "Bem-vindo" }, { href: "/novidades", label: "Novidades" }] },
+  {
+    id: "noticias",
+    label: "Notícias",
+    icon: "news",
+    items: [
+      { href: "/", label: "Bem-vindo" },
+      { href: "/novidades", label: "Novidades" },
+      { href: "/feedback", label: "Reportar ou sugerir" },
+    ],
+  },
   {
     id: "biblioteca",
     label: "Biblioteca",

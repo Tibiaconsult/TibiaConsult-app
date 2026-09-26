@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { MedievalSharp } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import RightColumn from "@/components/RightColumn";
+import FeedbackButton from "@/components/FeedbackButton";
 import "./globals.css";
 
 const medieval = MedievalSharp({ weight: "400", subsets: ["latin"], variable: "--font-medieval" });
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="tc-content">{children}</main>
           <RightColumn />
         </div>
+        <FeedbackButton />
         <footer className="tc-footer on-dark">
           Tibia e todo o seu conteúdo são de propriedade da CipSoft GmbH. Este site é uma ferramenta de fãs, sem vínculo com a CipSoft. Dados
           conferidos na TibiaWiki e no tibia.com.

@@ -1,25 +1,26 @@
 // Ícones de itens (baixados para /public/items) e de feitiços (static.tibia.com, biblioteca oficial).
 
-const PNG_ITEMS = new Set([
-  "Moonsilver_Channeler",
-  "Stellar_Moonsilver_Channeler",
-  "Moonsilver_Nimbus_Hat",
-  "Arcanomancer_Sigil",
-  "Enchanted_Flamingo_Amulet_of_Destruction",
-]);
+import { LOCAL_ITEMS } from "@/data/localItems";
+import { wikiImage } from "@/lib/md5";
 
 export function itemSlug(name: string): string {
   return name.trim().replace(/ /g, "_");
 }
 
-/** Caminho do sprite de um item. Para nomes compostos ("A / B"), usa o primeiro. */
+/** Sprite de um item: arquivo local quando existe; senão, a imagem da TibiaWiki. Nomes compostos usam o primeiro. */
 export function itemIcon(name: string): string {
   const first = name
     .replace(/\(.*?\)/g, "")
     .split(/\s+ou\s+|\//)[0]
     .trim();
   const slug = itemSlug(first);
-  return `/items/${encodeURIComponent(slug)}.${PNG_ITEMS.has(slug) ? "png" : "gif"}`;
+  const ext = LOCAL_ITEMS[slug];
+  return ext ? `/items/${encodeURIComponent(slug)}.${ext}` : wikiImage(first);
+}
+
+/** Sprite de uma criatura (TibiaWiki). */
+export function creatureIcon(name: string): string {
+  return wikiImage(name);
 }
 
 const SPELL_ICON: Record<string, string> = {
