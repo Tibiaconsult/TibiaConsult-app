@@ -2,7 +2,7 @@
 
 import SaveToChar from "@/components/SaveToChar";
 import ComboPlayer from "@/components/ComboPlayer";
-import { spellIcon } from "@/lib/icons";
+import { sorcererSteps } from "@/lib/player-steps";
 import { useEffect, useMemo, useState } from "react";
 import { SPELLS, spellById, ELEMENT_LABEL, Element } from "@/data/spells";
 import {
@@ -170,7 +170,7 @@ export default function RotationBuilder() {
 
       <div>
         <div className="font-bold mb-1">Ver a rotação animada</div>
-        <ComboPlayer steps={steps.map((s) => ({ t: s.t, id: s.spellId, name: spellById(s.spellId)?.name ?? s.spellId, icon: spellIcon(s.spellId) }))} />
+        <ComboPlayer steps={sorcererSteps(steps, mods)} />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import SaveToChar from "@/components/SaveToChar";
 import ComboPlayer from "@/components/ComboPlayer";
+import { vocSteps } from "@/lib/player-steps";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL } from "@/data/spells";
@@ -225,7 +226,7 @@ export default function ComboBuilder({ voc }: { voc: VocId }) {
       {steps.length > 0 && (
         <div>
           <div className="font-bold mb-1">Ver o combo animado</div>
-          <ComboPlayer steps={steps.map((s) => ({ t: s.t, id: s.spellId, name: byId(s.spellId)?.name ?? s.spellId, icon: byId(s.spellId) ? icon(byId(s.spellId)!.icon) : null }))} />
+          <ComboPlayer steps={vocSteps(voc, steps, opts)} />
         </div>
       )}
       <p className="muted text-[10px]">
