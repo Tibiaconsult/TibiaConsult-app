@@ -66,6 +66,8 @@ export const MENU: MenuGroup[] = [
       { href: "/hunts", label: "Hunts", keywords: "fichas de hunt respawn cacar party" },
       { href: "/hunts/preparar", label: "Preparar para a hunt", keywords: "preparar set imbuements combo charm sair para cacar" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker", keywords: "bestiario charm criaturas" },
+      { href: "/ferramentas/charms", label: "Charms", keywords: "charm planner pontos echoes zap enflame low blow dodge" },
+      { href: "/ferramentas/bosstiary", label: "Bosstiary Tracker", keywords: "boss bosses bosstiary boss points loot slot prowess mastery" },
       { href: "/ferramentas/imbuements", label: "Imbuements", keywords: "imbuir materiais lista de compras" },
       { href: "/ferramentas/loot", label: "Divisão de loot", keywords: "party hunt analyser split transferencia" },
     ],
