@@ -6,6 +6,12 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "Imbuements com os materiais de cada nível e lista de compras somada.", href: "/ferramentas/imbuements" },
+  { date: "2026-09-26", text: "Hoje no Tibia: criatura e boss boostados e a cidade do Rashid.", href: "/" },
+  { date: "2026-09-26", text: "Fichas de hunt com set sugerido para druid, knight, paladin e monk.", href: "/hunts" },
+  { date: "2026-09-26", text: "Exalted Monk e equipamento por slot para as quatro vocações.", href: "/vocacoes/monk" },
+  { date: "2026-09-26", text: "Minha área: sugestões de hunt, marcos da Wheel e bestiário de cada char seu.", href: "/minha-area" },
+  { date: "2026-09-26", text: "Calculadoras de experiência, stamina offline e blessings.", href: "/ferramentas/calculadoras" },
   { date: "2026-09-26", text: "Bestiary Tracker: as 833 criaturas, com charm points e progresso salvo por char.", href: "/ferramentas/bestiario" },
   { date: "2026-09-26", text: "Elder Druid, Elite Knight e Royal Paladin: magias, Wheel, gemas, armas e simulador com rotação automática.", href: "/vocacoes" },
   { date: "2026-09-26", text: "Hunts novas: Ingol (surface e subsolo), Norcferatu e Falcon Bastion.", href: "/hunts" },

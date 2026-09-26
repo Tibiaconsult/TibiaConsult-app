@@ -25,7 +25,7 @@ export default function Home() {
       </Box>
       <Box title="Novidades rápidas">
         <ul className="tc-ticker">
-          {TICKER.map((t, i) => (
+          {TICKER.slice(0, 8).map((t, i) => (
             <li key={i}>
               <span className="font-bold whitespace-nowrap">{formatDate(t.date)}</span>
               <span>
