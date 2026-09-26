@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Link from "next/link";
 import { MedievalSharp } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import RightColumn from "@/components/RightColumn";
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FeedbackButton />
         <footer className="tc-footer on-dark">
           Tibia e todo o seu conteúdo são de propriedade da CipSoft GmbH. Este site é uma ferramenta de fãs, sem vínculo com a CipSoft. Dados
-          conferidos na TibiaWiki e no tibia.com.
+          conferidos na TibiaWiki e no tibia.com. Plataforma beta, em desenvolvimento. <Link href="/termos">Termos de uso e privacidade</Link>.
         </footer>
       </body>
     </html>

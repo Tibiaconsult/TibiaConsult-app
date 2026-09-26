@@ -1,10 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Mode = "senha" | "link" | "criar";
+
+/** Versão do texto de /termos aceita no cadastro (fica gravada nos metadados da conta). */
+const TERMS_VERSION = "2026-09-26";
 
 export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
   const router = useRouter();
@@ -13,6 +17,7 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [msg, setMsg] = useState<string | null>(null);
+  const [accepted, setAccepted] = useState(false);
 
   const redirectTo = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
 
@@ -22,15 +27,25 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
     setMsg(null);
     const supabase = createClient();
     if (mode === "link") {
-      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo() } });
-      if (error) return (setStatus("error"), setMsg(error.message));
+      // o link só entra em conta que já existe: conta nova passa pela aba "Criar conta", com o aceite dos termos
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo(), shouldCreateUser: false } });
+      if (error)
+        return (
+          setStatus("error"),
+          setMsg(/signup|not allowed|not found/i.test(error.message) ? "Não há conta com esse e-mail. Crie a conta na aba \"Criar conta\"." : error.message)
+        );
       setStatus("sent");
       setMsg("Link enviado. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico).");
       return;
     }
     if (mode === "criar") {
       if (password.length < 8) return (setStatus("error"), setMsg("A senha precisa de pelo menos 8 caracteres."));
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: redirectTo() } });
+      if (!accepted) return (setStatus("error"), setMsg("Para criar a conta, leia e aceite os termos de uso."));
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: redirectTo(), data: { terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() } },
+      });
       if (error) return (setStatus("error"), setMsg(error.message));
       if (data.session) return router.push(next);
       setStatus("sent");
@@ -62,6 +77,12 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
         <p className="good">{msg}</p>
       ) : (
         <form onSubmit={submit} className="space-y-3">
+          {mode === "criar" && (
+            <div className="border-2 border-[#a33] rounded p-3 bg-[#f6d8d0] text-[12px]">
+              <b>Importante: não use o e-mail nem a senha da sua conta do Tibia.</b> Crie uma senha só para este site. O TibiaConsult nunca pede
+              login, senha ou token do Tibia, e ninguém da equipe vai pedir.
+            </div>
+          )}
           <label className="block">
             E-mail
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full" autoComplete="email" />
@@ -72,7 +93,19 @@ export default function LoginForm({ next = "/meus-chars" }: { next?: string }) {
               <input type="password" required minLength={mode === "criar" ? 8 : 1} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full" autoComplete={mode === "criar" ? "new-password" : "current-password"} />
             </label>
           )}
-          <button type="submit" disabled={status === "sending"} className="tc-btn disabled:opacity-50">
+          {mode === "criar" && (
+            <label className="flex items-start gap-2 text-[12px]">
+              <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="mt-0.5" required />
+              <span>
+                Li e aceito os{" "}
+                <Link href="/termos" target="_blank">
+                  termos de uso
+                </Link>
+                . Entendo que o TibiaConsult é uma plataforma beta, em desenvolvimento, gratuita e sem garantia, e que os cálculos são estimativas.
+              </span>
+            </label>
+          )}
+          <button type="submit" disabled={status === "sending" || (mode === "criar" && !accepted)} className="tc-btn disabled:opacity-50">
             {status === "sending" ? "Aguarde..." : mode === "senha" ? "Entrar" : mode === "criar" ? "Criar conta" : "Receber link de acesso"}
           </button>
           {msg && <p className={status === "error" ? "bad" : "good"}>{msg}</p>}

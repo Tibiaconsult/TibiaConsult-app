@@ -176,7 +176,7 @@ export const EXTRA_HUNTS: Hunt[] = [
       c("Crape Man", 9150, 5040, 3.4, [85, 115, 100, 105, 100, 90, 95], "Melee até 271, Crab Claw Snap 116-313, Energy Ball 331-383, Energy Wave 314-369."),
       c("Boar Man", 9200, 7100, 3.45, [90, 95, 110, 95, 85, 85, 95], "Melee até 498, Throwing Knife 375-392 de life drain, Death Strike 386-480, Energy Wave 311-400."),
     ],
-    element: "FOGO: média de 103% nos 6 bichos com peso igual (85 a 110%). Death vem logo atrás (média 101%). Energia é a pior: 75% em Harpy e Liodile.",
+    element: "FOGO ou DEATH, conforme o andar: com peso igual nos 6 bichos, fogo dá 103% e death 101%. O TibiaPal indica death na surface, -1 e -2 e fogo no -3. Energia é a pior: 75% em Harpy e Liodile.",
     set: SET_FOGO,
     play: [
       "Master of Flames. Se o andar tiver muito Crape Man (death 115%), confira death no simulador.",

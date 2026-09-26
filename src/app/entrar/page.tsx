@@ -27,10 +27,14 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
             <li>Salvar seus chars com set, Wheel, gemas e hunts.</li>
             <li>Mandar o char direto para o simulador de dano.</li>
             <li>Marcar o bestiário que você já completou.</li>
-            <li>Aparecer na comunidade, se quiser.</li>
+            <li>Em breve: perfil público do char, só se você quiser.</li>
           </ul>
           <p className="text-[11px] mt-3">
             O site funciona sem conta: <Link href="/">voltar ao início</Link>.
+          </p>
+          <p className="text-[11px] mt-2 bad">Nunca use aqui o e-mail e a senha da sua conta do Tibia.</p>
+          <p className="text-[11px] mt-2">
+            <Link href="/termos">Termos de uso e privacidade</Link>
           </p>
         </Box>
       </div>
