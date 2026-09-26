@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { itemIcon, spellIcon } from "@/lib/icons";
+import Boosted from "./Boosted";
 
 function ThemeBox({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -14,6 +15,9 @@ export default function RightColumn() {
   const ew = spellIcon("energy-wave");
   return (
     <aside className="tc-right">
+      <ThemeBox title="Boostados hoje">
+        <Boosted compact />
+      </ThemeBox>
       <ThemeBox title="Atalhos">
         <Link href="/simulador" className="tc-quick">
           {/* eslint-disable-next-line @next/next/no-img-element */}

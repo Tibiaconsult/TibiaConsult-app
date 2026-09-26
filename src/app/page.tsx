@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Box from "@/components/Box";
+import Boosted from "@/components/Boosted";
 import { NEWS, TICKER, formatDate } from "@/data/news";
 import { TIBIA, itemIcon, spellIcon } from "@/lib/icons";
 
@@ -15,6 +16,9 @@ const FEATURES = [
 export default function Home() {
   return (
     <div>
+      <Box title="Boostados hoje">
+        <Boosted />
+      </Box>
       <Box title="Novidades rápidas">
         <ul className="tc-ticker">
           {TICKER.map((t, i) => (
