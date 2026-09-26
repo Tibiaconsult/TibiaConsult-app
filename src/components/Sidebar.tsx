@@ -42,7 +42,7 @@ export const MENU: MenuGroup[] = [
     label: "Biblioteca",
     icon: "library",
     items: [
-      { href: "/cooldowns", label: "Cooldowns do sorc" },
+      { href: "/cooldowns", label: "Cooldowns" },
       { href: "/gemas", label: "Gemas do sorc" },
       { href: "/equipamento", label: "Equipamento do sorc" },
       { href: "/hunts", label: "Hunts" },
@@ -65,7 +65,7 @@ export const MENU: MenuGroup[] = [
     label: "Planejadores",
     icon: "abouttibia",
     items: [
-      { href: "/rotacoes", label: "Rotações" },
+      { href: "/rotacoes", label: "Rotações e combos" },
       { href: "/planejador/wheel", label: "Wheel of Destiny" },
       { href: "/planejador/proficiencia", label: "Proficiência" },
     ],

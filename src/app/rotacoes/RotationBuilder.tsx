@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SPELLS, spellById, ELEMENT_LABEL, Element } from "@/data/spells";
 import {
   DEFAULT_MODIFIERS,
@@ -31,6 +31,14 @@ const LABELS: Record<keyof Modifiers, string> = {
 export default function RotationBuilder() {
   const [steps, setSteps] = useState<RotationStep[]>(START);
   const [mods, setMods] = useState<Modifiers>({ ...DEFAULT_MODIFIERS, stance: "fire" });
+
+  // ?add= vem do botão "+ combo" da página de Cooldowns
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const add = new URLSearchParams(window.location.search).get("add");
+    if (add && spellById(add)) setSteps((prev) => [...prev, { t: prev.reduce((m, s) => Math.max(m, s.t), -2) + 2, spellId: add }]);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const conflicts = useMemo(() => validateRotation(steps, mods), [steps, mods]);
   const elements = useMemo(() => effectiveElements(steps, mods.stance), [steps, mods.stance]);
@@ -128,6 +136,9 @@ export default function RotationBuilder() {
           + feitiço
         </button>
         <span className="muted">Mana da sequência: {manaPerCycle(steps)}</span>
+        <a className="tc-btn" href="/cooldowns">
+          Ver cooldowns
+        </a>
         <a className="tc-btn" href={`/simulador?rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
           Calcular o dano desta rotação
         </a>

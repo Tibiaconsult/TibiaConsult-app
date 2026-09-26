@@ -33,6 +33,15 @@ export default function RightColumn() {
           <img src={itemIcon("Soulmantle")} alt="" width={32} height={32} />
           <span>Montar set</span>
         </Link>
+        <Link href="/planejador/wheel" className="tc-quick">
+          {/* ícone de revelation do planner oficial (sprite de static.tibia.com) */}
+          <span
+            aria-hidden
+            className="inline-block w-8 h-8 shrink-0 rounded-full"
+            style={{ background: "url(https://static.tibia.com/images/community/wheelofdestiny/icons-skillwheel-largeperks.png) 0 0 / 512px 32px" }}
+          />
+          <span>Roda de habilidade</span>
+        </Link>
         <Link href="/hunts" className="tc-quick">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={itemIcon("Sanguine Coil")} alt="" width={32} height={32} />

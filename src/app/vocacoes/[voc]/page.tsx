@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
@@ -57,6 +58,7 @@ export default async function VocationPage({
         </div>
       </Box>
 
+      <div id="simulador" className="scroll-mt-20" />
       {v.id === "monk" ? (
         <Box title="Simulador de dano">
           <p className="text-[12px]">
@@ -74,6 +76,14 @@ export default async function VocationPage({
       )}
 
       <Box title="Magias de ataque e cooldowns">
+        <p className="mb-2 text-[12px]">
+          <Link className="tc-btn !py-0.5" href={`/rotacoes?voc=${v.id}`}>
+            Montar combo de {v.promoted}
+          </Link>{" "}
+          <Link className="tc-btn !py-0.5" href={`/cooldowns?voc=${v.id}`}>
+            Tabela de cooldowns
+          </Link>
+        </p>
         <p className="mb-3 text-[12px]">
           Grupo de ataque: 2 s entre qualquer magia ou runa de ataque (4 s
           depois de Eternal Winter e Wrath of Nature). Magias do mesmo grupo

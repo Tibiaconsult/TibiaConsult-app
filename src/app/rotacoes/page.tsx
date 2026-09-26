@@ -4,6 +4,11 @@ import { ROTATIONS } from "@/data/rotations";
 import { spellById } from "@/data/spells";
 import { manaPerCycle } from "@/lib/rotation";
 import RotationBuilder from "./RotationBuilder";
+import ComboBuilder from "./ComboBuilder";
+import VocTabs, { parseVoc } from "@/components/VocTabs";
+import { VOCATIONS } from "@/data/vocations";
+
+export const metadata = { title: "Rotações e combos" };
 
 function Timeline({ steps }: { steps: { t: number; spellId: string; note?: string }[] }) {
   return (
@@ -36,10 +41,38 @@ function Timeline({ steps }: { steps: { t: number; spellId: string; note?: strin
   );
 }
 
-export default function RotacoesPage() {
+export default async function RotacoesPage({ searchParams }: { searchParams: Promise<{ voc?: string }> }) {
+  const voc = parseVoc((await searchParams).voc);
+  if (voc !== "sorcerer") {
+    const v = VOCATIONS[voc];
+    return (
+      <div>
+        <h1>Combos de {v.promoted}</h1>
+        <VocTabs base="/rotacoes" current={voc} />
+        <div id="montador" className="scroll-mt-20" />
+        <Box title="Montador de combos">
+          <p className="mb-3">
+            Monte a sequência de magias. O validador acusa o grupo de ataque, o cooldown próprio e o grupo secundário de cada magia, com o estágio das
+            revelations e os augments que reduzem cooldown.
+          </p>
+          <ComboBuilder voc={voc} />
+        </Box>
+        {v.tips.length > 0 && (
+          <Box title="Dicas da vocação">
+            <ul className="list-disc pl-5 space-y-1">
+              {v.tips.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </Box>
+        )}
+      </div>
+    );
+  }
   return (
     <div>
-      <h1>Rotações por elemento</h1>
+      <h1>Rotações e combos</h1>
+      <VocTabs base="/rotacoes" current={voc} />
       <p className="on-dark mb-4">
         Ciclos de 8 s montados pelos cooldowns oficiais. A stance converte o próximo feitiço de outro elemento, e é isso que deixa a Energy Wave
         entrar em qualquer hunt.
@@ -71,6 +104,7 @@ export default function RotacoesPage() {
         ))}
       </div>
       <div className="mt-6">
+        <div id="montador" className="scroll-mt-20" />
         <Box title="Montador de rotação">
           <p className="mb-3">
             Monte a sua sequência. O validador acusa grupo de ataque, cooldown individual e grupo secundário, e mostra o elemento convertido
