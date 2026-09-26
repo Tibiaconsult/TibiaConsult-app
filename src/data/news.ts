@@ -6,6 +6,7 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-26", text: "19 hunts de level alto: as 5 áreas do Soul War, Gnomprona, Rotten Blood, Radiant Ascendancy e Skyhold, Forsaken e Unhallowed Crypt, Bloodfire Gorge, Bulltaurs e as alas da Secret Library.", href: "/hunts" },
   { date: "2026-09-26", text: "Barra no topo: escolha a vocação (e o seu char) uma vez e o site todo abre nela. Busca rápida por hunt, magia, item e criatura.", href: "/minha-area" },
   { date: "2026-09-26", text: "Salvar no char: roda, set e combo ficam guardados e abrem com um clique na Minha área.", href: "/minha-area" },
   { date: "2026-09-26", text: "Cooldowns, gemas, equipamento e combos para as cinco vocações.", href: "/cooldowns" },

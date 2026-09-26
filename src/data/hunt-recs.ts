@@ -21,6 +21,44 @@ export const REC_SOURCE = "TibiaPal, Hunting Places (dados pós-rebalanceamento 
 export const SHARE_BONUS = [0, 0.2, 0.35, 0.7, 1];
 
 export const HUNT_RECS: Record<string, HuntRec> = {
+  // Hunts de level alto (adicionadas em 26/09/2026). TibiaPal lista Soul War, Gnomprona, Rotten Blood, Unhallowed Crypt e as áreas Radiant só na aba de times.
+  ...Object.fromEntries(
+    ["ebb-and-flow", "furious-crater", "claustrophobic-inferno", "rotten-wasteland", "mirrored-nightmare"].map((id) => [
+      id,
+      { solo: {}, team: 600, detail: "O TibiaPal lista as áreas do Soul War só como hunt de time, a partir de 600." },
+    ]),
+  ),
+  ...Object.fromEntries(
+    ["monster-graveyard", "sparkling-pools"].map((id) => [id, { solo: {}, team: 600, detail: "O TibiaPal lista Gnomprona só como hunt de time, a partir de 600." }]),
+  ),
+  ...Object.fromEntries(
+    ["jaded-roots", "gloom-pillars", "darklight-core"].map((id) => [id, { solo: {}, team: 800, detail: "O TibiaPal lista Rotten Blood só como hunt de time, a partir de 800." }]),
+  ),
+  "radiant-ascendancy": { solo: {}, team: 1000, detail: "O TibiaPal lista Radiant Ascendancy como hunt de time, a partir de 1000." },
+  "radiant-skyhold": { solo: {}, team: 1200, detail: "O TibiaPal lista Radiant Skyhold como hunt de time, a partir de 1200." },
+  "unhallowed-crypt": { solo: {}, team: 800, detail: "O TibiaPal lista Unhallowed Crypt como hunt de time, a partir de 800." },
+  "forsaken-crypt": {
+    solo: { paladin: 1000, sorcerer: 1000, druid: 1000 },
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier" },
+    detail: "O TibiaPal não lista Forsaken Crypt para knight nem monk. A área é feita para solo.",
+  },
+  "bloodfire-gorge": {
+    solo: { knight: 800, paladin: 800, sorcerer: 800, druid: 800, monk: 800 },
+    team: 500,
+    style: { knight: "Físico", paladin: "Diamond Arrows, Ethereal", sorcerer: "Fogo", druid: "Forked Thorns + Forked Glacier", monk: "Físico" },
+  },
+  "bulltaur-lair": {
+    solo: { knight: 800, paladin: 800, sorcerer: 800, druid: 600, monk: 800 },
+    style: { knight: "Terra", paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
+    detail: "Monk: andar -2.",
+  },
+  ...Object.fromEntries(
+    ["secret-library-fire", "secret-library-energy", "secret-library-ice"].map((id) => [
+      id,
+      { solo: { monk: 1000 }, team: 500, style: { monk: "Terra" }, detail: "TibiaPal: monk solo 1000+ nas alas de energia, fogo e gelo; time a partir de 500." },
+    ]),
+  ),
+
   nimmersatt: {
     solo: { knight: 700, paladin: 600, sorcerer: 600, druid: 500, monk: 600 },
     style: { sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", knight: "Terra", monk: "Terra" },
