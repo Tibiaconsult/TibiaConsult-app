@@ -167,8 +167,8 @@ export default function DamageSimulator() {
       const sp = spellById(st.spellId)!;
       const el = els[i];
       const expected = expectedOnGroup(sp.id, el, rotInputs);
-      const isArea = !/strike|lightning|sudden/.test(sp.id);
-      const hits = isArea ? areaTargets : 1;
+      // Lightning acorrenta em 2 alvos extras (3 no total); strikes e SD são alvo único; o resto é área.
+      const hits = sp.id === "lightning" ? Math.min(3, areaTargets) : /strike|sudden/.test(sp.id) ? 1 : areaTargets;
       const echo = sp.id === "death-echo" ? 1.5 : 1;
       const dmg = expected * hits * echo;
       total += dmg;
@@ -374,7 +374,10 @@ export default function DamageSimulator() {
             <div className="font-bold text-[#3a1a00] text-[14px]">
               {r.name} {i === 0 && <span className="good text-[11px]">melhor rotação</span>}
             </div>
-            <div className="muted text-[11px] mb-2">stance {ELEMENT_LABEL[r.stance]} · ciclo de {cycleSeconds} s</div>
+            <div className="muted text-[11px] mb-2">
+              stance {ELEMENT_LABEL[r.stance]} · ciclo de {cycleSeconds} s
+              {r.id === "death" && " · supõe o augment T1 do Death Echo (cooldown 4 s) na Wheel"}
+            </div>
             <table>
               <tbody>
                 {detail.map(({ sp, el, expected, hits, echo, dmg }, j) => (
