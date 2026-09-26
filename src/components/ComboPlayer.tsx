@@ -6,12 +6,49 @@ import { wikiImage } from "@/lib/md5";
 
 // Toca o combo no tempo do jogo: cada magia aparece no segundo em que sai, com a animação da TibiaWiki
 // (ou o ícone, quando a wiki não tem animação daquela magia). O palco tem a grade de sqm de 32 px do Tibia.
+// Embaixo, a barra de magias como a do jogo: cada magia do combo com o relógio do cooldown, a trava do grupo de ataque
+// e a próxima magia da ordem.
 
 export interface PlayerStep {
   t: number;
   id: string;
   name: string;
   icon: string | null;
+  /** cooldown próprio efetivo, em segundos */
+  cd?: number;
+  /** trava do grupo de ataque (2 s na maioria, 4 s nos focus) */
+  lock?: number;
+  /** grupo secundário (ex.: great beams, focus) */
+  group?: { id: string; label: string; cd: number };
+}
+
+/** Ícone com o relógio de cooldown: a parte escura encolhe no sentido horário até a magia voltar. */
+function CooldownSlot({ step, remaining, total, why, active, next }: { step: PlayerStep; remaining: number; total: number; why: string; active: boolean; next: boolean }) {
+  const frac = total > 0 ? Math.min(1, remaining / total) : 0;
+  return (
+    <div className="flex flex-col items-center gap-0.5 w-[58px]" title={remaining > 0 ? `${step.name}: volta em ${remaining.toFixed(1)} s (${why})` : `${step.name}: pronta`}>
+      <div
+        className="relative w-[44px] h-[44px] rounded-sm overflow-hidden"
+        style={{ outline: active ? "2px solid #ffd700" : next ? "2px dashed #7fd35b" : "1px solid #000", boxShadow: active ? "0 0 10px #ffd700" : undefined }}
+      >
+        {step.icon ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={step.icon} alt="" width={44} height={44} style={{ imageRendering: "pixelated" }} />
+        ) : (
+          <div className="w-full h-full bg-black/60 text-[9px] leading-tight p-0.5">{step.name}</div>
+        )}
+        {frac > 0 && (
+          <div
+            className="absolute inset-0 flex items-center justify-center font-bold text-[14px] text-white [text-shadow:0_1px_2px_#000]"
+            style={{ background: `conic-gradient(transparent ${(1 - frac) * 360}deg, rgba(0,0,0,.72) 0)` }}
+          >
+            {Math.ceil(remaining - 1e-9)}
+          </div>
+        )}
+      </div>
+      <span className="text-[9px] leading-tight text-center text-white/80 line-clamp-2">{step.name}</span>
+    </div>
+  );
 }
 
 const SPEEDS = [0.5, 1, 2];
@@ -56,6 +93,29 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
   const anim = cur ? SPELL_ANIMATIONS[cur.id] : undefined;
   const scale = anim ? Math.min(1, MAX_SIDE / Math.max(anim.w, anim.h)) : 1;
   const src = anim ? wikiImage(anim.file) : null;
+
+  // casts que já saíram nesta volta e, repetindo, os da volta anterior (o cooldown atravessa o fim do combo)
+  const cast = ordered.filter((st) => st.t <= now + 1e-9);
+  const past = loop && round > 0 ? ordered.map((st) => ({ ...st, t: st.t - end })) : [];
+  const history = [...past, ...cast];
+  const lastOf = (pred: (st: PlayerStep) => boolean) => {
+    for (let i = history.length - 1; i >= 0; i--) if (pred(history[i])) return history[i];
+    return null;
+  };
+  // uma casa por magia, na ordem em que aparece no combo
+  const slots = ordered.filter((st, i) => ordered.findIndex((x) => x.id === st.id) === i);
+  const slotState = (st: PlayerStep) => {
+    const own = lastOf((x) => x.id === st.id);
+    const ownRem = own && own.cd ? own.t + own.cd - now : 0;
+    const grp = st.group ? lastOf((x) => x.group?.id === st.group!.id) : null;
+    const grpRem = grp && grp.group ? grp.t + grp.group.cd - now : 0;
+    if (grpRem > ownRem && grpRem > 0) return { remaining: grpRem, total: grp!.group!.cd, why: `grupo ${st.group!.label}` };
+    return { remaining: Math.max(0, ownRem), total: own?.cd ?? 0, why: "cooldown próprio" };
+  };
+  const lastAny = history[history.length - 1] ?? null;
+  const lock = lastAny?.lock ?? 2;
+  const lockRem = lastAny ? Math.max(0, lastAny.t + lock - now) : 0;
+  const nextStep = ordered.find((st) => st.t > now + 1e-9) ?? (loop ? { ...ordered[0], t: ordered[0].t + end } : null);
 
   const jump = (t: number) => {
     setElapsed(round * end + t);
@@ -115,6 +175,30 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
         )}
       </div>
 
+      {/* barra de magias: cooldown de cada uma, trava do grupo de ataque e a próxima da ordem */}
+      <div className="mt-2 rounded bg-black/40 p-2">
+        <div className="flex flex-wrap gap-1">
+          {slots.map((st) => {
+            const s = slotState(st);
+            return <CooldownSlot key={st.id} step={st} {...s} active={cur?.id === st.id && now - (cur?.t ?? 0) < (cur?.lock ?? 2)} next={nextStep?.id === st.id} />;
+          })}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px]">
+          <span className="flex items-center gap-1">
+            Grupo de ataque
+            <span className="relative inline-block w-[90px] h-[8px] rounded bg-white/15 overflow-hidden">
+              <span className="absolute inset-y-0 left-0 bg-[#e0a33a]" style={{ width: `${(lockRem / lock) * 100}%` }} />
+            </span>
+            {lockRem > 0 ? `${lockRem.toFixed(1).replace(".", ",")} s` : "livre"}
+          </span>
+          {nextStep && (
+            <span>
+              Próxima: <b>{nextStep.name}</b> em {Math.max(0, nextStep.t - now).toFixed(1).replace(".", ",")} s
+            </span>
+          )}
+        </div>
+      </div>
+
       {/* linha do tempo com o cursor */}
       <div className="relative mt-2 h-[30px] rounded bg-black/40">
         {ordered.map((s, i) => (
@@ -163,7 +247,10 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
           {now.toFixed(1).replace(".", ",")} s de {end} s
         </span>
       </div>
-      <p className="mt-1 text-[10px] text-white/50">Animações: TibiaWiki. Cada quadrado do palco é um sqm.</p>
+      <p className="mt-1 text-[10px] text-white/50">
+        Animações: TibiaWiki. Cada quadrado do palco é um sqm. Na barra, o número é quantos segundos faltam para a magia voltar; a borda dourada é a
+        que está saindo e a tracejada verde é a próxima do combo.
+      </p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
 import SaveToChar from "@/components/SaveToChar";
 import ComboPlayer from "@/components/ComboPlayer";
+import { sorcererSteps, vocSteps } from "@/lib/player-steps";
 import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS } from "@/data/hunt-recs";
 import { IMBUEMENTS, IMBUE_TIER } from "@/data/imbuements";
@@ -306,7 +307,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
               })}
             </ol>
             <div className="mt-3">
-              <ComboPlayer steps={combo.steps.map((s) => ({ t: s.t, id: s.spellId, ...spellInfo(s.spellId) }))} />
+              <ComboPlayer steps={voc === "sorcerer" ? sorcererSteps(combo.steps) : vocSteps(voc, combo.steps)} />
             </div>
             <div className="flex flex-wrap gap-3 items-center mt-3">
               <a className="tc-btn" href={`/rotacoes?${combo.query}#montador`}>
