@@ -4,7 +4,7 @@ import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { SLOTS } from "@/data/equipment";
 import { SetChoice, SlotId, emptySet, encodeSet } from "@/lib/set";
-import { deleteChar, updateChar } from "../actions";
+import { checkVerify, deleteChar, startVerify, updateChar } from "../actions";
 import { VOCATIONS } from "../vocations";
 
 function slotItems(id: string): string[] {
@@ -81,10 +81,10 @@ function charToSet(c: Record<string, unknown>): SetChoice {
   return s;
 }
 
-export default async function CharPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ salvo?: string; erro?: string }> }) {
+export default async function CharPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ salvo?: string; erro?: string; verif?: string }> }) {
   if (!hasSupabaseEnv()) redirect("/entrar");
   const { id } = await params;
-  const { salvo, erro } = await searchParams;
+  const { salvo, erro, verif } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -120,6 +120,43 @@ export default async function CharPage({ params, searchParams }: { params: Promi
         <a className="tc-btn" href={`/planejador/wheel?level=${c.level}`}>
           Planejar a Wheel
         </a>
+      </div>
+
+      <div id="mural" className="max-w-4xl">
+        <Box title="Caixão e Vela Preta e ranking de XP">
+          {c.verified ? (
+            <p className="good text-[12px]">
+              Char verificado{c.verified_at ? ` em ${new Date(c.verified_at).toLocaleDateString("pt-BR")}` : ""}. Para aparecer no mural e no
+              ranking, deixe marcada a opção &quot;Mostrar no mural e no ranking&quot; no quadro Básico e salve.
+            </p>
+          ) : (
+            <div className="space-y-2 text-[12px]">
+              <p>
+                Só aparecem no mural e no ranking chars verificados. A verificação prova que o char é seu: gere um código, cole em qualquer
+                parte do comentário do char no tibia.com (Account Management, Edit Character, Comment) e clique em verificar. Depois pode apagar
+                o código do comentário.
+              </p>
+              {c.verify_code && (
+                <p>
+                  Seu código: <code className="bg-white/70 px-2 py-0.5 rounded font-bold">{c.verify_code}</code>
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2">
+                <form action={startVerify}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button className="tc-btn">{c.verify_code ? "Gerar outro código" : "Gerar código"}</button>
+                </form>
+                {c.verify_code && (
+                  <form action={checkVerify}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <button className="tc-btn">Verificar agora</button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
+          {verif && verif !== "codigo" && <p className={verif === "ok" ? "good mt-2" : "bad mt-2"}>{verif === "ok" ? "Char verificado." : verif}</p>}
+        </Box>
       </div>
 
       <form action={updateChar} className="max-w-4xl">
@@ -160,6 +197,13 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             <label>
               Mundo
               <input name="world" defaultValue={c.world ?? ""} className="mt-1 w-full" />
+            </label>
+            <label className="flex items-start gap-2 sm:col-span-2 text-[12px]">
+              <input type="checkbox" name="public_profile" defaultChecked={Boolean(c.public_profile)} className="mt-0.5" />
+              <span>
+                Mostrar no mural &quot;Caixão e Vela Preta&quot; e no ranking de XP. Ficam visíveis para todos: nome, mundo, vocação, level, XP
+                ganha e mortes. Só vale para char verificado.
+              </span>
             </label>
           </div>
         </Box>

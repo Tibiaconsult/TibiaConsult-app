@@ -81,6 +81,15 @@ export const MENU: MenuGroup[] = [
     ],
   },
   {
+    id: "comunidade",
+    label: "Comunidade",
+    icon: "forum",
+    items: [
+      { href: "/comunidade/mural", label: "Caixão e Vela Preta" },
+      { href: "/comunidade/ranking", label: "Ranking de XP" },
+    ],
+  },
+  {
     id: "conta",
     label: "Conta",
     icon: "account",

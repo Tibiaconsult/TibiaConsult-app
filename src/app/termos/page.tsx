@@ -47,10 +47,12 @@ export default function TermosPage() {
             <li>E-mail de acesso e a data em que você aceitou estes termos.</li>
             <li>O que você cadastrar: chars, set, Wheel, gemas, anotações e progresso do bestiário.</li>
             <li>Sugestões e relatos de erro enviados pela caixa de feedback.</li>
+            <li>Level, experiência e mortes dos chars cadastrados, lidos do tibia.com pela API pública do TibiaData.</li>
           </ul>
           <p>
-            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra, a menos que um recurso futuro de perfil público
-            seja criado e você escolha publicar. O administrador do site pode ver os dados para manutenção e suporte. Não vendemos nem repassamos
+            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você verificar um
+            char e ligar &quot;Mostrar no mural e no ranking&quot;, o nome, mundo, vocação, level, XP ganha e mortes desse char ficam visíveis
+            para todos no mural Caixão e Vela Preta e no ranking de XP. Desligar a opção tira o char das duas páginas. O administrador do site pode ver os dados para manutenção e suporte. Não vendemos nem repassamos
             dados a ninguém.
           </p>
           <p>

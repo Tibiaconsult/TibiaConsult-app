@@ -83,6 +83,7 @@ export async function updateChar(form: FormData) {
       gems: text(form, "gems"),
       hunts: text(form, "hunts"),
       notes: text(form, "notes"),
+      public_profile: form.get("public_profile") === "on",
     })
     .eq("id", id);
   revalidatePath("/meus-chars");
@@ -98,4 +99,25 @@ export async function deleteChar(form: FormData) {
   await supabase.from("chars").delete().eq("id", id);
   revalidatePath("/meus-chars");
   redirect("/meus-chars");
+}
+
+export async function startVerify(form: FormData) {
+  const id = text(form, "id");
+  if (!id) return;
+  const { supabase } = await requireUser();
+  const { error } = await supabase.rpc("start_verify", { p_char: id });
+  revalidatePath(`/meus-chars/${id}`);
+  redirect(`/meus-chars/${id}?verif=${encodeURIComponent(error ? error.message : "codigo")}#mural`);
+}
+
+export async function checkVerify(form: FormData) {
+  const id = text(form, "id");
+  if (!id) return;
+  const { supabase } = await requireUser();
+  const { data, error } = await supabase.rpc("check_verify", { p_char: id });
+  // atualiza snapshot e mortes na hora, para o char já aparecer
+  const { data: c } = await supabase.from("chars").select("name").eq("id", id).single();
+  if (!error && data === "ok" && c?.name) await supabase.rpc("refresh_char", { p_name: c.name });
+  revalidatePath(`/meus-chars/${id}`);
+  redirect(`/meus-chars/${id}?verif=${encodeURIComponent(error ? error.message : String(data))}#mural`);
 }
