@@ -14,6 +14,7 @@ const NAV = [
   { href: "/", label: "Início" },
   { href: "/cooldowns", label: "Cooldowns" },
   { href: "/rotacoes", label: "Rotações" },
+  { href: "/simulador", label: "Simulador" },
   { href: "/gemas", label: "Gemas" },
   { href: "/equipamento", label: "Equipamento" },
   { href: "/hunts", label: "Hunts" },
