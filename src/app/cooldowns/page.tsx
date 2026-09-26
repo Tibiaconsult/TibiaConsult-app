@@ -1,4 +1,5 @@
 import Box from "@/components/Box";
+import { SpellIcon } from "@/components/Icons";
 import { SPELLS, SUPPORT_SPELLS, ELEMENT_LABEL, SECONDARY_GROUP_LABEL } from "@/data/spells";
 
 export default function CooldownsPage() {
@@ -30,6 +31,7 @@ export default function CooldownsPage() {
               {SPELLS.map((s) => (
                 <tr key={s.id}>
                   <td className="font-bold">
+                    <SpellIcon id={s.id} />
                     {s.name}
                     {s.notes && <div className="muted font-normal mt-0.5 text-[11px]">{s.notes}</div>}
                   </td>
@@ -63,7 +65,10 @@ export default function CooldownsPage() {
             <tbody>
               {SUPPORT_SPELLS.map((s) => (
                 <tr key={s.name}>
-                  <td className="font-bold whitespace-nowrap">{s.name}</td>
+                  <td className="font-bold whitespace-nowrap">
+                    <SpellIcon id={s.name} />
+                    {s.name}
+                  </td>
                   <td className="whitespace-nowrap italic">{s.words}</td>
                   <td>{s.mana}</td>
                   <td className="whitespace-nowrap">{s.cooldown}</td>

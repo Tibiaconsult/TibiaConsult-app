@@ -1,4 +1,5 @@
 import Box from "@/components/Box";
+import { ItemSprite } from "@/components/Icons";
 import { HUNTS } from "@/data/hunts";
 
 function pct(v: number) {
@@ -66,7 +67,10 @@ export default function HuntsPage() {
                   {h.set.map((s) => (
                     <tr key={s.slot}>
                       <td className="muted whitespace-nowrap">{s.slot}</td>
-                      <td className="font-bold">{s.item}</td>
+                      <td className="font-bold">
+                        <ItemSprite name={s.item} size={28} />
+                        {s.item}
+                      </td>
                       <td>{s.why}</td>
                     </tr>
                   ))}

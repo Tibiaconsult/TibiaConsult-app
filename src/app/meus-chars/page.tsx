@@ -5,7 +5,8 @@ import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { addChar } from "./actions";
 import { VOCATIONS } from "./vocations";
 
-export default async function MeusCharsPage() {
+export default async function MeusCharsPage({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
+  const { erro } = await searchParams;
   if (!hasSupabaseEnv()) redirect("/entrar");
   const supabase = await createClient();
   const {
@@ -27,6 +28,7 @@ export default async function MeusCharsPage() {
         </form>
       </div>
 
+      {erro && <p className="on-dark bad mb-3">Não foi possível salvar: {erro}</p>}
       <Box title="Seus chars">
         <div className="grid gap-3 md:grid-cols-2">
           {(chars ?? []).map((c) => {

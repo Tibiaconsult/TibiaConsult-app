@@ -14,7 +14,10 @@ export function itemSlug(name: string): string {
 
 /** Caminho do sprite de um item. Para nomes compostos ("A / B"), usa o primeiro. */
 export function itemIcon(name: string): string {
-  const first = name.split("/")[0].trim();
+  const first = name
+    .replace(/\(.*?\)/g, "")
+    .split(/\s+ou\s+|\//)[0]
+    .trim();
   const slug = itemSlug(first);
   return `/items/${encodeURIComponent(slug)}.${PNG_ITEMS.has(slug) ? "png" : "gif"}`;
 }

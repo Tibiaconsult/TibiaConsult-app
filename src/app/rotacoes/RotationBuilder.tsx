@@ -128,6 +128,9 @@ export default function RotationBuilder() {
           + feitiço
         </button>
         <span className="muted">Mana da sequência: {manaPerCycle(steps)}</span>
+        <a className="tc-btn" href={`/simulador?rot=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}&stance=${mods.stance ?? "energy"}`}>
+          Calcular o dano desta rotação
+        </a>
       </div>
 
       {conflicts.length === 0 ? (

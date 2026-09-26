@@ -31,7 +31,7 @@ export async function addChar(form: FormData) {
   const name = text(form, "name");
   if (!name) return;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("chars")
     .insert({
       user_id: user.id,
@@ -44,7 +44,8 @@ export async function addChar(form: FormData) {
     .select("id")
     .single();
   revalidatePath("/meus-chars");
-  if (data?.id) redirect(`/meus-chars/${data.id}`);
+  if (error || !data?.id) redirect(`/meus-chars?erro=${encodeURIComponent(error?.message ?? "não foi possível cadastrar")}`);
+  redirect(`/meus-chars/${data.id}`);
 }
 
 export async function updateChar(form: FormData) {
@@ -53,7 +54,7 @@ export async function updateChar(form: FormData) {
   const name = text(form, "name");
   if (!id || !name) return;
 
-  await supabase
+  const { error } = await supabase
     .from("chars")
     .update({
       name,
@@ -84,6 +85,7 @@ export async function updateChar(form: FormData) {
     .eq("id", id);
   revalidatePath("/meus-chars");
   revalidatePath(`/meus-chars/${id}`);
+  if (error) redirect(`/meus-chars/${id}?erro=${encodeURIComponent(error.message)}`);
   redirect(`/meus-chars/${id}?salvo=1`);
 }
 

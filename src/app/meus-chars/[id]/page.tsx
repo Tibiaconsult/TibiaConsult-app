@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { SLOTS } from "@/data/equipment";
+import { SetChoice, SlotId, emptySet, encodeSet } from "@/lib/set";
 import { deleteChar, updateChar } from "../actions";
 import { VOCATIONS } from "../vocations";
 
@@ -37,10 +38,53 @@ function ItemSelect({ name, label, value, slot, withTier, tier }: { name: string
   );
 }
 
-export default async function CharPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ salvo?: string }> }) {
+const SLOT_WORDS: Record<string, SlotId> = { wand: "wand", elmo: "helmet", helmet: "helmet", armadura: "armor", armor: "armor", spellbook: "spellbook", botas: "boots", boots: "boots" };
+const IMB_WORDS: Record<string, string> = {
+  epiphany: "epiphany",
+  void: "void",
+  vampirism: "vampirism",
+  "dragon hide": "dragonhide",
+  "snake skin": "snakeskin",
+  "quara scale": "quarascale",
+  "cloud fabric": "cloudfabric",
+  "lich shroud": "lichshroud",
+  swiftness: "swiftness",
+};
+
+/** Monta o set do char para o montador e o simulador (imbuements lidos do texto "Slot: Powerful X + Powerful Y"). */
+function charToSet(c: Record<string, unknown>): SetChoice {
+  const s = emptySet();
+  const pick = (slot: SlotId, name: unknown, tier: unknown) => {
+    if (typeof name === "string" && name) s[slot] = { item: name, tier: Number(tier) || 0, imbues: [] };
+  };
+  pick("wand", c.wand, c.wand_tier);
+  pick("helmet", c.helmet, c.helmet_tier);
+  pick("armor", c.armor, c.armor_tier);
+  pick("legs", c.legs, c.legs_tier);
+  pick("boots", c.boots, c.boots_tier);
+  pick("spellbook", c.spellbook, 0);
+  pick("ring", c.ring, 0);
+  pick("amulet", c.amulet, 0);
+  for (const line of String(c.imbuements ?? "").split(/\n/)) {
+    const [head, rest] = line.split(":");
+    if (!rest) continue;
+    const slot = SLOT_WORDS[head.trim().toLowerCase()];
+    if (!slot) continue;
+    for (const part of rest.split("+")) {
+      const p = part.trim().toLowerCase();
+      const kind = Object.entries(IMB_WORDS).find(([w]) => p.includes(w))?.[1];
+      if (!kind) continue;
+      const level = p.includes("basic") ? 1 : p.includes("intricate") ? 2 : 3;
+      s[slot].imbues.push({ kind, level: level as 1 | 2 | 3 });
+    }
+  }
+  return s;
+}
+
+export default async function CharPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ salvo?: string; erro?: string }> }) {
   if (!hasSupabaseEnv()) redirect("/entrar");
   const { id } = await params;
-  const { salvo } = await searchParams;
+  const { salvo, erro } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -57,6 +101,18 @@ export default async function CharPage({ params, searchParams }: { params: Promi
       </Link>
       <h1 className="mt-2">{c.name}</h1>
       {salvo && <p className="on-dark good mb-3">Salvo.</p>}
+      {erro && <p className="on-dark bad mb-3">Não foi possível salvar: {erro}</p>}
+      <div className="flex flex-wrap gap-3 mb-4">
+        <a className="tc-btn" href={`/simulador?level=${c.level}&ml=${c.magic_level}&set=${encodeSet(charToSet(c))}`}>
+          Usar este char no simulador de dano
+        </a>
+        <a className="tc-btn" href={`/simulador/set?level=${c.level}&ml=${c.magic_level}&a=${encodeSet(charToSet(c))}`}>
+          Abrir o set no montador
+        </a>
+        <a className="tc-btn" href={`/planejador/wheel?level=${c.level}`}>
+          Planejar a Wheel
+        </a>
+      </div>
 
       <form action={updateChar} className="max-w-4xl">
         <input type="hidden" name="id" value={c.id} />

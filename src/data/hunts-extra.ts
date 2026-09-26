@@ -1,0 +1,161 @@
+// Hunts adicionais para Master Sorcerer 800+. Bichos, HP, exp, mitigação e resistências: TibiaWiki, 26/09/2026.
+// Lista de áreas: sugestões do TibiaPal para sorcerer 600-1000+. Peso no lure = 1 para todos (ajuste no simulador).
+import type { Hunt } from "./hunts";
+
+const c = (name: string, hp: number, exp: number, mitigation: number, t: [number, number, number, number, number, number, number], attacks: string) => ({
+  name,
+  hp,
+  exp,
+  mitigation,
+  weight: 1,
+  taken: { physical: t[0], death: t[1], holy: t[2], ice: t[3], fire: t[4], energy: t[5], earth: t[6] },
+  attacks,
+});
+
+const SET_ENERGIA = [
+  { slot: "Wand", item: "Sanguine Coil", why: "energy ML +1" },
+  { slot: "Armadura", item: "Norcferatu Bloodhide ou Soulmantle", why: "energy ML +6 na Bloodhide" },
+  { slot: "Botas", item: "Sanguine Boots", why: "Energy Wave +8% crit extra" },
+  { slot: "Amuleto", item: "Enchanted Flamingo Amulet of Destruction", why: "energy ML +1" },
+];
+const SET_FOGO = [
+  { slot: "Wand", item: "Sanguine Coil", why: "fire ML +1" },
+  { slot: "Elmo", item: "Stag Helmet ou Moonsilver Nimbus Hat", why: "fire ML +2 e crit no Great Fire Wave" },
+  { slot: "Botas", item: "Sanguine Boots", why: "Hell's Core +8% crit extra" },
+  { slot: "Spellbook", item: "Arcanomancer Folio ou Alchemist's Notepad", why: "fire ML" },
+];
+
+export const EXTRA_HUNTS: Hunt[] = [
+  {
+    id: "asura-citadel",
+    name: "Asura Citadel",
+    city: "Marapur",
+    access: "Shards of a Broken Moon Quest (Summer Update 2026). Dificuldade comparável à Asura Vaults. TibiaPal: solo 800+, earth mastery.",
+    floors: ["Andar de cima: True Asuras e as criaturas novas.", "Andar de baixo: mais variedade de bichos novos."],
+    creatures: [
+      c("True Midnight Asura", 9000, 7313, 3.45, [100, 0, 70, 90, 90, 110, 110], "Melee até 450, Death Missile 500-650, Smoke Beam 500-700, Life Drain Beam 100-240, Mana Drain Beam 50-280."),
+      c("True Frost Flower Asura", 4000, 7069, 3.36, [100, 80, 70, 0, 110, 110, 110], "Melee até 250, Ice Missile 200-275, Manadrain Beam 150-225, cura própria."),
+      c("Winged Jaracal", 8200, 7200, 3.92, [95, 90, 90, 110, 85, 105, 105], "A TibiaWiki ainda não lista."),
+      c("Silverfrost Sentinel", 9500, 7700, 2.99, [110, 110, 90, 85, 105, 90, 110], "A TibiaWiki ainda não lista."),
+      c("Iceplume Strider", 8500, 7500, 3.68, [105, 105, 90, 90, 105, 90, 105], "A TibiaWiki ainda não lista."),
+    ],
+    element: "ENERGIA: 90 a 110% em todos. Fogo quase empata (85 a 110%). Death é ruim: zero na True Midnight Asura.",
+    set: SET_ENERGIA,
+    play: ["Master of Thunder + Aura of Exposed Weakness.", "Evite death: a True Midnight Asura toma 0%.", "Proteção de death e de ice ajuda (Death Missile, Smoke Beam, Ice Missile)."],
+  },
+  {
+    id: "asura-vaults",
+    name: "Asura Vaults (True Asuras)",
+    city: "Port Hope",
+    access: "Asura Palace Quest e The Lost Brother Quest; espelho no térreo do palácio. Level 250+ para entrar.",
+    floors: ["Três andares do Secret Basement: Hellspawn, Hellhound e as três True Asuras."],
+    creatures: [
+      c("True Dawnfire Asura", 8500, 7475, 3.45, [110, 80, 110, 105, 0, 110, 100], "Melee até 700, Death Ball 550-750, Fire Missile 450-830, Mana Drain Beam 50-300."),
+      c("True Midnight Asura", 9000, 7313, 3.45, [100, 0, 70, 90, 90, 110, 110], "Melee até 450, Death Missile 500-650, Smoke Beam 500-700, Life Drain Beam 100-240."),
+      c("True Frost Flower Asura", 4000, 7069, 3.36, [100, 80, 70, 0, 110, 110, 110], "Melee até 250, Ice Missile 200-275, Manadrain Beam 150-225."),
+      c("Hellhound", 7500, 5440, 4.39, [100, 100, 105, 105, 0, 90, 80], "Earth Wave 300-700, Life Drain Wave até 657, Fire Wave até 662, Death Missile, Poison Strike."),
+      c("Hellspawn", 3500, 2550, 2.09, [90, 105, 70, 110, 60, 90, 20], "Melee até 350, Fire Missile 150-175, Burning Strike."),
+    ],
+    element: "ENERGIA: 90 a 110% em todos. Fogo é zero na Dawnfire e no Hellhound; death é zero na Midnight.",
+    set: SET_ENERGIA,
+    play: ["Master of Thunder; nunca fogo nem death aqui.", "Muito dano de death e fogo recebido: Soulshanks, Lich Shroud e Dragon Hide."],
+  },
+  {
+    id: "azzilon-castle",
+    name: "Azzilon Castle",
+    city: "Edron",
+    access: "No Rest for the Wicked Quest. TibiaPal: solo 600+, energy mastery.",
+    floors: ["Castelo: Broodrider, Gorger e Sineater Inferniarch."],
+    creatures: [
+      c("Broodrider Inferniarch", 9600, 7400, 3.26, [100, 85, 110, 115, 80, 105, 90], "Melee 250+, Bite até 430, Death Bolt até 370."),
+      c("Gorger Inferniarch", 9450, 7180, 3.17, [100, 90, 100, 110, 80, 105, 100], "Melee, Fire Chain até 360, Death Reaper até 440, Death Ball até 430, cura própria."),
+      c("Sineater Inferniarch", 9150, 6750, 3.08, [105, 90, 105, 105, 0, 110, 100], "Melee, Great Fireball até 400, Death Wave até 400, Death Scratch até 400, Fire Field."),
+    ],
+    element: "ENERGIA: 105 a 110% nos três. Fogo é zero no Sineater.",
+    set: SET_ENERGIA,
+    play: ["Master of Thunder.", "Proteção de death e fogo: Death Bolt, Death Reaper, Fire Chain."],
+  },
+  {
+    id: "azzilon-catacombs",
+    name: "Azzilon Catacombs",
+    city: "Edron",
+    access: "No Rest for the Wicked Quest. TibiaPal: solo 800+, earth mastery. Gralvalon, Twisterror e Malvaroth são bosses da área e ficam fora do lure.",
+    floors: ["Catacumbas: Hellhunter, Spellreaper e Brinebrute Inferniarch."],
+    creatures: [
+      c("Hellhunter Inferniarch", 11300, 8100, 3.5, [90, 115, 100, 95, 105, 85, 115], "A TibiaWiki ainda não lista."),
+      c("Spellreaper Inferniarch", 11800, 8350, 3.4, [90, 115, 100, 90, 105, 0, 115], "A TibiaWiki ainda não lista."),
+      c("Brinebrute Inferniarch", 32000, 20300, 3.92, [80, 110, 100, 90, 100, 85, 110], "A TibiaWiki ainda não lista."),
+    ],
+    element: "DEATH: 110 a 115% nos três. Fogo é a segunda opção (100 a 105%). Energia é zero no Spellreaper.",
+    set: [
+      { slot: "Wand", item: "Sanguine Coil", why: "death ML vem das botas" },
+      { slot: "Botas", item: "Sanguine Boots", why: "death ML +1" },
+      { slot: "Pernas", item: "Soulshanks", why: "death +10%" },
+      { slot: "Spellbook", item: "Eldritch Folio", why: "death ML +1" },
+    ],
+    play: ["Master of Decay: Death Echo, Great Death Beam e Energy Wave convertida.", "Nunca energia natural: o Spellreaper toma 0%."],
+  },
+  {
+    id: "iksupan",
+    name: "Iksupan Occupied Sanctuary",
+    city: "Port Hope",
+    access: "Área de Iksupan. Recomendado 400+. TibiaRoute: 1000+ solo, cerca de 5,2kk de exp por hora.",
+    floors: ["Mitmah Seer, Mitmah Scout e Iks Yapunac."],
+    creatures: [
+      c("Mitmah Seer", 4620, 4900, 3.22, [100, 85, 100, 95, 85, 120, 105], "Melee até 400, Energy Strike, Energy Wave, Death Bomb, Death Explosion, cura própria, crit."),
+      c("Mitmah Scout", 3940, 3230, 3.22, [95, 85, 110, 85, 90, 105, 115], "Energy Bolt, Death Missile, Smoke Bomb, crit."),
+      c("Iks Yapunac", 3125, 2340, 3.22, [85, 120, 85, 105, 90, 110, 90], "Melee até 400, Physical Wave, Death Strike."),
+    ],
+    element: "ENERGIA: 105 a 120% nos três. Death é boa só no Iks Yapunac.",
+    set: SET_ENERGIA,
+    play: ["Master of Thunder.", "Proteção de energia e death (Energy Wave, Death Bomb)."],
+  },
+  {
+    id: "putrefactory",
+    name: "Putrefactory (Rotten Blood)",
+    city: "Norte de Darama",
+    access: "Rotten Blood Quest; uma das quatro áreas acessadas pelo Blood Vestibule. Bichos de 27 a 33 mil de HP e 21 a 23 mil de exp.",
+    floors: ["Oozing Carcass, Sopping Carcass, Rotten Man-Maggot e Meandering Mushroom."],
+    creatures: [
+      c("Oozing Carcass", 27500, 20980, 4.97, [100, 60, 125, 65, 110, 75, 120], "A TibiaWiki ainda não lista."),
+      c("Sopping Carcass", 32700, 23425, 5.26, [100, 40, 120, 50, 105, 65, 115], "A TibiaWiki ainda não lista."),
+      c("Rotten Man-Maggot", 31100, 22625, 4.39, [100, 70, 115, 60, 110, 45, 115], "A TibiaWiki ainda não lista."),
+      c("Meandering Mushroom", 29100, 21980, 5.12, [100, 50, 115, 60, 110, 75, 120], "A TibiaWiki ainda não lista."),
+    ],
+    element: "FOGO: 105 a 110% nos quatro. Energia (45 a 75%) e death (40 a 70%) são ruins.",
+    set: SET_FOGO,
+    play: ["Master of Flames: tudo convertido em fogo, inclusive Energy Wave e Rage.", "Mitigação alta (4,4 a 5,3%)."],
+  },
+  {
+    id: "crystal-enigma",
+    name: "Crystal Enigma (Gnomprona)",
+    city: "Edron",
+    access: "Primal Ordeal Quest. Level 600+ recomendado para mages.",
+    floors: ["Headpecker, Mantosaurus, Mercurial Menace, Noxious Ripptor e Shrieking Cry-Stal."],
+    creatures: [
+      c("Headpecker", 16300, 12930, 3.26, [110, 110, 0, 110, 110, 90, 90], "Crit."),
+      c("Mantosaurus", 19400, 12440, 2.85, [110, 95, 115, 115, 100, 90, 95], "Crit."),
+      c("Mercurial Menace", 18500, 13000, 4.06, [95, 105, 0, 90, 80, 120, 110], "Crit."),
+      c("Noxious Ripptor", 22700, 14180, 3.5, [80, 110, 110, 110, 100, 90, 90], "Crit."),
+      c("Shrieking Cry-Stal", 20650, 14580, 3.92, [80, 100, 0, 95, 95, 90, 105], "Fear, Energy Chain 749-1356, Shrieking Wave 1037, crit."),
+    ],
+    element: "EQUILIBRADA: death 95 a 110%, fogo 80 a 110%, energia 90 a 120%. Death tem a menor variação.",
+    set: SET_ENERGIA,
+    play: ["Master of Decay tende a ganhar por pouco; confira no simulador com o peso real de cada bicho.", "Shrieking Cry-Stal: Energy Chain até 1356 e fear."],
+  },
+  {
+    id: "podzilla-quaras",
+    name: "Podzilla (Quaras)",
+    city: "Oramond",
+    access: "Podzilla Quest. Level 600+ recomendado. TibiaRoute: 1100+ solo, cerca de 9kk de exp por hora.",
+    floors: ["Quara Raider, Quara Plunderer e Quara Looter."],
+    creatures: [
+      c("Quara Raider", 12500, 8150, 4.39, [95, 100, 90, 0, 80, 110, 115], "A TibiaWiki ainda não lista."),
+      c("Quara Plunderer", 13500, 10800, 3.92, [105, 90, 85, 0, 80, 110, 110], "A TibiaWiki ainda não lista."),
+      c("Quara Looter", 11500, 8650, 4.39, [100, 95, 90, 0, 80, 115, 110], "A TibiaWiki ainda não lista."),
+    ],
+    element: "ENERGIA: 110 a 115% nos três. Gelo é zero; fogo 80%.",
+    set: SET_ENERGIA,
+    play: ["Master of Thunder.", "Proteção a conferir: a TibiaWiki ainda não lista os ataques."],
+  },
+];

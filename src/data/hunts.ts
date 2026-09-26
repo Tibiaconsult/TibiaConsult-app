@@ -1,4 +1,5 @@
 // Fichas de hunt. Fonte: TibiaWiki, 26/09/2026.
+import { EXTRA_HUNTS } from "./hunts-extra";
 
 export interface Creature {
   name: string;
@@ -26,7 +27,7 @@ export interface Hunt {
   warning?: string;
 }
 
-export const HUNTS: Hunt[] = [
+const BASE_HUNTS: Hunt[] = [
   {
     id: "lost-souls",
     name: "Lost Souls (Brain Grounds / Netherworld)",
@@ -95,3 +96,5 @@ export const HUNTS: Hunt[] = [
     warning: "Os feitiços dos bichos ainda não constam na TibiaWiki: proteções a definir depois de uma sessão de teste.",
   },
 ];
+
+export const HUNTS: Hunt[] = [...BASE_HUNTS, ...EXTRA_HUNTS];

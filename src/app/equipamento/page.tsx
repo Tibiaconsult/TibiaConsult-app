@@ -1,4 +1,5 @@
 import Box from "@/components/Box";
+import { ItemSprite } from "@/components/Icons";
 import { IMBUEMENTS, SLOTS } from "@/data/equipment";
 
 export default function EquipamentoPage() {
@@ -29,6 +30,7 @@ export default function EquipamentoPage() {
                 {slot.items.map((it) => (
                   <tr key={it.name}>
                     <td className="font-bold whitespace-nowrap">
+                      <ItemSprite name={it.name} />
                       {it.best && <span className="text-[#b8860b] mr-1">★</span>}
                       {it.name}
                     </td>

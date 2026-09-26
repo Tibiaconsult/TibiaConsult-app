@@ -1,4 +1,5 @@
 import Box from "@/components/Box";
+import { SpellIcon } from "@/components/Icons";
 import { ROTATIONS } from "@/data/rotations";
 import { spellById } from "@/data/spells";
 import { manaPerCycle } from "@/lib/rotation";
@@ -21,7 +22,10 @@ function Timeline({ steps }: { steps: { t: number; spellId: string; note?: strin
           return (
             <tr key={i}>
               <td className="font-mono font-bold">{st.t}</td>
-              <td className="font-bold">{sp?.name ?? st.spellId}</td>
+              <td className="font-bold">
+                <SpellIcon id={st.spellId} />
+                {sp?.name ?? st.spellId}
+              </td>
               <td className="italic">{sp?.words}</td>
               <td>{st.note}</td>
             </tr>
