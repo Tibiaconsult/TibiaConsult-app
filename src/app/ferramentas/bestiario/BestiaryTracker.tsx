@@ -144,7 +144,7 @@ export default function BestiaryTracker({ chars, logged }: { chars: { id: string
 
       <div className="grid gap-3 sm:grid-cols-4">
         {[
-          ["Criaturas completas", `${fmt(done.size)} de ${fmt(BESTIARY.length)}`],
+          ["Creatures completas", `${fmt(done.size)} de ${fmt(BESTIARY.length)}`],
           ["Charm points", `${fmt(earned)} de ${fmt(TOTAL_CHARMS)}`],
           ["Progresso", `${((done.size / BESTIARY.length) * 100).toFixed(1)}%`],
           ["Faltam", fmt(BESTIARY.length - done.size)],
@@ -176,7 +176,7 @@ export default function BestiaryTracker({ chars, logged }: { chars: { id: string
       </details>
 
       <div className="flex flex-wrap gap-2 items-end">
-        <input value={q} onChange={(e) => (setQ(e.target.value), setLimit(PAGE))} placeholder="buscar criatura" className="w-48" />
+        <input value={q} onChange={(e) => (setQ(e.target.value), setLimit(PAGE))} placeholder="buscar creature" className="w-48" />
         <select value={cls} onChange={(e) => (setCls(Number(e.target.value)), setLimit(PAGE))}>
           <option value={-1}>todas as classes</option>
           {CLASSES.map((c, i) => (
@@ -198,7 +198,7 @@ export default function BestiaryTracker({ chars, logged }: { chars: { id: string
           <option value="faltam">só as que faltam</option>
           <option value="feitas">só as completas</option>
         </select>
-        <span className="muted text-[11px]">{fmt(filtered.length)} criaturas</span>
+        <span className="muted text-[11px]">{fmt(filtered.length)} creatures</span>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">

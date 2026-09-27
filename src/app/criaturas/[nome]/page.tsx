@@ -59,7 +59,7 @@ export default async function CriaturaPage({ params }: Props) {
   return (
     <div>
       <p className="on-dark text-[12px] mb-1">
-        <Link href="/criaturas">← Todas as criaturas</Link>
+        <Link href="/criaturas">← Todas as creatures</Link>
       </p>
       <div className="flex items-center gap-3 mb-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -170,7 +170,7 @@ export default async function CriaturaPage({ params }: Props) {
 
       <Box title={`💰 Loot (${loot.length} itens)`}>
         {loot.length === 0 ? (
-          <p className="text-[12px]">A wiki não lista loot para esta criatura.</p>
+          <p className="text-[12px]">A wiki não lista loot para esta creature.</p>
         ) : (
           <>
             <div className="grid gap-1.5 sm:grid-cols-2">
@@ -202,7 +202,7 @@ export default async function CriaturaPage({ params }: Props) {
 
       <Box title="🗺️ Onde caçar">
         {hunts.length === 0 ? (
-          <p className="text-[12px]">Nenhuma ficha de hunt com esta criatura.</p>
+          <p className="text-[12px]">Nenhuma ficha de hunt com esta creature.</p>
         ) : (
           <ul className="text-[12px] space-y-0.5">
             {hunts.map((h) => (

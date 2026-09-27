@@ -2,8 +2,8 @@ import { ALL_CREATURES, bestiaryOf, huntsOf, weakness } from "@/lib/creatures";
 import CreatureList, { Row } from "./CreatureList";
 
 export const metadata = {
-  title: "Criaturas",
-  description: "Criaturas das hunts: sprite, HP, exp, fraquezas, bestiário, charm points e loot com a chance de cada item.",
+  title: "Creatures",
+  description: "Creatures das hunts: sprite, HP, exp, fraquezas, bestiário, charm points e loot com a chance de cada item.",
 };
 
 export default function CriaturasPage() {
@@ -25,10 +25,10 @@ export default function CriaturasPage() {
   });
   return (
     <div>
-      <h1>Criaturas</h1>
+      <h1>Creatures</h1>
       <p className="on-dark mb-4">
-        As criaturas das hunts do site, com sprite, vida, experiência, onde mais sofrem dano, quanto falta para o bestiário e o loot com a chance de cada item.
-        Clique numa criatura para ver a ficha completa.
+        As creatures das hunts do site, com sprite, vida, experiência, onde mais sofrem dano, quanto falta para o bestiário e o loot com a chance de cada item.
+        Clique numa creature para ver a ficha completa.
       </p>
       <CreatureList rows={rows} />
     </div>

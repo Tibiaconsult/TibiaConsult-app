@@ -50,9 +50,9 @@ export default async function ProficienciaPage({ searchParams }: { searchParams:
       </Box>
       <Box title="Como a proficiência funciona">
         <ul className="list-disc pl-5 space-y-1 text-[12px]">
-          <li>Cada arma sobe de nível de proficiência matando bichos com ela equipada ou usando catalisadores. Cada nível libera uma escolha de perk.</li>
+          <li>Cada arma sobe de nível de proficiência matando creatures com ela equipada ou usando catalisadores. Cada nível libera uma escolha de perk.</li>
           <li>Só um perk por nível fica ativo. Escolher pela primeira vez pode ser em qualquer lugar; trocar ou tirar, só em área protegida.</li>
-          <li>O progresso é do char e não passa para outro. Quem causou dano ganha progresso, como no bestiário; bicho sem entrada no bestiário não conta.</li>
+          <li>O progresso é do char e não passa para outro. Quem causou dano ganha progresso, como no bestiário; creature sem entrada no bestiário não conta.</li>
           <li>Os perks vão até o nível 7. Os dois níveis seguintes dão só maestria (título e conquista).</li>
           <li>Arma de outra vocação também acumula progresso, mas os perks só funcionam para a vocação da arma.</li>
         </ul>

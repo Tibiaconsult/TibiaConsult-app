@@ -1,4 +1,4 @@
-// Ficha das criaturas das hunts cadastradas: sprite, HP, exp, armadura, mitigação, velocidade, bestiário, resistências,
+// Ficha das creatures das hunts cadastradas: sprite, HP, exp, armadura, mitigação, velocidade, bestiário, resistências,
 // imunidades, onde vive e loot (raridade da wiki + chance real das estatísticas de loot da comunidade, quando houver).
 // Grava src/data/creatures.ts. Rodar de novo quando a wiki mudar:  node scripts/creatures.mjs
 // (no ambiente com proxy: NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=... node scripts/creatures.mjs)
@@ -9,7 +9,7 @@ const API = "https://tibia.fandom.com/api.php";
 const root = new URL("..", import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), "utf8");
 
-// criaturas com o mesmo nome de um item: a página da criatura leva "(Creature)"
+// creatures com o mesmo nome de um item: a página da criatura leva "(Creature)"
 const PAGE = { Sabretooth: "Sabretooth (Creature)" };
 
 const names = new Set();
@@ -189,8 +189,8 @@ const today = new Date().toISOString().slice(0, 10).split("-").reverse().join("/
 const missing = list.filter((n) => !out[n]).sort();
 writeFileSync(
   new URL("src/data/creatures.ts", root),
-  `// Ficha das criaturas das hunts cadastradas. Gerado por scripts/creatures.mjs a partir da TibiaWiki (Infobox Creature e
-// Loot Statistics) em ${today}. ${Object.keys(out).length} de ${list.length} criaturas. Sem ficha: ${missing.join(", ") || "nenhuma"}.
+  `// Ficha das creatures das hunts cadastradas. Gerado por scripts/creatures.mjs a partir da TibiaWiki (Infobox Creature e
+// Loot Statistics) em ${today}. ${Object.keys(out).length} de ${list.length} creatures. Sem ficha: ${missing.join(", ") || "nenhuma"}.
 
 export interface LootItem {
   name: string;
@@ -235,5 +235,5 @@ ${Object.values(out)
 };
 `,
 );
-console.log(`${Object.keys(out).length} de ${list.length} criaturas.`);
+console.log(`${Object.keys(out).length} de ${list.length} creatures.`);
 console.log(`Sem ficha (${missing.length}): ${missing.join(", ")}`);

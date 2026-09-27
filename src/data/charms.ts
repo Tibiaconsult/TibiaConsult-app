@@ -5,8 +5,8 @@
 export type CharmKind = "dano" | "defesa" | "utilidade";
 
 // Regras dos dois tipos (TibiaWiki, Major Charms e Minor Charms):
-// - major: pago em charm points (vêm do bestiário completo) e só vai em criatura com o bestiário completo;
-// - minor: pago em Minor Charm Echoes e vai em criatura com o estágio 2 do bestiário.
+// - major: pago em charm points (vêm do bestiário completo) e só vai em creature com o bestiário completo;
+// - minor: pago em Minor Charm Echoes e vai em creature com o estágio 2 do bestiário.
 // Cada nível comprado de um charm major rende echoes; char promovido ganha 100 echoes.
 export const ECHOES_PER_MAJOR_LEVEL = [50, 100, 200];
 export const ECHOES_PROMOTION = 100;

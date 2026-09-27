@@ -1,6 +1,6 @@
 "use client";
 
-// Lista de criaturas com busca, filtros (hunt, classe do bestiário) e ordenação.
+// Lista de creatures com busca, filtros (hunt, classe do bestiário) e ordenação.
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -52,14 +52,14 @@ export default function CreatureList({ rows }: { rows: Row[] }) {
   }, [rows, q, hunt, cls, sort]);
 
   return (
-    <Box title={`🐾 ${list.length} de ${rows.length} criaturas`}>
+    <Box title={`🐾 ${list.length} de ${rows.length} creatures`}>
       <div className="flex flex-wrap gap-2 mb-3 text-[12px]">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar criatura..."
+          placeholder="Buscar creature..."
           className="flex-1 min-w-[160px]"
-          aria-label="Buscar criatura"
+          aria-label="Buscar creature"
         />
         <select value={hunt} onChange={(e) => setHunt(e.target.value)} aria-label="Hunt" className="max-w-[220px]">
           <option value="">Todas as hunts</option>
@@ -109,7 +109,7 @@ export default function CreatureList({ rows }: { rows: Row[] }) {
           </Link>
         ))}
       </div>
-      {list.length === 0 && <p className="muted text-[12px]">Nenhuma criatura com esses filtros.</p>}
+      {list.length === 0 && <p className="muted text-[12px]">Nenhuma creature com esses filtros.</p>}
     </Box>
   );
 }

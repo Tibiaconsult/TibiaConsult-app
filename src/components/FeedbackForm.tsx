@@ -56,7 +56,7 @@ export default function FeedbackForm({ compact = false, initialKind = "bug" }: {
             <input name="hunt_level" className="mt-1 w-full" placeholder="ex.: 700+" />
           </label>
           <label>
-            Bichos principais
+            Creatures principais
             <input name="hunt_creatures" className="mt-1 w-full" placeholder="separe por vírgula" />
           </label>
         </div>

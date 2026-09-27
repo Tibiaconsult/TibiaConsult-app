@@ -1,4 +1,4 @@
-// Gerado de TibiaWiki (Bestiary/Difficulties e infobox de cada criatura), consulta em 26/09/2026. 833 criaturas.
+// Gerado de TibiaWiki (Bestiary/Difficulties e infobox de cada creature), consulta em 26/09/2026. 833 creatures.
 // Tupla: [nome, dificuldade, classe, muito rara (1/0), HP, exp]
 
 export const DIFFICULTIES = ["Harmless", "Trivial", "Easy", "Medium", "Hard", "Challenging"] as const;

@@ -1,5 +1,5 @@
-// Ficha das criaturas das hunts cadastradas. Gerado por scripts/creatures.mjs a partir da TibiaWiki (Infobox Creature e
-// Loot Statistics) em 27/09/2026. 165 de 165 criaturas. Sem ficha: nenhuma.
+// Ficha das creatures das hunts cadastradas. Gerado por scripts/creatures.mjs a partir da TibiaWiki (Infobox Creature e
+// Loot Statistics) em 27/09/2026. 165 de 165 creatures. Sem ficha: nenhuma.
 
 export interface LootItem {
   name: string;

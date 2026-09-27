@@ -1,5 +1,5 @@
 // "Preparar para esta hunt": a partir da ficha da hunt, monta set, imbuements, combo e charm para a vocação.
-// Tudo sai dos dados do site: resistências e ataques dos bichos (TibiaWiki), equipamento por vocação e o simulador de rotação.
+// Tudo sai dos dados do site: resistências e ataques das creatures (TibiaWiki), equipamento por vocação e o simulador de rotação.
 // É um ponto de partida automático, não um set testado em jogo; cada parte abre na ferramenta própria para ajustar.
 
 import type { Element } from "@/data/spells";
@@ -35,7 +35,7 @@ export interface CharmPick {
   max: number;
 }
 
-/** Charms de dano pela resistência média dos bichos: o charm ignora stance e set, então vale o elemento que mais entra. */
+/** Charms de dano pela resistência média das creatures: o charm ignora stance e set, então vale o elemento que mais entra. */
 export function charmRanking(h: Hunt): CharmPick[] {
   const tot = h.creatures.reduce((a, c) => a + (c.weight ?? 1), 0) || 1;
   return ALL_ELEMENTS.map((el) => {
@@ -75,7 +75,7 @@ export interface ImbuePick {
 
 /** Elementos que mais batem, sem o físico (não há imbuement de proteção física). */
 function protOrder(h: Hunt): Element[] {
-  // com dano da wiki para os bichos: ordem pelo peso do dano de cada elemento no lure
+  // com dano da wiki para as creatures: ordem pelo peso do dano de cada elemento no lure
   const dmg = incomingDamage(h)
     .rows.filter((r) => PROT_IMB[r.el as Element])
     .map((r) => r.el as Element);
@@ -101,7 +101,7 @@ export function suggestImbuements(h: Hunt, voc: SetVoc, weaponKind = ""): { pick
   const p2 = prot[1] ?? prot[0];
   const out: ImbuePick[] = [];
   let converted: Element | null = null;
-  const protWhy = (el: Element) => `os bichos batem com ${EL_PT[el]}`;
+  const protWhy = (el: Element) => `as creatures batem com ${EL_PT[el]}`;
 
   if (voc === "sorcerer" || voc === "druid") {
     out.push({ slot: "Arma", id: "epiphany", why: "+4 de magic level" }, { slot: "Arma", id: "void", why: "mana" });
@@ -242,6 +242,6 @@ export function comboPlan(
     stance: inp.stance,
     steps,
     query: `voc=${voc}&combo=${steps.map((s) => `${s.t}:${s.spellId}`).join(",")}`,
-    note: `Abertura com ${inp.targets} bichos no lure: a cada liberação do grupo de ataque, a magia pronta que mais causa dano nesta hunt, pelo simulador.`,
+    note: `Abertura com ${inp.targets} creatures no lure: a cada liberação do grupo de ataque, a magia pronta que mais causa dano nesta hunt, pelo simulador.`,
   };
 }

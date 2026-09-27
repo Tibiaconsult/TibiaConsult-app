@@ -1,4 +1,4 @@
-// Rótulos e cores da lista/ficha de criaturas (leve: pode ir para o navegador).
+// Rótulos e cores da lista/ficha de creatures (leve: pode ir para o navegador).
 
 export const creatureHref = (name: string) => `/criaturas/${encodeURIComponent(name)}`;
 

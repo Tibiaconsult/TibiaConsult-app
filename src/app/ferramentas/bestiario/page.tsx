@@ -23,14 +23,14 @@ export default async function BestiarioPage() {
     <div>
       <h1>Bestiary Tracker</h1>
       <p className="on-dark mb-4">
-        Marque as criaturas que o char já completou. Com conta, o progresso fica salvo por char e só você vê. Sem conta, fica guardado neste
+        Marque as creatures que o char já completou. Com conta, o progresso fica salvo por char e só você vê. Sem conta, fica guardado neste
         navegador.
       </p>
       <Box title="Bestiary">
         <BestiaryTracker chars={chars} logged={logged} />
       </Box>
       <p className="on-dark muted text-[11px]">
-        Lista de criaturas, dificuldade, classe, raridade, kills e charm points: TibiaWiki (Bestiary/Difficulties e página de cada criatura),
+        Lista de creatures, dificuldade, classe, raridade, kills e charm points: TibiaWiki (Bestiary/Difficulties e página de cada creature),
         consulta em 26/09/2026.
       </p>
     </div>

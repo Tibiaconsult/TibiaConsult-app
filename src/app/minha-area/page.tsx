@@ -100,7 +100,7 @@ export default async function MinhaAreaPage() {
                     </li>
                   )}
                   <li>
-                    <b>Bestiário:</b> {done} de {BESTIARY.length} criaturas.{" "}
+                    <b>Bestiário:</b> {done} de {BESTIARY.length} creatures.{" "}
                     <Link href="/ferramentas/bestiario">Abrir</Link>
                   </li>
                 </ul>

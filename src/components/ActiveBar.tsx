@@ -10,7 +10,7 @@ import { ActiveChar, VOCS, VOC_OUTFIT_FILE, VOC_SHORT, Voc, setActiveChar, setAc
 import { wikiImage } from "@/lib/md5";
 import type { SearchEntry } from "@/lib/search-index";
 
-/** Busca rápida: páginas, hunts, magias, itens, imbuements e criaturas. */
+/** Busca rápida: páginas, hunts, magias, itens, imbuements e creatures. */
 function SearchBox() {
   const router = useRouter();
   const [q, setQ] = useState("");
@@ -44,7 +44,7 @@ function SearchBox() {
       <input
         type="search"
         value={q}
-        placeholder="Buscar hunt, magia, item, criatura..."
+        placeholder="Buscar hunt, magia, item, creature..."
         aria-label="Buscar no site"
         className="w-full !py-1"
         onFocus={() => {

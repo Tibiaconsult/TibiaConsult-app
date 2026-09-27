@@ -172,11 +172,11 @@ const PVP: T[] = [
 const MANY: T[] = [
   (n) => `${n} puxou o respawn inteiro achando que era evento de XP dobrada.`,
   (n) => `${n} chamou a festa toda e esqueceu que era o convidado principal.`,
-  (n, _k, _l, c) => `contaram ${c} bichos em cima de ${n}. Eu parei de contar no terceiro.`,
+  (n, _k, _l, c) => `contaram ${c} creatures em cima de ${n}. Eu parei de contar no terceiro.`,
   (n) => `${n} fez um lure tão grande que o servidor pediu calma.`,
-  (n) => `${n} falou "só mais um bicho" umas sete vezes seguidas.`,
+  (n) => `${n} falou "só mais uma creature" umas sete vezes seguidas.`,
   (n) => `${n} achou que era um lure. Era uma excursão.`,
-  (n) => `${n} puxou tanto bicho que o respawn ao lado ficou vazio e reclamou.`,
+  (n) => `${n} puxou tanta creature que o respawn ao lado ficou vazio e reclamou.`,
   (n, _k, _l, c) => `${c} contra 1. ${n} gosta de desafio, não de viver.`,
   (n) => `${n} disse "vem, vem, vem" até que veio tudo.`,
 ];

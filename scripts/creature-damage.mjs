@@ -8,7 +8,7 @@ const API = "https://tibia.fandom.com/api.php";
 const root = new URL("..", import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), "utf8");
 
-// nomes das criaturas das fichas de hunt (objetos com name e taken, ou o atalho c("Nome", ...))
+// nomes das creatures das fichas de hunt (objetos com name e taken, ou o atalho c("Nome", ...))
 const names = new Set();
 for (const f of ["hunts.ts", "hunts-extra.ts", "hunts-high.ts", "hunts-high2.ts"]) {
   const src = read(`src/data/${f}`);
@@ -157,9 +157,9 @@ const today = new Date().toISOString().slice(0, 10).split("-").reverse().join("/
 const missing = list.filter((n) => !out[n]).sort();
 writeFileSync(
   new URL("src/data/creature-damage.ts", root),
-  `// Dano das criaturas das hunts: golpe físico (melee) e cada ataque com o maior valor e o elemento.
+  `// Dano das creatures das hunts: golpe físico (melee) e cada ataque com o maior valor e o elemento.
 // Gerado por scripts/creature-damage.mjs a partir da TibiaWiki (lista de habilidades de cada criatura) em ${today}.
-// ${Object.keys(out).length} de ${list.length} criaturas têm dano listado na wiki. Sem dados: ${missing.join(", ") || "nenhuma"}.
+// ${Object.keys(out).length} de ${list.length} creatures têm dano listado na wiki. Sem dados: ${missing.join(", ") || "nenhuma"}.
 
 export type DamageElement = "physical" | "fire" | "energy" | "ice" | "earth" | "death" | "holy" | "lifedrain" | "manadrain" | "drown";
 
@@ -177,5 +177,5 @@ ${Object.entries(out)
 };
 `,
 );
-console.log(`${Object.keys(out).length} de ${list.length} criaturas com dano.`);
+console.log(`${Object.keys(out).length} de ${list.length} creatures com dano.`);
 console.log(`Sem dados (${missing.length}): ${missing.join(", ")}`);

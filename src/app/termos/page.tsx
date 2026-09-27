@@ -77,7 +77,7 @@ export default function TermosPage() {
           <h2>6. Tibia e CipSoft</h2>
           <p>
             Tibia e todo o seu conteúdo são de propriedade da CipSoft GmbH. O TibiaConsult é uma ferramenta de fãs, sem vínculo, patrocínio ou aprovação da
-            CipSoft. Imagens de itens, criaturas e feitiços são carregadas do tibia.com e da TibiaWiki.
+            CipSoft. Imagens de itens, creatures e feitiços são carregadas do tibia.com e da TibiaWiki.
           </p>
 
           <h2>7. Uso adequado</h2>

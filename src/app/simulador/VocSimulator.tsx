@@ -196,7 +196,7 @@ export default function VocSimulator({ voc }: { voc: VocId }) {
                 />
               </label>
             ))}
-            <p className="muted text-[10px] sm:col-span-3">Peso = quantos desse bicho vêm no lure. Zero tira o bicho da conta.</p>
+            <p className="muted text-[10px] sm:col-span-3">Peso = quantas dessa creature vêm no lure. Zero tira a creature da conta.</p>
           </div>
         )}
       </div>

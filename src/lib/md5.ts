@@ -104,7 +104,7 @@ export function md5(str: string): string {
   return hex;
 }
 
-/** Imagem de um item ou criatura na TibiaWiki (carregada sem referrer). */
+/** Imagem de um item ou creature na TibiaWiki (carregada sem referrer). */
 export function wikiImage(name: string, ext = "gif"): string {
   const file = `${name
     .trim()

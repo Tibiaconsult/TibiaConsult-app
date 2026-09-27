@@ -1,6 +1,6 @@
 // Set sugerido por vocação para uma hunt, calculado a partir dos dados do site:
-// - elemento de ataque: média da sensibilidade dos bichos (peso de cada bicho no lure);
-// - proteção: elementos citados nos ataques dos bichos (texto da ficha, vindo da TibiaWiki);
+// - elemento de ataque: média da sensibilidade das creatures (peso de cada creature no lure);
+// - proteção: elementos citados nos ataques das creatures (texto da ficha, vindo da TibiaWiki);
 // - itens: equipamento de level 250+ da vocação (lista do TibiaPal, atributos da TibiaWiki).
 // É uma sugestão automática, não um set testado.
 
@@ -31,7 +31,7 @@ const INCOMING: [Element, RegExp][] = [
   ["holy", /holy/gi],
 ];
 
-/** Peso de cada elemento no dano que os bichos causam, pelo texto dos ataques. */
+/** Peso de cada elemento no dano que as creatures causam, pelo texto dos ataques. */
 export function incomingProfile(h: Hunt): Record<Element, number> {
   const p = { physical: 0, fire: 0, ice: 0, earth: 0, energy: 0, death: 0, holy: 0 } as Record<Element, number>;
   for (const c of h.creatures) {
@@ -49,7 +49,7 @@ const OFFENSE: Record<SetVoc, Element[]> = {
   monk: ["fire", "energy", "ice", "earth", "death", "physical"],
 };
 
-/** Média ponderada da sensibilidade dos bichos a cada elemento que a vocação usa. */
+/** Média ponderada da sensibilidade das creatures a cada elemento que a vocação usa. */
 export function offenseRanking(h: Hunt, voc: SetVoc): { el: Element; pct: number }[] {
   const tot = h.creatures.reduce((a, c) => a + (c.weight ?? 1), 0) || 1;
   return OFFENSE[voc]
@@ -117,7 +117,7 @@ export function suggestSet(
       const cand = (ofEl.length ? ofEl : items).sort((a, b) => b.level - a.level || protScore(b, prof) - protScore(a, prof))[0];
       const el = weaponElement(cand);
       const pct = offense.find((o) => o.el === el)?.pct;
-      return { slot, item: cand, why: el ? `ataque de ${EL_PT[el]}${pct ? `: os bichos tomam ${Math.round(pct)}% em média` : ""}` : "maior level disponível" };
+      return { slot, item: cand, why: el ? `ataque de ${EL_PT[el]}${pct ? `: as creatures tomam ${Math.round(pct)}% em média` : ""}` : "maior level disponível" };
     }
     const mage = voc === "sorcerer" || voc === "druid";
     const score = (r: EquipRow) => protScore(r, prof) + (mage ? mageScore(r, best) * 10 : 0);

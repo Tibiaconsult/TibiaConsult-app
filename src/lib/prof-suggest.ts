@@ -1,6 +1,6 @@
 // Sugestão de perk de proficiência por vocação. Não existe fonte pública com a escolha "certa"; esta é a regra do site,
 // mostrada na tela: prioriza dano e crítico das magias principais, crítico geral e o skill/ML da vocação; depois sustento;
-// por último bônus situacionais (contra um tipo de criatura).
+// por último bônus situacionais (contra um tipo de creature).
 
 export type ProfVoc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
 
@@ -65,7 +65,7 @@ export function scorePerk(voc: ProfVoc, text: string): PerkScore {
   if (/pierce/.test(t)) return { score: 4.5, why: "fura resistência" };
   if (/damage against bosses/.test(t)) return { score: 5, why: "boss" };
   if (/damage against targets (below|above)/.test(t)) return { score: 4, why: "condicional (vida do alvo)" };
-  if (/damage against /.test(t)) return { score: 2, why: "só contra um tipo de criatura" };
+  if (/damage against /.test(t)) return { score: 2, why: "só contra um tipo de creature" };
   if (/homing missile/.test(t)) return { score: 4, why: "dano extra aleatório" };
   if (/mana leech|life leech/.test(t)) return { score: MAGE(voc) && /mana/.test(t) ? 5 : 4, why: "sustento" };
   if (/on kill|on hit/.test(t)) return { score: 3, why: "sustento" };

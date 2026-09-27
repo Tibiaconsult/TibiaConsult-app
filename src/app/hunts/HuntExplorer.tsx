@@ -97,7 +97,7 @@ export default function HuntExplorer() {
       >
         <div className="font-bold text-[#3a1a00]">{h.name}</div>
         <div className="muted text-[11px]">
-          {h.city} · {h.creatures.length} bichos · sorc: {bestElement(h)}
+          {h.city} · {h.creatures.length} creatures · sorc: {bestElement(h)}
         </div>
         <div className="text-[11px] mt-1">
           <span className="mr-2">Solo: {soloTxt}</span>
@@ -111,7 +111,7 @@ export default function HuntExplorer() {
     <div>
       <Box title="Encontrar hunt">
         <div className="space-y-3">
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="buscar por hunt, cidade ou bicho (ex.: ingol, darashia, harpy)" className="w-full" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="buscar por hunt, cidade ou creature (ex.: ingol, darashia, harpy)" className="w-full" />
           <div className="flex flex-wrap gap-2">
             {(
               [
