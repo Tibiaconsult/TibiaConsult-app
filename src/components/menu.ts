@@ -73,12 +73,11 @@ export const MENU: MenuGroup[] = [
       { href: "/ferramentas/charms", label: "Charms", keywords: "charm planner pontos echoes zap enflame low blow dodge" },
       { href: "/ferramentas/bosstiary", label: "Bosstiary Tracker", keywords: "boss bosses bosstiary boss points loot slot prowess mastery" },
       { href: "/ferramentas/imbuements", label: "Imbuements", keywords: "imbuir materiais lista de compras" },
-      { href: "/ferramentas/loot", label: "Divisão de loot", keywords: "party hunt analyser split transferencia" },
     ],
   },
   {
     id: "calcular",
-    label: "Calcular",
+    label: "Calculadoras",
     icon: "gameguides",
     items: [
       { href: "/simulador", label: "Dano e DPS", keywords: "simulador dano dps rotacao calibrar druid knight paladin sorcerer" },
@@ -90,6 +89,7 @@ export const MENU: MenuGroup[] = [
         label: "Exp, exercise, stamina e bless",
         keywords: "calculadora experiencia exercise weapons stamina blessing treino",
       },
+      { href: "/ferramentas/loot", label: "LootSplit", keywords: "divisao de loot party hunt analyser split transferencia" },
     ],
   },
   {
