@@ -3,6 +3,7 @@ import { itemIcon, spellIcon } from "@/lib/icons";
 import Boosted from "./Boosted";
 import InstallGuide from "./InstallGuide";
 import Rashid from "./Rashid";
+import TavernPromo from "./TavernPromo";
 
 function ThemeBox({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -23,6 +24,7 @@ export default function RightColumn() {
           <Rashid />
         </div>
       </ThemeBox>
+      <TavernPromo />
       <ThemeBox title="Atalhos">
         <Link href="/simulador" className="tc-quick">
           {/* eslint-disable-next-line @next/next/no-img-element */}
