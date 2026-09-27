@@ -104,7 +104,13 @@ export function wheelEffects(w: WheelConfig): WheelEffects {
     spellCritExtra: {},
     spellCritChance: {},
     critExtra: 0,
-    modifiers: { focusMastery: w.focusMastery, focusAugmentT2: w.augments.focusSpells >= 2, specialAugmentT1: w.augments.specialSpells >= 1, deathEchoAugmentT1: w.augments.deathEcho >= 1, energyWaveGem: false },
+    modifiers: {
+      focusMastery: w.focusMastery,
+      focusAugmentT2: w.augments.focusSpells >= 2,
+      specialAugmentT1: w.augments.specialSpells >= 1,
+      deathEchoAugmentT1: w.augments.deathEcho >= 1,
+      energyWaveGem: false,
+    },
   };
   const add = (rec: Record<string, number>, id: string, v: number) => (rec[id] = (rec[id] ?? 0) + v);
   if (w.augments.greatFireWave >= 1) {

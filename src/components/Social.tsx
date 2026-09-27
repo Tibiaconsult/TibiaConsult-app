@@ -199,7 +199,7 @@ export function ReactionBar({
 }
 
 /** Denunciar um causo ou comentário. Com 3 denúncias ele some até a moderação olhar. */
-export function ReportButton({ type, id, me, dark }: { type: "post" | "comment"; id: string; me: Me; dark?: boolean }) {
+export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" | "gossip"; id: string; me: Me; dark?: boolean }) {
   const [state, setState] = useState<"idle" | "ask" | "done">("idle");
   const [reason, setReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -241,7 +241,8 @@ export function ReportButton({ type, id, me, dark }: { type: "post" | "comment";
 
 /** Tradução das mensagens do banco para o jogador. */
 export function friendlyError(msg: string): string {
-  if (/libere o char|linguagem ofensiva|por hora|tente de novo|não encontrado/i.test(msg)) return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
+  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural/i.test(msg))
+    return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
   if (/check constraint|violates/i.test(msg)) return "Texto curto ou longo demais.";
   return `Não foi possível enviar: ${msg}`;
 }

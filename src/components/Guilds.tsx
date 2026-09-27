@@ -26,11 +26,4 @@ export function GuildTabs({ guilds, current, href }: { guilds: string[]; current
   );
 }
 
-export function GuildTag({ guild }: { guild: string | null | undefined }) {
-  if (!guild) return null;
-  return (
-    <span className="tag tag-ice whitespace-nowrap" title={`Guilda ${guild}`}>
-      🛡️ {guild}
-    </span>
-  );
-}
+export { GuildTag } from "./GuildTag";

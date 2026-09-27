@@ -25,7 +25,13 @@ export default function MobileNav() {
         return (
           <Link key={label} href={href} className={active ? "is-active" : ""}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={icon} alt="" width={outfit ? 30 : 24} height={outfit ? 30 : 24} style={outfit ? { imageRendering: "pixelated", margin: "-3px 0" } : undefined} />
+            <img
+              src={icon}
+              alt=""
+              width={outfit ? 30 : 24}
+              height={outfit ? 30 : 24}
+              style={outfit ? { imageRendering: "pixelated", margin: "-3px 0" } : undefined}
+            />
             <span>{label}</span>
           </Link>
         );

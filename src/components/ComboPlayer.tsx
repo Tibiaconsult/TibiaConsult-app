@@ -23,10 +23,27 @@ export interface PlayerStep {
 }
 
 /** Ícone com o relógio de cooldown: a parte escura encolhe no sentido horário até a magia voltar. */
-function CooldownSlot({ step, remaining, total, why, active, next }: { step: PlayerStep; remaining: number; total: number; why: string; active: boolean; next: boolean }) {
+function CooldownSlot({
+  step,
+  remaining,
+  total,
+  why,
+  active,
+  next,
+}: {
+  step: PlayerStep;
+  remaining: number;
+  total: number;
+  why: string;
+  active: boolean;
+  next: boolean;
+}) {
   const frac = total > 0 ? Math.min(1, remaining / total) : 0;
   return (
-    <div className="flex flex-col items-center gap-0.5 w-[58px]" title={remaining > 0 ? `${step.name}: volta em ${remaining.toFixed(1)} s (${why})` : `${step.name}: pronta`}>
+    <div
+      className="flex flex-col items-center gap-0.5 w-[58px]"
+      title={remaining > 0 ? `${step.name}: volta em ${remaining.toFixed(1)} s (${why})` : `${step.name}: pronta`}
+    >
       <div
         className="relative w-[44px] h-[44px] rounded-sm overflow-hidden"
         style={{ outline: active ? "2px solid #ffd700" : next ? "2px dashed #7fd35b" : "1px solid #000", boxShadow: active ? "0 0 10px #ffd700" : undefined }}
@@ -180,7 +197,9 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
         <div className="flex flex-wrap gap-1">
           {slots.map((st) => {
             const s = slotState(st);
-            return <CooldownSlot key={st.id} step={st} {...s} active={cur?.id === st.id && now - (cur?.t ?? 0) < (cur?.lock ?? 2)} next={nextStep?.id === st.id} />;
+            return (
+              <CooldownSlot key={st.id} step={st} {...s} active={cur?.id === st.id && now - (cur?.t ?? 0) < (cur?.lock ?? 2)} next={nextStep?.id === st.id} />
+            );
           })}
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px]">
@@ -193,7 +212,11 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
           </span>
           {nextStep && (
             <span>
-              Próxima: <b>{nextStep.name}</b> em {Math.max(0, nextStep.t - now).toFixed(1).replace(".", ",")} s
+              Próxima: <b>{nextStep.name}</b> em{" "}
+              {Math.max(0, nextStep.t - now)
+                .toFixed(1)
+                .replace(".", ",")}{" "}
+              s
             </span>
           )}
         </div>
@@ -248,8 +271,8 @@ export default function ComboPlayer({ steps }: { steps: PlayerStep[] }) {
         </span>
       </div>
       <p className="mt-1 text-[10px] text-white/50">
-        Animações: TibiaWiki. Cada quadrado do palco é um sqm. Na barra, o número é quantos segundos faltam para a magia voltar; a borda dourada é a
-        que está saindo e a tracejada verde é a próxima do combo.
+        Animações: TibiaWiki. Cada quadrado do palco é um sqm. Na barra, o número é quantos segundos faltam para a magia voltar; a borda dourada é a que está
+        saindo e a tracejada verde é a próxima do combo.
       </p>
     </div>
   );

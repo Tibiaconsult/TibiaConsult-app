@@ -23,7 +23,11 @@ export function sorcererSteps(steps: { t: number; spellId: string }[], mods: Mod
       cd: effectiveCooldown(sp, mods),
       lock: sp.attackLock,
       group: sp.secondary
-        ? { id: sp.secondary.group, label: SECONDARY_GROUP_LABEL[sp.secondary.group].replace(/ \(.*\)$/, ""), cd: effectiveSecondaryCooldown(sp, mods) ?? sp.secondary.cooldown }
+        ? {
+            id: sp.secondary.group,
+            label: SECONDARY_GROUP_LABEL[sp.secondary.group].replace(/ \(.*\)$/, ""),
+            cd: effectiveSecondaryCooldown(sp, mods) ?? sp.secondary.cooldown,
+          }
         : undefined,
     };
   });

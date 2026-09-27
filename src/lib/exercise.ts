@@ -9,7 +9,13 @@
 export type Skill = "magic" | "melee" | "fist" | "distance" | "shielding";
 export type Voc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
 
-export const SKILL_LABEL: Record<Skill, string> = { magic: "Magic level", melee: "Espada, machado ou clava", fist: "Fist", distance: "Distance", shielding: "Shielding" };
+export const SKILL_LABEL: Record<Skill, string> = {
+  magic: "Magic level",
+  melee: "Espada, machado ou clava",
+  fist: "Fist",
+  distance: "Distance",
+  shielding: "Shielding",
+};
 export const VOC_LABEL: Record<Voc, string> = { sorcerer: "Sorcerer", druid: "Druid", knight: "Knight", paladin: "Paladin", monk: "Monk" };
 
 const A: Record<Skill, number> = { magic: 1600, melee: 50, fist: 50, distance: 30, shielding: 100 };
@@ -40,7 +46,16 @@ export interface ExerciseResult {
 }
 
 /** Cargas e armas para ir de `current` (faltando `pctLeft`% para o próximo nível) até `target`. */
-export function exerciseNeeded(opts: { voc: Voc; skill: Skill; current: number; pctLeft: number; target: number; loyalty: number; dummy: boolean; double: boolean }): ExerciseResult {
+export function exerciseNeeded(opts: {
+  voc: Voc;
+  skill: Skill;
+  current: number;
+  pctLeft: number;
+  target: number;
+  loyalty: number;
+  dummy: boolean;
+  double: boolean;
+}): ExerciseResult {
   const { voc, skill, current, pctLeft, target } = opts;
   const next = totalPoints(voc, skill, current + 1);
   const start = next - (next - totalPoints(voc, skill, current)) * (Math.min(100, Math.max(0, pctLeft)) / 100);

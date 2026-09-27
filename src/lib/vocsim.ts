@@ -72,7 +72,7 @@ function augmentFx(v: VocationData, inp: VocInputs, spell: VSpell, key: "base" |
 function revelationStage(v: VocationData, inp: VocInputs, name?: string): number {
   if (!name) return 0;
   const i = v.revelations.findIndex((r) => r.name === name);
-  return i < 0 ? 0 : inp.revelationStages[i] ?? 0;
+  return i < 0 ? 0 : (inp.revelationStages[i] ?? 0);
 }
 
 export function flatBonus(inp: VocInputs): number {
@@ -165,7 +165,10 @@ export function spellDamage(v: VocationData, inp: VocInputs, s: VSpell, hunt: Hu
   if (s.element === "weapon") {
     const tot = inp.atkPhysical + inp.atkElemental;
     const el = tot > 0 ? inp.atkElemental / tot : 0;
-    parts = [{ element: "physical" as Element, share: 1 - el }, { element: inp.weaponElement, share: el }].filter((p) => p.share > 0);
+    parts = [
+      { element: "physical" as Element, share: 1 - el },
+      { element: inp.weaponElement, share: el },
+    ].filter((p) => p.share > 0);
     if (inp.weaponElement === "physical") parts = [{ element: "physical", share: 1 }];
   } else parts = [{ element: s.element, share: 1 }];
 
@@ -222,7 +225,7 @@ export function simulateRotation(v: VocationData, dmg: SpellDamage[], seconds = 
   while (t < seconds) {
     const avail = pool.filter((d) => (ready[d.spell.id] ?? 0) <= t + 1e-9 && (!d.spell.group || (groupReady[d.spell.group.id] ?? 0) <= t + 1e-9));
     if (!avail.length) {
-      const next = Math.min(...pool.map((d) => Math.max(ready[d.spell.id] ?? 0, d.spell.group ? groupReady[d.spell.group.id] ?? 0 : 0)));
+      const next = Math.min(...pool.map((d) => Math.max(ready[d.spell.id] ?? 0, d.spell.group ? (groupReady[d.spell.group.id] ?? 0) : 0)));
       if (!isFinite(next) || next <= t) break;
       t = Math.ceil(next / 2) * 2;
       continue;

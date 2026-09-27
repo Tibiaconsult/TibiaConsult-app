@@ -105,8 +105,14 @@ export function split(session: Session, expenses: Record<string, number>, remove
   // diff positivo: repassa; negativo: recebe.
   for (const r of rows) r.diff = r.balance - (share + r.expense);
 
-  const payers = rows.filter((r) => r.diff > 0).map((r) => ({ name: r.name, left: r.diff })).sort((a, b) => b.left - a.left);
-  const receivers = rows.filter((r) => r.diff < 0).map((r) => ({ name: r.name, left: -r.diff })).sort((a, b) => b.left - a.left);
+  const payers = rows
+    .filter((r) => r.diff > 0)
+    .map((r) => ({ name: r.name, left: r.diff }))
+    .sort((a, b) => b.left - a.left);
+  const receivers = rows
+    .filter((r) => r.diff < 0)
+    .map((r) => ({ name: r.name, left: -r.diff }))
+    .sort((a, b) => b.left - a.left);
   const transfers: Transfer[] = [];
   let i = 0;
   let j = 0;

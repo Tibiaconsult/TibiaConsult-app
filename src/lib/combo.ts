@@ -57,7 +57,8 @@ export function validateCombo(steps: ComboStep[], spells: VSpell[], augs: Augmen
     if (f !== undefined && st.t < f) out.push({ index: st.index, message: `${s.name} no segundo ${st.t}: o cooldown próprio só volta no segundo ${f}.` });
     if (s.group) {
       const g = group.get(s.group.id);
-      if (g !== undefined && st.t < g) out.push({ index: st.index, message: `${s.name} no segundo ${st.t}: o grupo ${s.group.label} está travado até o segundo ${g}.` });
+      if (g !== undefined && st.t < g)
+        out.push({ index: st.index, message: `${s.name} no segundo ${st.t}: o grupo ${s.group.label} está travado até o segundo ${g}.` });
     }
     attackFree = st.t + s.lock;
     own.set(s.id, st.t + comboCooldown(s, augs, o));

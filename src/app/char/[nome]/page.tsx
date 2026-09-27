@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
-import { Profile, achievements, deathCaption, fmtOnline, kindOf, timeAgo } from "@/lib/social";
+import { rashidRumor } from "@/lib/rashid";
+import { Profile, achievements, fmtOnline, kindOf, timeAgo } from "@/lib/social";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -102,7 +103,7 @@ export default async function CharProfilePage({ params }: Props) {
               <li key={d.died_at} className="text-[12px] border-b border-[#b98a5a]/40 pb-1">
                 <b>{date(d.died_at)}</b> · level {d.level ?? "?"} {d.by_player && <span className="tag tag-fire">PvP</span>}
                 <div>{d.reason}</div>
-                <div className="italic muted">“{deathCaption({ name: p.name, ...d })}”</div>
+                <div className="italic muted">🗣️ {rashidRumor({ name: p.name, ...d }).text}</div>
               </li>
             ))}
           </ul>

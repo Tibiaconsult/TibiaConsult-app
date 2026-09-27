@@ -26,10 +26,7 @@ export async function getBoosted(): Promise<{ creature: BoostedItem | null; boss
 export default async function Boosted({ compact = false }: { compact?: boolean }) {
   const { creature, boss } = await getBoosted();
   if (!creature && !boss) return null;
-  const items = [
-    creature && { label: "Criatura", ...creature },
-    boss && { label: "Boss", ...boss },
-  ].filter(Boolean) as (BoostedItem & { label: string })[];
+  const items = [creature && { label: "Criatura", ...creature }, boss && { label: "Boss", ...boss }].filter(Boolean) as (BoostedItem & { label: string })[];
   return (
     <div className={compact ? "space-y-2" : "flex flex-wrap gap-4"}>
       {items.map((i) => (

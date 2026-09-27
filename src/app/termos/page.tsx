@@ -92,6 +92,10 @@ export default function TermosPage() {
               Qualquer conta pode denunciar. Com 3 denúncias o conteúdo fica oculto até a moderação analisar. A moderação pode apagar conteúdo e remover contas
               que descumprirem estas regras. Você pode apagar os seus causos e comentários quando quiser.
             </li>
+            <li>
+              Fofoca pro Rashid: só sobre mortes que estão no mural. O Rashid publica sem dizer quem contou, mas a moderação sabe o autor e responde por abuso.
+              Vale zoeira sobre a morte; não vale inventar, expor vida pessoal ou atacar alguém. Limite de 3 fofocas por hora e uma por morte.
+            </li>
             <li>Há limite de 5 causos e 30 comentários por hora por conta, contra spam.</li>
           </ul>
 

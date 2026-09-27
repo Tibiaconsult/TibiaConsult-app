@@ -23,57 +23,6 @@ export const REACTIONS: { id: ReactionId; emoji: string; label: string }[] = [
 /** Chave de uma morte do mural para comentários e reações: nome em minúsculas + segundo da morte. */
 export const deathKey = (name: string, diedAt: string) => `${name.toLowerCase()}|${Math.floor(new Date(diedAt).getTime() / 1000)}`;
 
-/** Número estável a partir de um texto: a mesma morte sempre ganha a mesma legenda. */
-function hash(s: string): number {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-  return Math.abs(h);
-}
-const pick = <T>(arr: T[], seed: string) => arr[hash(seed) % arr.length];
-
-const WEAK = /\b(rat|cave rat|rotworm|troll|wasp|bug|snake|spider|chicken|sheep|deer|rabbit|pig|dog|wolf|bat|frog|orc|goblin|skeleton)\b/i;
-const CLASSIC = /\b(dragon|demon|hydra|behemoth|juggernaut|hellhound|serpent spawn|warlock|grim reaper)\b/i;
-const FLOOR = /\b(fire field|energy field|poison field|field|drown|drowning|trap|explosion)\b/i;
-
-const GENERIC = [
-  "A bless tava em dia? Pergunta pra um amigo.",
-  "Culpa do lag, com certeza.",
-  "Faltou uma potion. Sempre falta uma potion.",
-  "O templo agradece a visita.",
-  "Deslogou do jeito mais caro possível.",
-  "Pegou o respawn certo na hora errada.",
-  "Estava só testando a Wheel, juro.",
-  "Um minuto de silêncio pelo loot que ficou no chão.",
-  "Faltou o utamo. Ou sobrou coragem.",
-  "Foi buscar o bestiário e o bestiário buscou ele.",
-];
-
-/** Legenda automática de uma morte do mural. */
-export function deathCaption(d: { name: string; died_at: string; reason: string | null; by_player: boolean }): string {
-  const seed = d.name + d.died_at;
-  const reason = d.reason ?? "";
-  const killers = reason
-    .replace(/^.*?\bby\b/i, "")
-    .split(/,| and /)
-    .filter((x) => x.trim());
-  if (d.by_player)
-    return pick(
-      ["Treta confirmada. Anota o nome e segue o baile.", "Morreu pra player: agora é pessoal.", "PK na conta. A vingança é um prato que se come no Thais."],
-      seed,
-    );
-  if (FLOOR.test(reason)) return pick(["O chão sempre vence.", "Perdeu para o piso. Clássico.", "Nem o bicho precisou trabalhar."], seed);
-  if (killers.length >= 4)
-    return pick(
-      ["Trem de monstros: não deu tempo nem de apertar a potion.", "Chamou a festa inteira e a festa veio.", "Lure grande demais, templo perto demais."],
-      seed,
-    );
-  const weak = reason.match(WEAK);
-  if (weak) return `Morreu pra ${weak[1].toLowerCase()}. Não tem explicação, só aceitação.`;
-  const classic = reason.match(CLASSIC);
-  if (classic) return `Clássico. O ${classic[1].toLowerCase()} manda lembranças.`;
-  return pick(GENERIC, seed);
-}
-
 /** "há 5 min", "há 3 h", "há 2 dias". */
 export function timeAgo(iso: string): string {
   const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
