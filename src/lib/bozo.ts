@@ -1,4 +1,4 @@
-// Bozo, o bobo da corte de Thais. As piadas de monstro e de vocação são as dele no jogo (TibiaWiki, Bozo/Transcripts),
+// Bozo, o bobo da corte de Thais: faz uma piada em toda morte da Taverna. As piadas de monstro e de vocação são as dele no jogo (TibiaWiki, Bozo/Transcripts),
 // adaptadas para português e para a morte; as demais seguem o mesmo estilo.
 
 import { type RumorDeath, killersOf } from "@/lib/rashid";
@@ -40,15 +40,30 @@ const GENERIC = [
   (n: string) => `Eu vendo a magia de "aliviar a carga" por 200 gold. ${n} ganhou de graça: aliviou a backpack inteira.`,
   (n: string) => `Quer entrar na guilda dos bobos? ${n} já é sócio, só não sabia.`,
   (n: string) => `Vendi uma "mace of the fury" pro ${n}. Era um rolo de macarrão. Pelo resultado, ele usou na hunt.`,
+  (n: string) => `Eu queria ser herói também, mas era qualificado demais. ${n} não teve esse problema.`,
+  (n: string) => `Sabe qual a diferença entre ${n} e um bobo da corte? O bobo cobra pra fazer o rei rir.`,
+  (n: string) => `O rei riu tanto dessa morte de ${n} que me deu folga amanhã.`,
+  (n: string) => `Eu faço palhaçada por profissão. ${n} faz de graça, e ainda paga bless.`,
+  (n: string) => `Toc toc! Quem é? É ${n}, voltando pro templo. De novo.`,
+  (n: string) => `Nem a flor de água que eu uso pra molhar o rei deixa ninguém tão ensopado de vergonha quanto ${n} hoje.`,
+  (n: string) => `A guilda dos bobos tem título de "grande bobo". ${n} está a uma morte de ganhar.`,
+  (n: string) => `${n} pediu uma piada pra animar. Eu disse: "abre o mural". Ele abriu e viu a própria morte.`,
 ];
 
-/** Piada do Bozo para a morte, ou null (ele não comenta todas: só quando tem piada de monstro ou em parte das outras). */
-export function bozoJoke(d: RumorDeath & { vocation?: string | null }): string | null {
+/** Piada do Bozo para a morte: de monstro quando o matador tem piada, senão de vocação ou uma das dele. Sempre a mesma para a mesma morte. */
+export function bozoJoke(d: RumorDeath & { vocation?: string | null }): string {
   const h = hash(d.name + d.died_at);
   const k = killersOf(d)[0] ?? "";
   const m = MONSTER.find(([re]) => re.test(k));
   if (m && !d.by_player) return m[1](d.name, k);
-  if (h % 3 !== 0) return null;
   const v = VOCATION.find(([re]) => re.test(d.vocation ?? ""));
-  return v && h % 2 ? v[1](d.name) : GENERIC[(h >> 4) % GENERIC.length](d.name);
+  return v && h % 3 === 0 ? v[1](d.name) : GENERIC[(h >> 4) % GENERIC.length](d.name);
 }
+
+/** Falas soltas do Bozo para o banner da lateral. */
+export const BOZO_SAYS = [
+  "Sou o cobrador de impostos real! Digo, o bobo da corte.",
+  "Por que o dragão cospe fogo? Comeu sorcerer com pimenta!",
+  "Quer entrar na guilda dos bobos? A inscrição é morrer pra rat.",
+  "Tenho uma piada pra cada morte da guilda. Estoque garantido.",
+];

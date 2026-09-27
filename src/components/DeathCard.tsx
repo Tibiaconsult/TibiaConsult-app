@@ -104,10 +104,9 @@ function HenricusSays({ name, deaths }: { name: string; deaths: number }) {
   );
 }
 
-/** Bozo, o bobo da corte de Thais: piada de monstro (quando o matador casa) ou de vocação, em parte das mortes. */
+/** Bozo, o bobo da corte de Thais: uma piada em toda morte (de monstro, de vocação ou dele mesmo). */
 function BozoSays({ d }: { d: Death }) {
   const joke = bozoJoke(d);
-  if (!joke) return null;
   return (
     <div className="w-full pt-1 flex items-start gap-1.5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
