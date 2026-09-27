@@ -8,9 +8,8 @@ export default function LootSplitSpotlight() {
       className="rounded-md p-4 mb-4 flex flex-wrap items-center gap-4"
       style={{ background: "linear-gradient(135deg, #3a2410, #1b1108)", border: "2px solid #d9a441", color: "#f5e6c8", boxShadow: "0 2px 10px #0006" }}
     >
-      <div className="text-[40px] leading-none" aria-hidden>
-        💰
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/lootsplit/gold-pouch.gif" alt="" width={64} height={64} style={{ imageRendering: "pixelated" }} />
       <div className="flex-1 min-w-[240px]">
         <div
           className="inline-block rounded-full px-2 py-0.5 text-[11px] font-bold mb-1"
@@ -26,9 +25,14 @@ export default function LootSplitSpotlight() {
           para tirar quem saiu e reembolsar gasto extra. Sem planilha, sem conta de cabeça.
         </p>
       </div>
-      <Link href="/ferramentas/loot" className="tc-btn !text-[14px] !px-4 !py-2">
-        Dividir o loot agora
-      </Link>
+      <div className="flex flex-col items-center gap-1">
+        <Link href="/ferramentas/loot" className="tc-btn !text-[14px] !px-4 !py-2">
+          Dividir o loot agora
+        </Link>
+        <Link href="/lootsplit" className="text-[11px]" style={{ color: "#f3d27a" }}>
+          💻 instalar como app no PC
+        </Link>
+      </div>
     </section>
   );
 }

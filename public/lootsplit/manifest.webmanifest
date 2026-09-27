@@ -1,0 +1,17 @@
+{
+  "id": "/lootsplit",
+  "name": "LootSplit · TibiaConsult",
+  "short_name": "LootSplit",
+  "description": "Cole o Party Hunt Analyser do Tibia e receba a divisão do loot pronta, com os comandos de transfer.",
+  "start_url": "/lootsplit",
+  "scope": "/lootsplit",
+  "display": "standalone",
+  "background_color": "#140c06",
+  "theme_color": "#2a1a08",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/lootsplit/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/lootsplit/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/lootsplit/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
