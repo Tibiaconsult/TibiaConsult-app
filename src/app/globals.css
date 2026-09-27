@@ -952,3 +952,25 @@ p.on-dark {
     animation: none;
   }
 }
+
+/* Texto das notícias do tibia.com (tibia/noticias) */
+.tc-news img {
+  float: right;
+  max-width: 45%;
+  height: auto;
+  margin: 0 0 8px 12px;
+  border-radius: 3px;
+}
+.tc-news p {
+  margin: 0 0 8px;
+}
+.tc-news ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0 0 8px;
+}
+.tc-news::after {
+  content: "";
+  display: block;
+  clear: both;
+}

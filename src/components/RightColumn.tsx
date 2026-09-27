@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { itemIcon, spellIcon } from "@/lib/icons";
 import Boosted from "./Boosted";
+import EventsToday from "./EventsToday";
 import InstallGuide from "./InstallGuide";
 import Rashid from "./Rashid";
 import TavernPromo from "./TavernPromo";
@@ -22,6 +23,7 @@ export default function RightColumn() {
         <div className="space-y-2">
           <Boosted compact />
           <Rashid />
+          <EventsToday />
         </div>
       </ThemeBox>
       <TavernPromo />
