@@ -69,6 +69,7 @@ export const MENU: MenuGroup[] = [
       { href: "/hunts", label: "Fichas de hunt", keywords: "hunts fichas de hunt respawn cacar cacada party" },
       { href: "/hunts/preparar", label: "Preparar para a hunt", keywords: "preparar set imbuements combo charm sair para cacar" },
       { href: "/hunts/analyser", label: "Hunt Analyser da guild", keywords: "xp/h lucro por hora profit ranking hunts analyser sessao" },
+      { href: "/mapa", label: "Mapa do Tibia", keywords: "mapa minimap map andar coordenada rota caminho tibiamaps" },
       { href: "/criaturas", label: "Creatures", keywords: "criatura creature bicho monstro loot drop resistencia fraqueza bestiario" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker", keywords: "bestiario charm criaturas creatures" },
       { href: "/ferramentas/charms", label: "Charms", keywords: "charm planner pontos echoes zap enflame low blow dodge" },

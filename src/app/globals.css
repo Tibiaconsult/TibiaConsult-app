@@ -974,3 +974,16 @@ p.on-dark {
   display: block;
   clear: both;
 }
+
+/* mapa do Tibia (MapViewer): pixels nítidos no zoom e abaixo dos menus */
+.tc-map {
+  z-index: 0;
+}
+.tc-map .leaflet-image-layer {
+  image-rendering: pixelated;
+}
+.tc-map .leaflet-container,
+.tc-map.leaflet-container {
+  background: #000;
+  font: inherit;
+}

@@ -1,0 +1,12 @@
+{
+  "asura-citadel": { "x": 33894, "y": 32713, "z": 7, "ref": "marcador Asura Citadel (TibiaMaps)" },
+  "crystal-enigma": { "x": 33594, "y": 32909, "z": 15, "ref": "marcador Crystal Enigma (TibiaMaps)" },
+  "podzilla-quaras": { "x": 33805, "y": 31995, "z": 4, "ref": "entrada: marcador To Podzilla (TibiaMaps)" },
+  "ingol": { "x": 33356, "y": 31985, "z": 7, "ref": "entrada: marcador To Ingol (TibiaMaps)" },
+  "monster-graveyard": { "x": 33632, "y": 32844, "z": 15, "ref": "marcador Monster Graveyard (TibiaMaps)" },
+  "sparkling-pools": { "x": 33564, "y": 32860, "z": 15, "ref": "marcador Sparkling Pools (TibiaMaps)" },
+  "forsaken-crypt": { "x": 32881, "y": 31594, "z": 11, "ref": "entrada: marcador To Forsaken Crypt (TibiaMaps)" },
+  "unhallowed-crypt": { "x": 32823, "y": 31534, "z": 10, "ref": "marcador Unhallowed Crypt (TibiaMaps)" },
+  "issavi-catacombs": { "x": 33857, "y": 31529, "z": 7, "ref": "entrada: marcador Kilmaresh Catacombs (TibiaMaps)" },
+  "issavi-sewers": { "x": 33875, "y": 31477, "z": 7, "ref": "entrada: marcador Issavi sewers (TibiaMaps)" }
+}

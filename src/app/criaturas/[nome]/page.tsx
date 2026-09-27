@@ -207,7 +207,10 @@ export default async function CriaturaPage({ params }: Props) {
           <ul className="text-[12px] space-y-0.5">
             {hunts.map((h) => (
               <li key={h.id}>
-                <Link href={`/hunts?h=${h.id}`}>{h.name}</Link> <span className="muted">({h.city})</span>
+                <Link href={`/hunts?h=${h.id}`}>{h.name}</Link> <span className="muted">({h.city})</span> ·{" "}
+                <Link href={`/mapa?hunt=${h.id}`} title="Ver no mapa">
+                  📍 mapa
+                </Link>
               </li>
             ))}
           </ul>
