@@ -878,3 +878,57 @@ p.on-dark {
     padding-right: max(12px, env(safe-area-inset-right));
   }
 }
+
+/* Guia animado de instalação (InstallGuide) */
+@keyframes tc-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.tc-fade {
+  animation: tc-fade-in 0.5s ease both;
+}
+@keyframes tc-tap-ring {
+  0%,
+  45% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+.tc-tap {
+  animation: tc-tap-ring 1.6s ease-out 0.4s both;
+}
+@keyframes tc-pop-in {
+  0%,
+  30% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.tc-pop {
+  animation: tc-pop-in 0.9s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-fade,
+  .tc-tap,
+  .tc-pop {
+    animation: none;
+  }
+}

@@ -21,6 +21,7 @@ export const MENU: MenuGroup[] = [
     items: [
       { href: "/", label: "Bem-vindo", keywords: "home inicio boosted rashid" },
       { href: "/novidades", label: "Novidades", keywords: "noticias atualizacoes" },
+      { href: "/instalar", label: "Instalar o app", keywords: "app instalar celular pc windows barra de tarefas fixar tela inicial iphone android" },
       { href: "/feedback", label: "Reportar ou sugerir", keywords: "bug erro sugestao feedback" },
     ],
   },

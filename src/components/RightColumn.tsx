@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { itemIcon, spellIcon } from "@/lib/icons";
 import Boosted from "./Boosted";
+import InstallGuide from "./InstallGuide";
 import Rashid from "./Rashid";
 
 function ThemeBox({ title, children }: { title: string; children: React.ReactNode }) {
@@ -49,7 +50,7 @@ export default function RightColumn() {
         </Link>
       </ThemeBox>
       <ThemeBox title="Instale o app">
-        <p>No celular, abra o menu do navegador e toque em &quot;Adicionar à tela inicial&quot;. No PC, use o ícone de instalar na barra de endereço.</p>
+        <InstallGuide compact />
       </ThemeBox>
       <ThemeBox title="Sobre os dados">
         <p>Números conferidos na TibiaWiki e no tibia.com. Onde a fórmula não é oficial, o site avisa e deixa você calibrar.</p>
