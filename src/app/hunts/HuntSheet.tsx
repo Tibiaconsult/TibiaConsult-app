@@ -41,7 +41,7 @@ export default function HuntSheet({ h }: { h: Hunt }) {
               </span>
             ))}
             <span className={`border rounded px-2 py-0.5 ${rec.team ? "border-[#3a5a8a] bg-[#dde6f3]" : "border-[#c9b089] opacity-60"}`}>
-              Time: {rec.team ? `${rec.team}+` : "não listado"}
+              PT: {rec.team ? `${rec.team}+` : "não listado"}
             </span>
           </div>
           {rec.detail && <p className="text-[11px] mt-1">{rec.detail}</p>}

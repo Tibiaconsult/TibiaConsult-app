@@ -101,7 +101,7 @@ export default function HuntExplorer() {
         </div>
         <div className="text-[11px] mt-1">
           <span className="mr-2">Solo: {soloTxt}</span>
-          {r?.team && <span className="tag tag-energy">Time {r.team}+</span>}
+          {r?.team && <span className="tag tag-energy">PT {r.team}+</span>}
         </div>
       </button>
     );
@@ -117,7 +117,7 @@ export default function HuntExplorer() {
               [
                 ["todas", "Todas"],
                 ["solo", "Solo"],
-                ["time", "Time (party)"],
+                ["time", "PT (party)"],
               ] as [Mode, string][]
             ).map(([m, l]) => (
               <button key={m} type="button" className={`tc-btn ${mode === m ? "" : "opacity-60"}`} onClick={() => setMode(m)}>
@@ -148,7 +148,7 @@ export default function HuntExplorer() {
 
           {mode === "time" && (
             <div className="space-y-2">
-              <div className="font-bold text-[12px]">Membros do time</div>
+              <div className="font-bold text-[12px]">Membros da PT</div>
               {party.map((m, i) => (
                 <div key={i} className="flex flex-wrap gap-2 items-center">
                   <select
@@ -193,7 +193,7 @@ export default function HuntExplorer() {
                 </div>
                 <div className="border border-[#b98a5a] rounded p-2 bg-white/40">
                   <b>Filtro pelo menor level: {lowest}</b>
-                  <div className="text-[11px]">A recomendação de time do TibiaPal vale para o time inteiro nesse level.</div>
+                  <div className="text-[11px]">A recomendação de PT do TibiaPal vale para a PT inteira nesse level.</div>
                 </div>
               </div>
             </div>
