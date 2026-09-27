@@ -24,7 +24,7 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
     loadGossips(keys).then(async (g) => {
       const items = deaths.map((d) => {
         const key = deathKey(d.name, d.died_at);
-        return { type: "death" as const, at: d.died_at, id: key, death: d, gossips: g[key] ?? [] };
+        return { at: d.died_at, id: key, death: d, gossips: g[key] ?? [] };
       });
       const x = await fetchExtras(items, me.userId);
       setGossips(g);

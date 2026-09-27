@@ -91,7 +91,7 @@ export function TellRashid({ deathKey, who, me, onSent }: { deathKey: string; wh
         <p>
           Para fofocar, libere seu char na comunidade (um clique em{" "}
           <Link href="/comunidade/taverna" style={gold}>
-            Causos da Taverna
+            Taverna
           </Link>
           ).
         </p>

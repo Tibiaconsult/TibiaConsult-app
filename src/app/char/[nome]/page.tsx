@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
 import { rashidRumor } from "@/lib/rashid";
-import { Profile, achievements, fmtOnline, kindOf, timeAgo } from "@/lib/social";
+import { Profile, achievements, fmtOnline } from "@/lib/social";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -15,17 +15,11 @@ async function load(nome: string) {
   const { data } = await supabase.rpc("char_profile", { p_name: decodeURIComponent(nome) });
   if (!data) return null;
   const p = data as Profile;
-  const { data: posts } = await supabase
-    .from("posts")
-    .select("id, kind, hunt, body, created_at")
-    .eq("char_name", p.name)
-    .eq("hidden", false)
-    .order("created_at", { ascending: false })
-    .limit(10);
   const snaps = p.snapshots;
   const first30 = snaps.find((s) => (Date.now() - new Date(s.date).getTime()) / 86400000 <= 30);
   const gained30 = first30 ? snaps[snaps.length - 1].level - first30.level : null;
-  return { p, posts: posts ?? [], gained30 };
+  const deaths30 = p.deaths.filter((d) => Date.now() - new Date(d.died_at).getTime() <= 30 * 86400000).length;
+  return { p, gained30, deaths30 };
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -39,7 +33,7 @@ export default async function CharProfilePage({ params }: Props) {
   const { nome } = await params;
   const r = await load(nome);
   if (!r) notFound();
-  const { p, posts, gained30 } = r;
+  const { p, gained30, deaths30 } = r;
   const list = achievements(p);
   const earned = list.filter((a) => a.earned);
   return (
@@ -57,7 +51,7 @@ export default async function CharProfilePage({ params }: Props) {
             ["Level", p.level ?? "?"],
             ["Levels em 30 dias", gained30 === null ? "—" : gained30 >= 0 ? `+${gained30}` : gained30],
             ["Mortes registradas", p.deaths.length],
-            ["Causos contados", p.posts],
+            ["Mortes em 30 dias", deaths30],
             ["Online em 30 dias", fmtOnline(p.online30 ?? 0)],
           ].map(([l, v]) => (
             <div key={String(l)} className="border border-[#b98a5a] rounded p-3 bg-white/40">
@@ -67,7 +61,7 @@ export default async function CharProfilePage({ params }: Props) {
           ))}
         </div>
         <p className="muted text-[11px] mt-2">
-          🪦 {p.fs} F recebidos no mural · 🤡 {p.clowns} reações de palhaço nos causos · ⏱️ {fmtOnline(p.online_month ?? 0)} online neste mês
+          🪦 {p.fs} F recebidos no mural · 🤡 {p.clowns} reações de palhaço nas mortes · ⏱️ {fmtOnline(p.online_month ?? 0)} online neste mês
           {p.wins > 0 && ` · 🏅 ${p.wins}x Funcionário do Mês`}
         </p>
       </Box>
@@ -113,33 +107,14 @@ export default async function CharProfilePage({ params }: Props) {
         </p>
       </Box>
 
-      <Box title="🍺 Causos na Taverna">
-        {posts.length === 0 ? (
+      {!p.registered && (
+        <Box title="💬 Esse char é seu?">
           <p className="text-[12px]">
-            {p.registered ? (
-              "Ainda não contou nenhum causo."
-            ) : (
-              <>
-                {p.name} ainda não tem conta no site. É seu? <Link href="/entrar">Entre</Link>, cadastre o char em <Link href="/meus-chars">Meus chars</Link> e
-                libere na comunidade para contar causos e comentar.
-              </>
-            )}
+            {p.name} ainda não tem conta no site. <Link href="/entrar">Entre</Link>, cadastre o char em <Link href="/meus-chars">Meus chars</Link> e libere na
+            comunidade para comentar as mortes na <Link href="/comunidade/taverna">Taverna</Link> e contar fofoca pro Rashid.
           </p>
-        ) : (
-          <ul className="space-y-2">
-            {posts.map((c) => (
-              <li key={c.id} className="text-[12px] border-b border-[#b98a5a]/40 pb-1">
-                {kindOf(c.kind).emoji} <b>{kindOf(c.kind).label}</b>
-                {c.hunt ? ` · 📍 ${c.hunt}` : ""} <span className="muted text-[11px]">· {timeAgo(c.created_at)}</span>
-                <div className="whitespace-pre-wrap break-words">{c.body}</div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <p className="text-[11px] mt-2">
-          Reaja e comente na <Link href="/comunidade/taverna">Taverna</Link>.
-        </p>
-      </Box>
+        </Box>
+      )}
     </div>
   );
 }

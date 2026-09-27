@@ -119,8 +119,7 @@ export function achievements(p: Profile): Achievement[] {
   add("imortal", "🛡️", "Imortal (por enquanto)", "30 dias sem morrer. Não comenta, senão dá azar.", deaths30 === 0 && p.snapshots.length >= 7);
   add("bot", "🤖", "Tá de bot?", "Subiu 3 levels ou mais em um dia. Só perguntando.", bestJump >= 3);
   add("lenda", "👑", "Lenda Viva", "Level 1000 ou mais.", (p.level ?? 0) >= 1000);
-  add("causos", "📜", "Contador de Causos", "Contou 5 causos na Taverna.", p.posts >= 5);
-  add("palhaco", "🤡", "Palhaço da Taverna", "Recebeu 5 reações de palhaço. A galera ama.", p.clowns >= 5);
+  add("palhaco", "🤡", "Palhaço da Taverna", "Recebeu 5 reações de palhaço nas mortes. A galera ama.", p.clowns >= 5);
   add("chorado", "🕯️", "Chorado pela Galera", "Recebeu 5 F nas mortes do mural.", p.fs >= 5);
   add("funcionario", "🏅", "Funcionário do Mês", "Foi o char que mais ficou online num mês. Quadro na parede.", p.wins > 0);
   add("vidasocial", "🦇", "Sem Vida Social", "100 horas online em 30 dias. Lá fora ainda existe, tá?", p.online30 >= 6000);

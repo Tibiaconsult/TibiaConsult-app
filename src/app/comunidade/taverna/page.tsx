@@ -1,15 +1,19 @@
+import { loadGuilds } from "@/components/Guilds";
 import TavernFeed from "./TavernFeed";
 
-export const metadata = { title: "Causos da Taverna" };
+export const metadata = { title: "Taverna" };
+export const dynamic = "force-dynamic";
 
-export default function TavernaPage() {
+export default async function TavernaPage() {
+  const guilds = await loadGuilds();
   return (
     <div>
-      <h1>Causos da Taverna</h1>
+      <h1>Taverna</h1>
       <p className="on-dark mb-4">
-        Morreu de um jeito ridículo? Caiu o drop da vida? Esqueceu a bless? Conta aqui. Libere seu char com um clique e bota a história na mesa.
+        Toda morte da turma vira assunto no balcão: o Rashid espalha o boato, o Henricus confere quem já é cliente de carteirinha e a galera comenta. Sabe a
+        história de verdade? Clique em &quot;🤫 contar pro Rashid&quot;.
       </p>
-      <TavernFeed />
+      <TavernFeed guilds={guilds} />
     </div>
   );
 }

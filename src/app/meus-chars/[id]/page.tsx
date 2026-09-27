@@ -160,8 +160,8 @@ export default async function CharPage({
             <p className="flex-1 min-w-[240px]">
               {c.public_profile ? (
                 <>
-                  {c.name} já pode contar causos na <Link href="/comunidade/taverna">Taverna</Link>, comentar e aparece no mural, no ranking, no Funcionário do
-                  Mês e no <Link href={`/char/${encodeURIComponent(c.name)}`}>perfil público</Link>.
+                  {c.name} já pode comentar as mortes na <Link href="/comunidade/taverna">Taverna</Link>, contar fofoca pro Rashid e aparece no mural, no
+                  ranking, no Funcionário do Mês e no <Link href={`/char/${encodeURIComponent(c.name)}`}>perfil público</Link>.
                 </>
               ) : (
                 <>

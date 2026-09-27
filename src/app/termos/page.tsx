@@ -53,7 +53,7 @@ export default function TermosPage() {
               públicas do tibia.com, como fazem os sites de estatísticas de guilda. Eles aparecem no mural, no ranking, no Funcionário do Mês e no perfil
               público mesmo sem conta. Quem não quiser aparecer pede pelo <Link href="/feedback">Reportar ou sugerir</Link> e o char sai de todas as páginas.
             </li>
-            <li>Causos, comentários, reações e denúncias que você fizer na comunidade.</li>
+            <li>Comentários, fofocas, reações e denúncias que você fizer na comunidade.</li>
           </ul>
           <p>
             Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você liberar um char na
@@ -80,23 +80,23 @@ export default function TermosPage() {
           </h2>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              Para postar e comentar, libere o char na comunidade (um clique). Causos, comentários e o nome do char que os escreveu são públicos. Reações
-              também. Cada char só pode estar liberado em uma conta; se alguém liberou o seu, avise pelo Reportar ou sugerir.
+              Para comentar, libere o char na comunidade (um clique). Comentários e o nome do char que os escreveu são públicos. Reações também. Cada char só
+              pode estar liberado em uma conta; se alguém liberou o seu, avise pelo Reportar ou sugerir.
             </li>
-            <li>O perfil público (/char/nome) só existe para chars liberados na comunidade, e mostra level, mortes, tempo online, causos e conquistas.</li>
+            <li>O perfil público (/char/nome) só existe para chars liberados na comunidade, e mostra level, mortes, tempo online e conquistas.</li>
             <li>
               Zoeira é bem-vinda; ofensa não. Proibido: preconceito, ataques pessoais, ameaças, dados pessoais de terceiros, golpes, venda de itens ou contas e
               divulgação de bot/cheat. Palavrão é liberado; termos preconceituosos são bloqueados automaticamente.
             </li>
             <li>
               Qualquer conta pode denunciar. Com 3 denúncias o conteúdo fica oculto até a moderação analisar. A moderação pode apagar conteúdo e remover contas
-              que descumprirem estas regras. Você pode apagar os seus causos e comentários quando quiser.
+              que descumprirem estas regras. Você pode apagar os seus comentários quando quiser.
             </li>
             <li>
               Fofoca pro Rashid: só sobre mortes que estão no mural. O Rashid publica sem dizer quem contou, mas a moderação sabe o autor e responde por abuso.
               Vale zoeira sobre a morte; não vale inventar, expor vida pessoal ou atacar alguém. Limite de 3 fofocas por hora e uma por morte.
             </li>
-            <li>Há limite de 5 causos e 30 comentários por hora por conta, contra spam.</li>
+            <li>Há limite de 30 comentários por hora por conta, contra spam.</li>
           </ul>
 
           <h2>9. Mudanças</h2>
