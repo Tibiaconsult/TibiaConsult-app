@@ -158,3 +158,31 @@ Paladin Exemplo
 	Balance: -50,000
 	Damage: 30,100,000
 	Healing: 1,300,000`;
+
+/** 1234567 → "1.23kk", 210973 → "211k", 950 → "950" (como os jogadores escrevem no chat). */
+export function shortGold(v: number): string {
+  const a = Math.abs(v);
+  const s = a >= 1e6 ? `${Number((a / 1e6).toFixed(2))}kk` : a >= 1e3 ? `${Math.round(a / 1e3)}k` : String(Math.round(a));
+  return v < 0 ? `-${s}` : s;
+}
+
+/**
+ * Resumo pronto para colar no chat ou no Discord, no formato que a turma já usa:
+ *   1. Fulano to pay 211k to Ciclano (Bank: transfer 210973 to Ciclano)
+ *   Total profit: 1.95kk~ which is: 651k~ for each player.
+ *   Session duration: 00:50h, which is: 782k~ for each player per hour.
+ *   Damage Split: A - 38.3%, B - 35.7%, C - 26.1%.
+ */
+export function splitSummary(session: Session, result: SplitResult): string {
+  const out: string[] = result.transfers.map((t, i) => `${i + 1}. ${t.from} to pay ${shortGold(t.amount)} to ${t.to} (Bank: transfer ${t.amount} to ${t.to})`);
+  if (!result.transfers.length) out.push("Nobody needs to transfer anything.");
+  out.push(`Total profit: ${shortGold(result.total)}~ which is: ${shortGold(result.share)}~ for each player.`);
+  if (session.duration && result.perHour !== null)
+    out.push(`Session duration: ${session.duration}, which is: ${shortGold(result.perHour)}~ for each player per hour.`);
+  const dmg = result.rows.reduce((a, r) => a + r.damage, 0);
+  if (dmg > 0) {
+    const parts = [...result.rows].sort((a, b) => b.damage - a.damage).map((r) => `${r.name} - ${((r.damage / dmg) * 100).toFixed(1)}%`);
+    out.push(`Damage Split: ${parts.join(", ")}.`);
+  }
+  return out.join("\n\n");
+}
