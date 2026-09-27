@@ -47,13 +47,14 @@ export default function TermosPage() {
             <li>O que você cadastrar: chars, set, Wheel, gemas, anotações e progresso do bestiário.</li>
             <li>Sugestões e relatos de erro enviados pela caixa de feedback.</li>
             <li>Level, experiência e mortes dos chars cadastrados, lidos do tibia.com pela API pública do TibiaData.</li>
+            <li>Tempo online dos chars cadastrados, contado a cada 5 minutos pela lista pública de quem está online no mundo.</li>
             <li>Causos, comentários, reações e denúncias que você fizer na comunidade.</li>
           </ul>
           <p>
             Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você ligar &quot;Mostrar no mural
-            e no ranking&quot; num char, o nome, mundo, vocação, level, XP ganha e mortes desse char ficam visíveis para todos no mural Caixão e Vela Preta e no
-            ranking de XP. Desligar a opção tira o char das duas páginas. O administrador do site pode ver os dados para manutenção e suporte. Não vendemos nem
-            repassamos dados a ninguém.
+            e no ranking&quot; num char, o nome, mundo, vocação, level, XP ganha, tempo online e mortes desse char ficam visíveis para todos no mural Caixão e
+            Vela Preta, no ranking de XP, no Funcionário do Mês e no perfil público. Desligar a opção tira o char dessas páginas. O administrador do site pode
+            ver os dados para manutenção e suporte. Não vendemos nem repassamos dados a ninguém.
           </p>
           <p>
             Os dados ficam no Supabase (banco de dados) e o site é hospedado na Vercel. Para pedir a exclusão da sua conta e de tudo que ela guarda, use a{" "}
@@ -78,8 +79,8 @@ export default function TermosPage() {
               escreveu são públicos. Reações também.
             </li>
             <li>
-              O perfil público (/char/nome) só existe para chars verificados com &quot;Mostrar no mural e no ranking&quot; ligado, e mostra level, mortes,
-              causos e conquistas.
+              O perfil público (/char/nome) só existe para chars verificados com &quot;Mostrar no mural e no ranking&quot; ligado, e mostra level, mortes, tempo
+              online, causos e conquistas.
             </li>
             <li>
               Zoeira é bem-vinda; ofensa não. Proibido: preconceito, ataques pessoais, ameaças, dados pessoais de terceiros, golpes, venda de itens ou contas e

@@ -102,6 +102,7 @@ export const MENU: MenuGroup[] = [
       { href: "/comunidade/taverna", label: "Causos da Taverna", keywords: "rede social causos posts historias humor feed" },
       { href: "/comunidade/mural", label: "Caixão e Vela Preta", keywords: "mortes mural deaths f comentarios" },
       { href: "/comunidade/ranking", label: "Ranking de XP", keywords: "experiencia ranking xp" },
+      { href: "/comunidade/funcionario-do-mes", label: "Funcionário do Mês", keywords: "tempo online horas guildstats ranking online viciado" },
     ],
   },
 ];

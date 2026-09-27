@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
-import { Profile, achievements, deathCaption, kindOf, timeAgo } from "@/lib/social";
+import { Profile, achievements, deathCaption, fmtOnline, kindOf, timeAgo } from "@/lib/social";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -50,12 +50,13 @@ export default async function CharProfilePage({ params }: Props) {
       </p>
 
       <Box title="📋 Ficha">
-        <div className="grid gap-3 sm:grid-cols-4 text-center">
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-5 text-center">
           {[
             ["Level", p.level ?? "?"],
             ["Levels em 30 dias", gained30 === null ? "—" : gained30 >= 0 ? `+${gained30}` : gained30],
             ["Mortes registradas", p.deaths.length],
             ["Causos contados", p.posts],
+            ["Online em 30 dias", fmtOnline(p.online30 ?? 0)],
           ].map(([l, v]) => (
             <div key={String(l)} className="border border-[#b98a5a] rounded p-3 bg-white/40">
               <div className="muted text-[11px]">{l}</div>
@@ -64,7 +65,8 @@ export default async function CharProfilePage({ params }: Props) {
           ))}
         </div>
         <p className="muted text-[11px] mt-2">
-          🪦 {p.fs} F recebidos no mural · 🤡 {p.clowns} reações de palhaço nos causos
+          🪦 {p.fs} F recebidos no mural · 🤡 {p.clowns} reações de palhaço nos causos · ⏱️ {fmtOnline(p.online_month ?? 0)} online neste mês
+          {p.wins > 0 && ` · 🏅 ${p.wins}x Funcionário do Mês`}
         </p>
       </Box>
 

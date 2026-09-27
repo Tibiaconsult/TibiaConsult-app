@@ -97,6 +97,30 @@ export interface Profile {
   posts: number;
   clowns: number;
   fs: number;
+  /** minutos online nos últimos 30 dias e no mês atual (coleta a cada 5 min) */
+  online30: number;
+  online_month: number;
+  /** primeiro dia com coleta de tempo online no site */
+  online_since: string | null;
+  /** quantas vezes foi o Funcionário do Mês */
+  wins: number;
+}
+
+/** 754 → "12 h 34 min" */
+export function fmtOnline(min: number): string {
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return h ? (m ? `${h} h ${m} min` : `${h} h`) : `${m} min`;
+}
+
+/** Legenda do Funcionário do Mês conforme as horas. */
+export function employeeCaption(min: number): string {
+  const h = min / 60;
+  if (h >= 300) return "Mora no Tibia. A correspondência já chega direto no depot.";
+  if (h >= 200) return "Bate ponto mais que CLT. O RH está preocupado.";
+  if (h >= 100) return "Dedicação exemplar. A CipSoft agradece a preferência.";
+  if (h >= 30) return "Assiduidade de dar inveja. Luz do sol é superestimada.";
+  return "Começo de mês: a vaga ainda está em disputa.";
 }
 
 export interface Achievement {
@@ -145,6 +169,15 @@ export function achievements(p: Profile): Achievement[] {
   add("causos", "📜", "Contador de Causos", "Contou 5 causos na Taverna.", p.posts >= 5);
   add("palhaco", "🤡", "Palhaço da Taverna", "Recebeu 5 reações de palhaço. A galera ama.", p.clowns >= 5);
   add("chorado", "🕯️", "Chorado pela Galera", "Recebeu 5 F nas mortes do mural.", p.fs >= 5);
+  add("funcionario", "🏅", "Funcionário do Mês", "Foi o char que mais ficou online num mês. Quadro na parede.", p.wins > 0);
+  add("vidasocial", "🦇", "Sem Vida Social", "100 horas online em 30 dias. Lá fora ainda existe, tá?", p.online30 >= 6000);
+  add(
+    "grama",
+    "🌱",
+    "Foi Tocar Grama",
+    "Menos de 10 horas online em 30 dias. Saudável demais para este jogo.",
+    Boolean(p.online_since && days(p.online_since) >= 30 && p.online30 < 600),
+  );
   add("novato", "🐣", "Recém-chegado", "Verificou o char nesta semana. Bem-vindo à Taverna.", Boolean(p.verified_at && days(p.verified_at) <= 7));
   return list.map((a) => ({ ...a, earned: earned.has(a.id) }));
 }
