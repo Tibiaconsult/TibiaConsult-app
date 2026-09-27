@@ -6,8 +6,8 @@ import LoginForm from "./LoginForm";
 
 export const metadata = { title: "Entrar" };
 
-export default async function EntrarPage({ searchParams }: { searchParams: Promise<{ erro?: string; next?: string }> }) {
-  const { erro, next } = await searchParams;
+export default async function EntrarPage({ searchParams }: { searchParams: Promise<{ erro?: string; next?: string; modo?: string }> }) {
+  const { erro, next, modo } = await searchParams;
   const nextPath = safeNext(next, "/minha-area");
   return (
     <div className="max-w-3xl">
@@ -19,7 +19,7 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
           ) : (
             <>
               {erro === "link" && <p className="bad mb-3">O link não pôde ser validado. Peça um novo e abra o e-mail neste mesmo navegador.</p>}
-              <LoginForm next={nextPath} />
+              <LoginForm next={nextPath} create={modo === "criar"} />
             </>
           )}
         </Box>
@@ -28,7 +28,8 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
             <li>Salvar seus chars com set, Wheel, gemas e hunts.</li>
             <li>Mandar o char direto para o simulador de dano.</li>
             <li>Marcar o bestiário que você já completou.</li>
-            <li>Em breve: perfil público do char, só se você quiser.</li>
+            <li>Comentar as mortes e os level ups da guild na Taverna e contar fofoca pro Rashid.</li>
+            <li>Receber aviso no celular quando zoarem a sua morte ou você subir de level.</li>
           </ul>
           <p className="text-[11px] mt-3">
             O site funciona sem conta: <Link href="/">voltar ao início</Link>.

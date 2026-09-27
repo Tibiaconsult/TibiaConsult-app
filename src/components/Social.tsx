@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useActive } from "@/lib/active";
 import { REACTIONS, ReactionId, timeAgo } from "@/lib/social";
-import { Comment, ReactionMap, TargetType, addComment, hasDb, loadComments, removeRow, report, setReaction } from "@/lib/social-client";
+import { Comment, CommentTarget, ReactionMap, TargetType, addComment, hasDb, loadComments, removeRow, report, setReaction } from "@/lib/social-client";
 import { createClient } from "@/lib/supabase/client";
 import { notifySocial } from "@/lib/timeline";
 
@@ -257,7 +257,7 @@ export function CommentThread({
   charId,
   dark,
 }: {
-  type: "post" | "death";
+  type: CommentTarget;
   targetKey: string;
   count: number;
   me: Me;

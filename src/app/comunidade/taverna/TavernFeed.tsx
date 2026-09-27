@@ -8,9 +8,13 @@ import { useCallback, useEffect, useState } from "react";
 import Box from "@/components/Box";
 import DeathCard from "@/components/DeathCard";
 import HenricusBoard from "@/components/HenricusBoard";
+import JoinInvite from "@/components/JoinInvite";
+import LevelCard, { LevelStrip } from "@/components/LevelCard";
+import { PushToggle } from "@/components/Notifications";
 import { ReleaseChar, useMe, usePostingChar } from "@/components/Social";
 import { ReactionMap } from "@/lib/social-client";
-import { TimelineItem, fetchExtras, fetchTimeline, notifySocial, onSocialChange } from "@/lib/timeline";
+import type { LevelUp } from "@/lib/levelup";
+import { TimelineItem, fetchExtras, fetchLevelUps, fetchTimeline, notifySocial, onSocialChange } from "@/lib/timeline";
 
 const EMPTY: ReactionMap = { counts: {}, mine: {} };
 
@@ -21,18 +25,31 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
   const [items, setItems] = useState<TimelineItem[] | null>(null);
   const [reactions, setReactions] = useState<ReactionMap>(EMPTY);
   const [comments, setComments] = useState<Record<string, number>>({});
+  const [ups, setUps] = useState<LevelUp[]>([]);
 
   const load = useCallback(
     (alive: () => boolean = () => true) =>
       fetchTimeline(guild).then(async (list) => {
-        const x = await fetchExtras(list, me.userId);
+        const [x, recent] = await Promise.all([fetchExtras(list, me.userId), fetchLevelUps(guild, 1)]);
         if (!alive()) return;
         setItems(list);
+        setUps(recent);
         setReactions(x.reactions);
         setComments(x.comments);
       }),
     [guild, me.userId],
   );
+
+  // veio de um aviso (/comunidade/taverna#chave): rola até o item quando a lista chegar
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    if (scrolled || !items?.length || !window.location.hash) return;
+    const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.style.outline = "2px solid #f3d27a";
+    requestAnimationFrame(() => setScrolled(true));
+  }, [items, scrolled]);
 
   useEffect(() => {
     if (!me.loaded) return;
@@ -47,7 +64,8 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
 
   return (
     <>
-      {me.loaded && !charId && (
+      {me.loaded && !me.userId && <JoinInvite />}
+      {me.loaded && me.userId && !charId && (
         <Box title="💬 Quer comentar?">
           <ReleaseChar me={me} />
         </Box>
@@ -61,6 +79,8 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
           ))}
         </div>
       )}
+      {me.chars.length > 0 && <PushToggle compact />}
+      <LevelStrip ups={ups} />
       <Box title="🍺 Na mesa da Taverna">
         {items === null ? (
           <p className="muted">Abrindo a taverna...</p>
@@ -70,15 +90,19 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
           <ul className="space-y-3">
             {items.map((it) => (
               <li key={it.id}>
-                <DeathCard
-                  d={it.death}
-                  gossips={it.gossips}
-                  me={me}
-                  charId={charId}
-                  reactions={reactions}
-                  comments={comments[it.id] ?? 0}
-                  onGossip={() => notifySocial()}
-                />
+                {it.level ? (
+                  <LevelCard u={it.level} me={me} charId={charId} reactions={reactions} comments={comments[it.id] ?? 0} />
+                ) : (
+                  <DeathCard
+                    d={it.death}
+                    gossips={it.gossips}
+                    me={me}
+                    charId={charId}
+                    reactions={reactions}
+                    comments={comments[it.id] ?? 0}
+                    onGossip={() => notifySocial()}
+                  />
+                )}
               </li>
             ))}
           </ul>

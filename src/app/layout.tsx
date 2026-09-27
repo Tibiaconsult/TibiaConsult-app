@@ -6,6 +6,7 @@ import RightColumn from "@/components/RightColumn";
 import FeedbackButton from "@/components/FeedbackButton";
 import ActiveBar from "@/components/ActiveBar";
 import MobileNav from "@/components/MobileNav";
+import VisitTracker from "@/components/VisitTracker";
 import "./globals.css";
 
 const medieval = MedievalSharp({ weight: "400", subsets: ["latin"], variable: "--font-medieval" });
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <FeedbackButton />
         <MobileNav />
+        <VisitTracker />
         <footer className="tc-footer on-dark">
           Tibia e todo o seu conteúdo são de propriedade da CipSoft GmbH. Este site é uma ferramenta de fãs, sem vínculo com a CipSoft. Dados
           conferidos na TibiaWiki e no tibia.com. Plataforma beta, em desenvolvimento. <Link href="/termos">Termos de uso e privacidade</Link>.

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import LogoutButton from "./LogoutButton";
+import { NotificationBell } from "./Notifications";
 import { ActiveChar, VOCS, VOC_OUTFIT_FILE, VOC_SHORT, Voc, setActiveChar, setActiveVoc, useActive } from "@/lib/active";
 import { wikiImage } from "@/lib/md5";
 import type { SearchEntry } from "@/lib/search-index";
@@ -148,6 +149,7 @@ export default function ActiveBar() {
           </button>
         ))}
       </div>
+      {logged && <NotificationBell />}
       {logged && <LogoutButton className="text-[12px] text-[#f6d372] underline" />}
       {logged && chars && chars.length > 0 ? (
         <label className="flex items-center gap-1 text-[12px] text-[#f3e9d2]">

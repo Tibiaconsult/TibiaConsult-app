@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Box from "@/components/Box";
 import { requireAdmin } from "@/lib/admin";
 import { moderate, setFeedbackStatus, setOptout } from "./actions";
+import Metrics, { MetricsData } from "./Metrics";
 
 export const metadata = { title: "Painel", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -60,6 +61,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   ].sort((a, b) => b.created_at.localeCompare(a.created_at));
   const reasons = (type: string, id: string) => (reports ?? []).filter((r) => r.target_type === type && r.target_id === id);
 
+  const { data: metrics } = await ctx.supabase.rpc("admin_metrics", { p_days: 14 });
+
   const { data: optouts } = await ctx.supabase.from("tracking_optout").select("name, created_at").order("created_at", { ascending: false });
 
   const count = (s: string) => (all ?? []).filter((f) => f.status === s).length;
@@ -86,6 +89,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           Contas com char cadastrado: {users}. Esta página não aparece no menu e responde &quot;não encontrada&quot; para qualquer outra conta.
         </p>
       </Box>
+
+      <Metrics m={(metrics as MetricsData | null) ?? null} />
 
       <Box title={`Moderação da comunidade (${queue.length})`}>
         {queue.length === 0 ? (
