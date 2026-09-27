@@ -8,6 +8,7 @@ import { RashidRumor, RashidSays, TellRashid } from "@/components/Gossip";
 import { CommentThread, ReactionBar, type Me } from "@/components/Social";
 import { bozoJoke } from "@/lib/bozo";
 import { henricusLine } from "@/lib/henricus";
+import { yasirLine } from "@/lib/yasir";
 import { deathKey } from "@/lib/social";
 import type { Gossip, ReactionMap } from "@/lib/social-client";
 import type { Death } from "@/lib/timeline";
@@ -65,6 +66,7 @@ export default function DeathCard({
         <RashidRumor d={d} />
       </div>
       {(d.month_deaths ?? 0) >= 2 && <HenricusSays name={d.name} deaths={d.month_deaths!} />}
+      <YasirSays d={d} />
       <BozoSays d={d} />
       {gossips.map((g) => (
         <div key={g.id} className="w-full pt-1">
@@ -119,6 +121,27 @@ function BozoSays({ d }: { d: Death }) {
         />
         🃏 {joke}
         <div className="mt-0.5 text-[10px] opacity-70">— Bozo, bobo da corte de Thais</div>
+      </div>
+    </div>
+  );
+}
+
+/** Yasir, o mercador oriental: aparece de vez em quando, fala na língua dele e o Rashid traduz. */
+function YasirSays({ d }: { d: Death }) {
+  const l = yasirLine(d);
+  if (!l) return null;
+  return (
+    <div className="w-full pt-1 flex items-start gap-1.5">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/yasir.webp" alt="Yasir" width={44} height={44} className="shrink-0" style={{ imageRendering: "pixelated" }} />
+      <div className="relative flex-1 rounded-lg px-2 py-1.5 text-[12px] leading-snug" style={{ background: "#ffe9cc", color: "#4a2600" }}>
+        <span
+          aria-hidden
+          className="absolute -left-1.5 top-3 w-0 h-0"
+          style={{ borderTop: "6px solid transparent", borderBottom: "6px solid transparent", borderRight: "7px solid #ffe9cc" }}
+        />
+        🐪 <b>{l.yasir}</b> <span className="italic">(Rashid traduz: “{l.pt}”)</span>
+        <div className="mt-0.5 text-[10px] opacity-70">— Yasir, mercador oriental, de passagem pelo porto</div>
       </div>
     </div>
   );
