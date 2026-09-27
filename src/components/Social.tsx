@@ -108,7 +108,7 @@ export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
         {busy ? "Liberando..." : `🍺 Liberar ${target.name} na comunidade`}
       </button>
       <p className="opacity-80">
-        Com um clique o char pode comentar e contar fofoca pro Rashid, e aparece no mural, no ranking, no Funcionário do Mês e no perfil público. Dá para
+        Com um clique o char pode comentar e contar fofoca pro Rashid, e aparece na Taverna, no ranking, no Funcionário do Mês e no perfil público. Dá para
         desligar quando quiser em Meus chars.
       </p>
       {msg && <p className="bad">{msg}</p>}
@@ -242,7 +242,7 @@ export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" 
 
 /** Tradução das mensagens do banco para o jogador. */
 export function friendlyError(msg: string): string {
-  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural/i.test(msg))
+  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural|fora da realidade|horário muito longe|horário inválido|lembretes ativos/i.test(msg))
     return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
   if (/check constraint|violates/i.test(msg)) return "Texto curto ou longo demais.";
   return `Não foi possível enviar: ${msg}`;

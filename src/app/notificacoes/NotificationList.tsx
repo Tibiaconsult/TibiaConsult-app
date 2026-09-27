@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Box from "@/components/Box";
 import { PushToggle } from "@/components/Notifications";
+import { MyReminders } from "@/components/Reminders";
 import { timeAgo } from "@/lib/social";
 import { Notification, clearAll, loadNotifications, markAllRead } from "@/lib/notify-client";
 import { createClient } from "@/lib/supabase/client";
@@ -42,6 +43,9 @@ export default function NotificationList() {
     <>
       <Box title="📱 Notificações no celular e no PC">
         <PushToggle />
+      </Box>
+      <Box title="⏰ Meus lembretes">
+        <MyReminders />
       </Box>
       <Box title="🔔 Últimos avisos">
         {list === null ? (

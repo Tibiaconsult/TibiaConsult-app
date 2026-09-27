@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BOSSES, BOSS_CATEGORY, BossCategory } from "@/data/bosses";
 import { useActive } from "@/lib/active";
 import { SECOND_SLOT, STAGE_LABEL, bossProgress, lootBonus, pointsToNextBonus } from "@/lib/bosstiary";
+import { RemindButton } from "@/components/Reminders";
 import { creatureIcon } from "@/lib/icons";
 import { createClient } from "@/lib/supabase/client";
 
@@ -22,6 +23,7 @@ export default function BosstiaryTracker() {
   const [cat, setCat] = useState<BossCategory | "">("");
   const [status, setStatus] = useState<"todos" | "comecados" | "faltam" | "mastery">("todos");
   const [limit, setLimit] = useState(PAGE);
+  const [cooldown, setCooldown] = useState(20);
 
   const online = Boolean(char && process.env.NEXT_PUBLIC_SUPABASE_URL);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
@@ -219,6 +221,16 @@ export default function BosstiaryTracker() {
             <option value="mastery">com Mastery</option>
           </select>
         </label>
+        <label title="Depois de matar, o boss volta em (a maioria: 20 horas). O lembrete chega no celular.">
+          <span className="font-bold block">⏰ Cooldown do lembrete</span>
+          <select value={cooldown} onChange={(e) => setCooldown(Number(e.target.value))}>
+            {[2, 4, 8, 12, 20, 24, 48, 72, 168].map((h) => (
+              <option key={h} value={h}>
+                {h === 168 ? "7 dias" : `${h} horas`}
+              </option>
+            ))}
+          </select>
+        </label>
         <span className="muted">{rows.length} bosses</span>
       </div>
 
@@ -231,6 +243,7 @@ export default function BosstiaryTracker() {
               <th>Kills</th>
               <th>Estágio</th>
               <th>Pontos</th>
+              <th>Lembrete</th>
             </tr>
           </thead>
           <tbody>
@@ -279,6 +292,20 @@ export default function BosstiaryTracker() {
                     {p.next !== null && <span className="muted text-[11px]">faltam {p.next - k}</span>}
                   </td>
                   <td>{p.points}</td>
+                  <td>
+                    <RemindButton
+                      compact
+                      label="⏰ matei"
+                      minutes={cooldown * 60}
+                      r={{
+                        kind: "boss",
+                        ref: name,
+                        title: `⏰ ${name} liberado`,
+                        body: `Passaram ${cooldown}h desde o kill: o cooldown acabou.`,
+                        url: "/ferramentas/bosstiary",
+                      }}
+                    />
+                  </td>
                 </tr>
               );
             })}

@@ -68,6 +68,7 @@ export const MENU: MenuGroup[] = [
     items: [
       { href: "/hunts", label: "Fichas de hunt", keywords: "hunts fichas de hunt respawn cacar cacada party" },
       { href: "/hunts/preparar", label: "Preparar para a hunt", keywords: "preparar set imbuements combo charm sair para cacar" },
+      { href: "/hunts/analyser", label: "Hunt Analyser da guild", keywords: "xp/h lucro por hora profit ranking hunts analyser sessao" },
       { href: "/criaturas", label: "Creatures", keywords: "criatura creature bicho monstro loot drop resistencia fraqueza bestiario" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker", keywords: "bestiario charm criaturas creatures" },
       { href: "/ferramentas/charms", label: "Charms", keywords: "charm planner pontos echoes zap enflame low blow dodge" },
@@ -107,8 +108,7 @@ export const MENU: MenuGroup[] = [
     label: "Comunidade",
     icon: "forum",
     items: [
-      { href: "/comunidade/taverna", label: "Taverna", keywords: "rede social mortes fofoca rashid henricus comentarios humor" },
-      { href: "/comunidade/mural", label: "Caixão e Vela Preta", keywords: "mortes mural deaths f comentarios" },
+      { href: "/comunidade/taverna", label: "Taverna", keywords: "caixao e vela preta mortes mural deaths f level up rede social mortes fofoca rashid henricus comentarios humor" },
       { href: "/comunidade/ranking", label: "Ranking de XP", keywords: "experiencia ranking xp" },
       { href: "/comunidade/funcionario-do-mes", label: "Funcionário do Mês", keywords: "tempo online horas guildstats ranking online viciado" },
     ],

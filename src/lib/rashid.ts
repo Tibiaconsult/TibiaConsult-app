@@ -136,7 +136,7 @@ const GENERIC: T[] = [
   (n) => `${n} dormiu no teclado com o char na hunt. Acordou no templo com a marca do F4 na testa.`,
   (n, k) => `${n} tentou fugir do ${k} pela escada. A escada estava do outro lado do mapa.`,
   (n) => `${n} deixou o char no offline training... ah não, era a hunt mesmo.`,
-  (n) => `${n} foi olhar o Discord da guilda no meio da hunt. A guilda viu primeiro no mural.`,
+  (n) => `${n} foi olhar o Discord da guilda no meio da hunt. A guilda viu primeiro na Taverna.`,
   (n) => `${n} garante que a internet caiu. O Discord dele ficou online o tempo todo.`,
   (n) => `${n} esqueceu de renovar o imbuement. O imbuement lembrou de ${n}.`,
   (n) => `${n} estava sem amulet of loss e com muita esperança. A esperança não é item.`,
@@ -197,7 +197,7 @@ const WEAKK: T[] = [
   (n, k) => `os ${k}s da região estão comemorando desde ontem por causa de ${n}.`,
   (n, k) => `o ${k} que matou ${n} já está pedindo autógrafo no depot.`,
   (n, k) => `${n} voltou pra Rookgaard em espírito: morreu pra ${k}.`,
-  (n, k) => `o ${k} contou pros amigos que derrubou ${n}. Ninguém acreditou até ver o mural.`,
+  (n, k) => `o ${k} contou pros amigos que derrubou ${n}. Ninguém acreditou até ver o Caixão e Vela Preta.`,
   (n, k) => `${n} está dizendo que era um ${k} "diferente". Era um ${k} normal.`,
 ];
 

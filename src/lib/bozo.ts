@@ -47,7 +47,7 @@ const GENERIC = [
   (n: string) => `Toc toc! Quem é? É ${n}, voltando pro templo. De novo.`,
   (n: string) => `Nem a flor de água que eu uso pra molhar o rei deixa ninguém tão ensopado de vergonha quanto ${n} hoje.`,
   (n: string) => `A guilda dos bobos tem título de "grande bobo". ${n} está a uma morte de ganhar.`,
-  (n: string) => `${n} pediu uma piada pra animar. Eu disse: "abre o mural". Ele abriu e viu a própria morte.`,
+  (n: string) => `${n} pediu uma piada pra animar. Eu disse: "abre o Caixão e Vela Preta". Ele abriu e viu a própria morte.`,
 ];
 
 /** Piada do Bozo para a morte: de monstro quando o matador tem piada, senão de vocação ou uma das dele. Sempre a mesma para a mesma morte. */

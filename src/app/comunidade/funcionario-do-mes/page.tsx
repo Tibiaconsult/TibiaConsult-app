@@ -115,7 +115,7 @@ export default async function FuncionarioPage({ searchParams }: { searchParams: 
           ) : (
             <p className="text-[13px]">
               Ninguém bateu ponto neste mês ainda. Para concorrer, verifique seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a opção de aparecer
-              no mural e no ranking.
+              na Taverna e no ranking.
             </p>
           )}
         </div>

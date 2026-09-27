@@ -50,12 +50,19 @@ export default function TermosPage() {
             <li>Tempo online dos chars cadastrados, contado a cada 5 minutos pela lista pública de quem está online no mundo.</li>
             <li>
               Membros das guildas acompanhadas (Rangers e Rangers Academy, em Belobra): nome, level, vocação, cargo, mortes e tempo online, tirados das páginas
-              públicas do tibia.com, como fazem os sites de estatísticas de guilda. Eles aparecem no mural, no ranking, no Funcionário do Mês e no perfil
+              públicas do tibia.com, como fazem os sites de estatísticas de guilda. Eles aparecem na Taverna, no ranking, no Funcionário do Mês e no perfil
               público mesmo sem conta. Quem não quiser aparecer pede pelo <Link href="/feedback">Reportar ou sugerir</Link> e o char sai de todas as páginas.
             </li>
             <li>Comentários, fofocas, reações e denúncias que você fizer na comunidade.</li>
             <li>
-              Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars), apagados depois de 60 dias. Se você ligar as notificações, o
+              Lembretes que você marcar (boss, stamina) e as creatures que você acompanha no Bestiary Tracker.
+            </li>
+            <li>
+              Sessões de hunt que você publicar (char, level, hunt, XP/h, lucro/h e creatures mortas): ficam visíveis para todos, com o nome do char. Você apaga as
+              suas quando quiser.
+            </li>
+            <li>
+              Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars, lembretes e boosted do dia), apagados depois de 60 dias. Se você ligar as notificações, o
               endereço de entrega que o navegador cria para este aparelho; desligar apaga o endereço.
             </li>
             <li>
@@ -65,7 +72,7 @@ export default function TermosPage() {
           </ul>
           <p>
             Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você liberar um char na
-            comunidade, o nome, mundo, vocação, level, XP ganha, tempo online e mortes desse char ficam visíveis para todos no mural Caixão e Vela Preta, no
+            comunidade, o nome, mundo, vocação, level, XP ganha, tempo online e mortes desse char ficam visíveis para todos na Taverna (e no Caixão e Vela Preta), no
             ranking de XP, no Funcionário do Mês e no perfil público. Tirar da comunidade tira o char dessas páginas. O administrador do site pode ver os dados
             para manutenção e suporte. Não vendemos nem repassamos dados a ninguém.
           </p>
@@ -84,7 +91,7 @@ export default function TermosPage() {
           <p>Não tente acessar dados de outras contas, sobrecarregar o site ou usá-lo para algo ilegal. Contas com uso abusivo podem ser removidas.</p>
 
           <h2 id="comunidade" className="scroll-mt-24">
-            8. Comunidade: Taverna, mural e perfis
+            8. Comunidade: Taverna e perfis
           </h2>
           <ul className="list-disc pl-5 space-y-1">
             <li>
@@ -101,7 +108,7 @@ export default function TermosPage() {
               que descumprirem estas regras. Você pode apagar os seus comentários quando quiser.
             </li>
             <li>
-              Fofoca pro Rashid: só sobre mortes que estão no mural. O Rashid publica sem dizer quem contou, mas a moderação sabe o autor e responde por abuso.
+              Fofoca pro Rashid: só sobre mortes que estão na Taverna. O Rashid publica sem dizer quem contou, mas a moderação sabe o autor e responde por abuso.
               Vale zoeira sobre a morte; não vale inventar, expor vida pessoal ou atacar alguém. Limite de 3 fofocas por hora e uma por morte.
             </li>
             <li>Há limite de 30 comentários por hora por conta, contra spam.</li>

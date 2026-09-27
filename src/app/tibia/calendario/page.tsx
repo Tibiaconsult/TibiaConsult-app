@@ -30,20 +30,23 @@ function monthOf(mes: string | undefined) {
   return { key: ok, today, prev: shift(-1), next: shift(1), first: iso(first), last: iso(last), cells, label, month: m };
 }
 
+type News = { id: number; date: string; title: string; type: string };
+
 async function load(from: string, to: string, today: string) {
-  if (!hasSupabaseEnv()) return { month: [] as TibiaEvent[], soon: [] as TibiaEvent[] };
+  if (!hasSupabaseEnv()) return { month: [] as TibiaEvent[], soon: [] as TibiaEvent[], news: [] as News[] };
   const supabase = await createClient();
-  const [a, b] = await Promise.all([
+  const [a, b, c] = await Promise.all([
     supabase.from("tibia_events").select("id, name, start_date, end_date, tentative").lte("start_date", to).gte("end_date", from).order("start_date"),
     supabase.from("tibia_events").select("id, name, start_date, end_date, tentative").gte("end_date", today).order("start_date").limit(14),
+    supabase.from("tibia_news").select("id, date, title, type").neq("type", "ticker").order("date", { ascending: false }).limit(5),
   ]);
-  return { month: (a.data ?? []) as TibiaEvent[], soon: (b.data ?? []) as TibiaEvent[] };
+  return { month: (a.data ?? []) as TibiaEvent[], soon: (b.data ?? []) as TibiaEvent[], news: (c.data ?? []) as News[] };
 }
 
 export default async function CalendarioPage({ searchParams }: { searchParams: Promise<{ mes?: string }> }) {
   const { mes } = await searchParams;
   const mo = monthOf(mes);
-  const { month, soon } = await load(mo.cells[0], mo.cells[mo.cells.length - 1], mo.today);
+  const { month, soon, news } = await load(mo.cells[0], mo.cells[mo.cells.length - 1], mo.today);
   const now = soon.filter((e) => e.start_date <= mo.today);
   const next = soon.filter((e) => e.start_date > mo.today).slice(0, 8);
   const daysTo = (d: string) => Math.round((day(d).getTime() - day(mo.today).getTime()) / 86400000);
@@ -157,6 +160,21 @@ export default async function CalendarioPage({ searchParams }: { searchParams: P
           </div>
         </div>
       </section>
+
+      {news.length > 0 && (
+        <Box title="📰 Últimas do tibia.com">
+          <ul className="text-[12px] space-y-0.5">
+            {news.map((n) => (
+              <li key={n.id}>
+                <span className="muted">{fmtDay(n.date)}</span> · <Link href={`/tibia/noticias#n${n.id}`}>{n.title}</Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-[11px] mt-1">
+            <Link href="/tibia/noticias">Todas as notícias</Link>
+          </p>
+        </Box>
+      )}
 
       <ul className="on-dark muted text-[11px] list-disc pl-5 space-y-0.5">
         <li>{SS_NOTE}</li>

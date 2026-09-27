@@ -31,10 +31,14 @@ export async function fetchLevelUps(guild: string | null = null, days = 14): Pro
   return (data ?? []) as LevelUp[];
 }
 
-/** Mortes do mural e marcos de level (todos ou de uma guilda) com as fofocas, na ordem da Taverna. */
-export async function fetchTimeline(guild: string | null = null, size = 60): Promise<TimelineItem[]> {
+/** Mortes do mural e marcos de level (todos ou de uma guilda) com as fofocas, na ordem da Taverna.
+ *  `limit` = quantas mortes buscar (o "carregar mais" aumenta). */
+export async function fetchTimeline(guild: string | null = null, size = 60, limit = 100): Promise<TimelineItem[]> {
   if (!hasDb()) return [];
-  const [{ data }, ups] = await Promise.all([createClient().rpc("death_wall", { p_limit: 100, p_guild: guild }), fetchLevelUps(guild)]);
+  const [{ data }, ups] = await Promise.all([
+    createClient().rpc("death_wall", { p_limit: Math.min(limit, 500), p_guild: guild }),
+    fetchLevelUps(guild, limit > 100 ? 60 : 14),
+  ]);
   const deaths = (data ?? []) as Death[];
   const gossips = await loadGossips(deaths.map((d) => deathKey(d.name, d.died_at)));
   const items: TimelineItem[] = deaths.map((d) => {

@@ -165,7 +165,7 @@ export default async function CharPage({
                 </>
               ) : (
                 <>
-                  Libere com um clique para postar na Taverna, comentar no mural e aparecer no ranking, no Funcionário do Mês e no perfil público. Ficam
+                  Libere com um clique para postar na Taverna, comentar as mortes e aparecer no ranking, no Funcionário do Mês e no perfil público. Ficam
                   visíveis para todos: nome, mundo, vocação, level, XP ganha, tempo online, mortes e conquistas.
                 </>
               )}
@@ -223,7 +223,7 @@ export default async function CharPage({
             <label className="flex items-start gap-2 sm:col-span-2 text-[12px]">
               <input type="checkbox" name="public_profile" defaultChecked={Boolean(c.public_profile)} className="mt-0.5" />
               <span>
-                Liberado na comunidade: Taverna, mural &quot;Caixão e Vela Preta&quot;, ranking de XP, Funcionário do Mês e perfil público. Ficam visíveis para
+                Liberado na comunidade: Taverna (com o Caixão e Vela Preta), ranking de XP, Funcionário do Mês e perfil público. Ficam visíveis para
                 todos: nome, mundo, vocação, level, XP ganha, tempo online, mortes e conquistas.
               </span>
             </label>
