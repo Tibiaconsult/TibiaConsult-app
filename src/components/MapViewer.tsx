@@ -43,6 +43,8 @@ interface SpawnFloor {
 const SPAWN_MIN_ZOOM = 0;
 
 const NO_LINES: MapLine[] = [];
+/** Texto puro para os balões do Leaflet (que montam HTML): nome de char e observação vêm dos jogadores. */
+const esc = (t: string) => t.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const toLL = (x: number, y: number): [number, number] => [-(y - Y0) - 0.5, x - X0 + 0.5];
 
 const floorFile = (z: number) => `/mapa/floor-${String(z).padStart(2, "0")}.png`;
@@ -120,13 +122,13 @@ export default function MapViewer({
           iconSize: [size, size],
           iconAnchor: [size / 2, size / 2],
           html:
-            `<div style="position:relative;width:${size}px;height:${size}px"><img src="${creatureIcon(name)}" alt="" width="${size}" height="${size}" style="image-rendering:pixelated"/>` +
+            `<div style="position:relative;width:${size}px;height:${size}px"><img src="${esc(creatureIcon(name))}" alt="" width="${size}" height="${size}" style="image-rendering:pixelated"/>` +
             (n > 1
               ? `<span style="position:absolute;right:-4px;bottom:-4px;background:#000c;color:#fff;font:bold 10px/12px sans-serif;padding:0 3px;border-radius:6px">${n}</span>`
               : "") +
             `</div>`,
         });
-        L.marker(ll, { icon, keyboard: false }).bindTooltip(`${n}x ${name} · ${d.h[hi]}`, { direction: "top" }).addTo(layer);
+        L.marker(ll, { icon, keyboard: false }).bindTooltip(esc(`${n}x ${name} · ${d.h[hi]}`), { direction: "top" }).addTo(layer);
       }
     });
   }, [showSpawns]);
@@ -204,7 +206,7 @@ export default function MapViewer({
           if (seg.length > 1) {
             L.polyline(seg, { color: "#000", weight: 6, opacity: 0.5, interactive: false }).addTo(lay);
             const pl = L.polyline(seg, { color: ln.color, weight: 3, dashArray: ln.dashed ? "6 6" : undefined }).addTo(lay);
-            if (ln.label) pl.bindTooltip(ln.label, { sticky: true });
+            if (ln.label) pl.bindTooltip(esc(ln.label), { sticky: true });
           }
           seg = [];
         };
@@ -257,7 +259,7 @@ export default function MapViewer({
           html: `<div style="font-size:22px;line-height:22px;transform:translate(-50%,-100%);filter:drop-shadow(0 1px 1px #000)">📍</div>`,
         });
         const mk = L.marker([-(p.y - Y0) - 0.5, p.x - X0 + 0.5], { icon, title: p.label }).addTo(pointLayer.current!);
-        mk.bindTooltip(p.label, { direction: "top", offset: [0, -20] });
+        mk.bindTooltip(esc(p.label), { direction: "top", offset: [0, -20] });
         if (p.popup) mk.bindPopup(p.popup, { offset: [0, -18], maxWidth: 280 });
         else if (p.href) mk.on("click", () => (window.location.href = p.href!));
       }
@@ -284,7 +286,7 @@ export default function MapViewer({
             fillColor: ICON_COLOR[icon] ?? "#ffffff",
             fillOpacity: 0.9,
           }).addTo(markLayer.current!);
-          if (desc) c.bindTooltip(desc, { direction: "top" });
+          if (desc) c.bindTooltip(esc(desc), { direction: "top" });
         }
       } catch {
         // sem marcadores: o mapa segue normal

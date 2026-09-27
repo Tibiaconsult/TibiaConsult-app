@@ -4,6 +4,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { isLootSplitHost } from "@/lib/lootsplit-app";
 import { createClient } from "@/lib/supabase/client";
 
 function visitor(): string | null {
@@ -23,10 +24,14 @@ export default function VisitTracker() {
   const path = usePathname();
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !path) return;
+    // o Painel não entra na conta (senão o próprio administrador infla as métricas)
+    if (path.startsWith("/admin")) return;
+    // no endereço próprio do LootSplit a raiz é o LootSplit, não a tela inicial do site
+    const page = isLootSplitHost(window.location.host) && path === "/" ? "/lootsplit" : path;
     const id = visitor();
     if (!id) return;
     createClient()
-      .rpc("track_visit", { p_visitor: id, p_path: path })
+      .rpc("track_visit", { p_visitor: id, p_path: page })
       .then(
         () => {},
         () => {},
