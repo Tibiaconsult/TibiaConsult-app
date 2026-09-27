@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BOSSES, BOSS_CATEGORY, BossCategory } from "@/data/bosses";
 import { useActive } from "@/lib/active";
 import { SECOND_SLOT, STAGE_LABEL, bossProgress, lootBonus, pointsToNextBonus } from "@/lib/bosstiary";
 import { creatureIcon } from "@/lib/icons";
+import { createClient } from "@/lib/supabase/client";
 
 // Bosstiary Tracker: kills de cada boss, estágio (Prowess, Expertise, Mastery), boss points e o bônus de loot do slot.
-// Os kills ficam neste navegador, separados por char ativo.
+// Com login e char ativo, os kills ficam na conta (tabela boss_kills, por char); sem char, neste navegador.
 
 const PAGE = 100;
 const fmt = (v: number) => v.toLocaleString("pt-BR");
@@ -22,26 +23,92 @@ export default function BosstiaryTracker() {
   const [status, setStatus] = useState<"todos" | "comecados" | "faltam" | "mastery">("todos");
   const [limit, setLimit] = useState(PAGE);
 
+  const online = Boolean(char && process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  // kills deste navegador, oferecidos para levar à conta quando o char ainda não tem nada salvo
+  const [localOffer, setLocalOffer] = useState<Record<string, number> | null>(null);
+  // um temporizador por boss: vários cliques em + ou − viram um envio só
+  const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  const readLocal = (k: string): Record<string, number> => {
+    try {
+      return JSON.parse(localStorage.getItem(k) ?? "{}");
+    } catch {
+      return {};
+    }
+  };
+
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    try {
-      setKills(JSON.parse(localStorage.getItem(key) ?? "{}"));
-    } catch {
-      setKills({});
+    if (!online || !char) {
+      setKills(readLocal(key));
+      setLocalOffer(null);
+      return;
     }
-  }, [key]);
+    let alive = true;
+    setSaveMsg("carregando...");
+    createClient()
+      .from("boss_kills")
+      .select("boss, kills")
+      .eq("char_id", char.id)
+      .then(({ data, error }) => {
+        if (!alive) return;
+        if (error) return setSaveMsg(`Não carregou da conta: ${error.message}`);
+        setSaveMsg(null);
+        const saved = Object.fromEntries((data ?? []).map((r) => [r.boss as string, r.kills as number]));
+        setKills(saved);
+        const local = { ...readLocal("tc-bosstiary:local"), ...readLocal(key) };
+        setLocalOffer(!data?.length && Object.keys(local).length ? local : null);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [online, char, key]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  /** Grava um boss: na conta (upsert, ou apaga com zero kills) ou no navegador. */
+  const saveBoss = (name: string, n: number, all: Record<string, number>) => {
+    if (!online || !char) {
+      try {
+        localStorage.setItem(key, JSON.stringify(all));
+      } catch {
+        // sem armazenamento: vale só nesta visita
+      }
+      return;
+    }
+    clearTimeout(timers.current[name]);
+    setSaveMsg("salvando...");
+    timers.current[name] = setTimeout(async () => {
+      const sb = createClient();
+      const { error } =
+        n > 0
+          ? await sb.from("boss_kills").upsert({ char_id: char.id, boss: name, kills: n, updated_at: new Date().toISOString() })
+          : await sb.from("boss_kills").delete().eq("char_id", char.id).eq("boss", name);
+      setSaveMsg(error ? `Não salvou ${name}: ${error.message}` : `Salvo em ${char.name}.`);
+    }, 500);
+  };
 
   const setBoss = (name: string, n: number) => {
     const next = { ...kills };
-    if (n > 0) next[name] = n;
+    const v = Math.min(100000, Math.max(0, Math.round(n)));
+    if (v > 0) next[name] = v;
     else delete next[name];
     setKills(next);
-    try {
-      localStorage.setItem(key, JSON.stringify(next));
-    } catch {
-      // sem armazenamento: vale só nesta visita
-    }
+    saveBoss(name, v, next);
+  };
+
+  /** Leva os kills deste navegador para o char ativo. */
+  const importLocal = async () => {
+    if (!localOffer || !char) return;
+    const rows = Object.entries(localOffer)
+      .filter(([b, k]) => k > 0 && BOSSES.some(([n]) => n === b))
+      .map(([boss, k]) => ({ char_id: char.id, boss, kills: Math.min(100000, Math.round(k)) }));
+    setSaveMsg("salvando...");
+    const { error } = await createClient().from("boss_kills").upsert(rows);
+    if (error) return setSaveMsg(`Não salvou: ${error.message}`);
+    setKills(Object.fromEntries(rows.map((r) => [r.boss, r.kills])));
+    setLocalOffer(null);
+    setSaveMsg(`${rows.length} bosses salvos em ${char.name}.`);
   };
 
   const summary = useMemo(() => {
@@ -70,6 +137,16 @@ export default function BosstiaryTracker() {
 
   return (
     <div className="space-y-4 text-[12px]">
+      {localOffer && char && (
+        <div className="border border-[#c9a13a] bg-[#fff4cf] rounded p-2 flex flex-wrap items-center gap-2">
+          <span>
+            Há kills de {Object.keys(localOffer).length} bosses guardados neste navegador e {char.name} ainda não tem nada na conta.
+          </span>
+          <button type="button" className="tc-btn !py-0.5" onClick={importLocal}>
+            levar para {char.name}
+          </button>
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Boss points", `${fmt(summary.points)} de ${fmt(maxPoints)}`],
@@ -86,9 +163,9 @@ export default function BosstiaryTracker() {
       <p>
         {STAGE_LABEL.map((s, i) => `${s}: ${summary.byStage[i]}`).join(" · ")} de {BOSSES.length} bosses.{" "}
         <span className="muted">
-          {char
-            ? `Kills de ${char.name}, guardados neste navegador.`
-            : "Kills guardados neste navegador. Escolha o char na barra do topo para separar por char."}
+          {online && char
+            ? (saveMsg ?? `Kills de ${char.name}, salvos na conta.`)
+            : "Kills guardados neste navegador. Com login e char escolhido na barra do topo, ficam na conta."}
         </span>
       </p>
 
