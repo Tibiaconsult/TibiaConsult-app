@@ -53,7 +53,9 @@ export function staminaAfterOffline(from: number, offline: number): number {
 
 // Vida, mana e capacidade por vocação (TibiaWiki, Formulae, seção Hitpoints, Mana, and Capacity; consulta em 26/09/2026).
 export type StatVoc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
-export function vocStats(voc: StatVoc, lvl: number): { hp: number; mana: number; cap: number } {
+// As fórmulas valem para vocação promovida, a partir do level 8 (abaixo disso o char ainda está em Rookgaard).
+export function vocStats(voc: StatVoc, level: number): { hp: number; mana: number; cap: number } {
+  const lvl = Math.max(8, level);
   switch (voc) {
     case "knight":
       return { hp: 5 * (3 * lvl + 13), mana: 5 * (lvl + 10), cap: 5 * (5 * lvl + 54) };

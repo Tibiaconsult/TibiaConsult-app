@@ -104,7 +104,7 @@ export default function ExerciseCalc() {
           </div>
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 flex-1 min-w-[260px]">
             <label>
-              <span className="font-bold block">{sk === "magic" ? "Magic level atual" : "Skill atual"} (sem bônus)</span>
+              <span className="font-bold block">{sk === "magic" ? "Magic level atual" : "Skill atual"} (como aparece no jogo)</span>
               <input type="number" className="w-full" value={current} min={0} onChange={(e) => setCurrent(Number(e.target.value) || 0)} />
             </label>
             <label>
@@ -180,7 +180,10 @@ export default function ExerciseCalc() {
           Fórmulas da TibiaWiki (Formulae e Exercise Weapons): cada carga de wand ou rod vale 600 de mana; espada, machado, clava e wraps 7,2 hits; arco
           4,32; escudo 14,4 blocks. Uma carga a cada 2 segundos. Rod e wand treinam magic level em qualquer vocação.
         </li>
-        <li>Loyalty soma 5% a cada 360 pontos sobre os pontos de skill. Dummy de casa (Demon, Ferumbras ou Monk Exercise Dummy): +10%.</li>
+        <li>
+          Loyalty soma 5% a cada 360 pontos sobre os pontos de skill mostrados; o treino em si não acelera. Por isso, com loyalty, use o skill atual e o
+          desejado como aparecem no jogo (já com o bônus). Dummy de casa (Demon, Ferumbras ou Monk Exercise Dummy): +10%.
+        </li>
         <li>O TibiaPal chega aos mesmos números. O Intibia mostra a metade das armas para magic level; não localizei fonte que explique essa diferença.</li>
       </ul>
     </Box>
