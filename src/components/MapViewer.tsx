@@ -15,6 +15,14 @@ const Y0 = 30976;
 const W = 2560;
 const H = 2048;
 
+/** Rota desenhada: pontos [x, y, andar] na ordem do caminho. */
+export interface MapLine {
+  pts: [number, number, number][];
+  color: string;
+  label?: string;
+  dashed?: boolean;
+}
+
 export interface MapPoint {
   x: number;
   y: number;
@@ -33,6 +41,9 @@ interface SpawnFloor {
 }
 // creatures só aparecem com zoom suficiente: longe, viram uma nuvem de ícones
 const SPAWN_MIN_ZOOM = 0;
+
+const NO_LINES: MapLine[] = [];
+const toLL = (x: number, y: number): [number, number] => [-(y - Y0) - 0.5, x - X0 + 0.5];
 
 const floorFile = (z: number) => `/mapa/floor-${String(z).padStart(2, "0")}.png`;
 export const floorName = (z: number) => (z === 7 ? "térreo" : z < 7 ? `+${7 - z} (acima)` : `-${z - 7} (subsolo)`);
@@ -57,11 +68,16 @@ export default function MapViewer({
   points = [],
   height = 360,
   zoom = 1,
+  lines = NO_LINES,
+  onPick,
 }: {
   center: { x: number; y: number; z: number };
   points?: MapPoint[];
   height?: number;
   zoom?: number;
+  lines?: MapLine[];
+  /** modo desenho: cada clique no mapa devolve o sqm e o andar em que o jogador está */
+  onPick?: (x: number, y: number, z: number) => void;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const map = useRef<LMap | null>(null);
@@ -69,6 +85,9 @@ export default function MapViewer({
   const markLayer = useRef<LayerGroup | null>(null);
   const pointLayer = useRef<LayerGroup | null>(null);
   const spawnLayer = useRef<LayerGroup | null>(null);
+  const lineLayer = useRef<LayerGroup | null>(null);
+  const pickRef = useRef<typeof onPick>(undefined);
+  const zRef = useRef(center.z);
   const spawnData = useRef<SpawnFloor | null>(null);
   const [z, setZ] = useState(center.z);
   const [pos, setPos] = useState<string>("");
@@ -107,9 +126,7 @@ export default function MapViewer({
               : "") +
             `</div>`,
         });
-        L.marker(ll, { icon, keyboard: false })
-          .bindTooltip(`${n}x ${name} · ${d.h[hi]}`, { direction: "top" })
-          .addTo(layer);
+        L.marker(ll, { icon, keyboard: false }).bindTooltip(`${n}x ${name} · ${d.h[hi]}`, { direction: "top" }).addTo(layer);
       }
     });
   }, [showSpawns]);
@@ -141,7 +158,9 @@ export default function MapViewer({
       ]).addTo(m);
       markLayer.current = L.layerGroup().addTo(m);
       spawnLayer.current = L.layerGroup().addTo(m);
+      lineLayer.current = L.layerGroup().addTo(m);
       pointLayer.current = L.layerGroup().addTo(m);
+      m.on("click", (e) => pickRef.current?.(Math.floor(e.latlng.lng) + X0, Math.floor(-e.latlng.lat) + Y0, zRef.current));
       m.setView([-(center.y - Y0) - 0.5, center.x - X0 + 0.5], zoom);
       m.on("mousemove", (e) => {
         const x = Math.floor(e.latlng.lng) + X0;
@@ -160,6 +179,68 @@ export default function MapViewer({
     // o centro inicial vale só na criação; depois o jogador navega à vontade
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    pickRef.current = onPick;
+    zRef.current = z;
+    if (box.current) {
+      box.current.style.cursor = onPick ? "crosshair" : "";
+      // desenhando: ícones de creature e marcadores não seguram o clique, que vira ponto da rota
+      box.current.classList.toggle("tc-drawing", !!onPick);
+    }
+  }, [onPick, z]);
+
+  // rotas: trechos do andar aberto, início (verde), fim (vermelho) e onde a rota sobe ou desce
+  useEffect(() => {
+    if (!ready) return;
+    let alive = true;
+    import("leaflet").then((L) => {
+      const lay = lineLayer.current;
+      if (!alive || !lay) return;
+      lay.clearLayers();
+      for (const ln of lines) {
+        let seg: [number, number][] = [];
+        const flush = () => {
+          if (seg.length > 1) {
+            L.polyline(seg, { color: "#000", weight: 6, opacity: 0.5, interactive: false }).addTo(lay);
+            const pl = L.polyline(seg, { color: ln.color, weight: 3, dashArray: ln.dashed ? "6 6" : undefined }).addTo(lay);
+            if (ln.label) pl.bindTooltip(ln.label, { sticky: true });
+          }
+          seg = [];
+        };
+        ln.pts.forEach(([x, y, pz], i) => {
+          if (pz === z) seg.push(toLL(x, y));
+          else flush();
+          const prev = ln.pts[i - 1];
+          const next = ln.pts[i + 1];
+          // escada: o ponto está neste andar e o vizinho em outro
+          const other = [prev, next].find((q) => q && q[2] !== pz && pz === z);
+          if (other)
+            L.marker(toLL(x, y), {
+              interactive: false,
+              icon: L.divIcon({
+                className: "",
+                iconSize: [18, 18],
+                iconAnchor: [9, 9],
+                html: `<div style="width:18px;height:18px;border-radius:9px;background:${ln.color};color:#000;font:bold 12px/18px sans-serif;text-align:center;border:1px solid #000">${other[2] < pz ? "▲" : "▼"}</div>`,
+              }),
+            }).addTo(lay);
+        });
+        flush();
+        const first = ln.pts[0];
+        const last = ln.pts[ln.pts.length - 1];
+        if (first?.[2] === z)
+          L.circleMarker(toLL(first[0], first[1]), { radius: 6, color: "#000", weight: 1, fillColor: "#35c46a", fillOpacity: 1 })
+            .bindTooltip("início")
+            .addTo(lay);
+        if (last && ln.pts.length > 1 && last[2] === z)
+          L.circleMarker(toLL(last[0], last[1]), { radius: 6, color: "#000", weight: 1, fillColor: "#e05252", fillOpacity: 1 }).bindTooltip("fim").addTo(lay);
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [ready, z, lines]);
 
   // troca de andar: imagem, marcadores do jogo e pontos das hunts daquele andar
   useEffect(() => {

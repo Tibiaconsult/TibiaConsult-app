@@ -987,3 +987,11 @@ p.on-dark {
   background: #000;
   font: inherit;
 }
+.tc-drawing .leaflet-marker-pane *,
+.tc-drawing .leaflet-interactive {
+  pointer-events: none !important;
+}
+.tc-drawing .leaflet-container,
+.tc-drawing.leaflet-container {
+  cursor: crosshair;
+}

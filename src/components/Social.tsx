@@ -199,8 +199,8 @@ export function ReactionBar({
   );
 }
 
-/** Denunciar uma fofoca ou comentário. Com 3 denúncias ele some até a moderação olhar. */
-export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" | "gossip"; id: string; me: Me; dark?: boolean }) {
+/** Denunciar uma fofoca, comentário ou rota. Com 3 denúncias ele some até a moderação olhar. */
+export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" | "gossip" | "route"; id: string; me: Me; dark?: boolean }) {
   const [state, setState] = useState<"idle" | "ask" | "done">("idle");
   const [reason, setReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -242,7 +242,11 @@ export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" 
 
 /** Tradução das mensagens do banco para o jogador. */
 export function friendlyError(msg: string): string {
-  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural|fora da realidade|horário muito longe|horário inválido|lembretes ativos/i.test(msg))
+  if (
+    /libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural|fora da realidade|rota curta|rota longa|ponto fora|muitas rotas|própria rota|entre para votar|horário muito longe|horário inválido|lembretes ativos/i.test(
+      msg,
+    )
+  )
     return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
   if (/check constraint|violates/i.test(msg)) return "Texto curto ou longo demais.";
   return `Não foi possível enviar: ${msg}`;

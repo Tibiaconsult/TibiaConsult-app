@@ -21,7 +21,7 @@ const STEPS: [string, React.ReactNode][] = [
     "🎒",
     <>
       <b>Antes de caçar:</b> abra a hunt em <Link href="/hunts">Fichas de hunt</Link> e clique em <b>Preparar para esta hunt</b>: set, imbuements, charm e combo
-      já montados para aquelas creatures.
+      já montados para aquelas creatures. No mapa da ficha você vê o respawn e as rotas de outros jogadores.
     </>,
   ],
   [
@@ -42,7 +42,7 @@ const STEPS: [string, React.ReactNode][] = [
 
 const TABS: [string, string, string][] = [
   ["Montar", "Set, Wheel, combos e proficiência: monte e teste antes de gastar gold no jogo.", "/simulador/set"],
-  ["Hunt", "Fichas, preparar, creatures e loot, Bestiary sem limite de 📌, charms, bosstiary e lista de compras de imbuements.", "/hunts"],
+  ["Hunt", "Fichas, mapa com respawn e rotas dos jogadores, preparar, creatures e loot, Bestiary sem limite de 📌, charms e bosstiary.", "/hunts"],
   ["Calculadoras", "Dano e DPS por rotação, forja, gemas, mana, exp, exercise, stamina, bless e LootSplit.", "/simulador"],
   ["Consultar", "Cooldowns, gemas e equipamento por vocação, para tirar dúvida rápida.", "/cooldowns"],
   ["Comunidade", "Taverna (as mortes da guild zoadas pelos NPCs), ranking de XP e Funcionário do Mês.", "/comunidade/taverna"],
@@ -64,6 +64,11 @@ export default function HowTo() {
           </li>
         ))}
       </ol>
+      <div className="rounded p-2 mb-3 text-[12px]" style={{ background: "#fff3d1", border: "1px solid #d9a441" }}>
+        🧭 <b>Novo: rotas dos jogadores.</b> Conhece bem uma hunt? Desenhe no mapa o caminho que você faz e ajude outros jogadores a caçar melhor. É só abrir a
+        hunt em <Link href="/hunts">Fichas de hunt</Link> e, no mapa, clicar em <b>✏️ Desenhar a minha rota</b>. As rotas que mais ajudam recebem 👍 e sobem
+        para o topo.
+      </div>
       <div className="font-bold text-[12px] mb-1">O que cada aba do menu resolve</div>
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {TABS.map(([name, text, href]) => (

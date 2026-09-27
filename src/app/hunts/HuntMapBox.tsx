@@ -1,13 +1,16 @@
 "use client";
 
-// Mapa na ficha da hunt: o minimapa já no ponto e no andar da hunt, a imagem da área na TibiaWiki e os links de rota.
+// Mapa na ficha da hunt: o minimapa já no ponto e no andar da hunt, o respawn, a imagem da área na TibiaWiki, os links de rota
+// e as rotas desenhadas pelos jogadores.
 
 import Link from "next/link";
+import { useMemo } from "react";
 import MapViewer, { tibiaMapsUrl } from "@/components/MapViewer";
 import { TIBIAROUTE, tibiaRouteUrl } from "@/data/tibiaroute";
 import { creatureHref } from "@/lib/creature-labels";
 import { HUNT_MAPS, HUNT_SPAWNS, TIBIAROUTE_URL, areaImage, huntPoint } from "@/lib/hunt-map";
 import { creatureIcon } from "@/lib/icons";
+import { usePlayerRoutes } from "./usePlayerRoutes";
 
 export default function HuntMapBox({ id, name }: { id: string; name: string }) {
   const m = HUNT_MAPS[id];
@@ -16,10 +19,13 @@ export default function HuntMapBox({ id, name }: { id: string; name: string }) {
   const has = pt !== null;
   const spawn = HUNT_SPAWNS[id];
   const routes = TIBIAROUTE[id] ?? [];
+  const player = usePlayerRoutes(id, name);
+  // mesma lista a cada render: o mapa só recarrega o andar quando ela muda de verdade
+  const pins = useMemo(() => (pt ? [{ x: pt.x, y: pt.y, z: pt.z, label: name }] : []), [pt?.x, pt?.y, pt?.z, name]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="border border-[#b98a5a] rounded p-3 bg-white/40 mt-3">
       <div className="font-bold mb-1">🗺️ Mapa</div>
-      {pt && <MapViewer key={id} center={pt} points={[{ x: pt.x, y: pt.y, z: pt.z, label: name }]} height={340} zoom={1} />}
+      {pt && <MapViewer key={id} center={pt} points={pins} height={340} zoom={1} lines={player.lines} onPick={player.onPick} />}
       {pt?.fromSpawn ? (
         <p className="muted text-[10px] mt-1">📍 Mapa aberto no meio do respawn.</p>
       ) : (
@@ -74,6 +80,7 @@ export default function HuntMapBox({ id, name }: { id: string; name: string }) {
           ))}
         </div>
       )}
+      {has && player.panel}
       {!has && !img && <p className="text-[12px] mt-1">Ainda sem posição no mapa para esta hunt.</p>}
     </div>
   );
