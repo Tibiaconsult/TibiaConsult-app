@@ -26,7 +26,13 @@ const avg = (amount: string | null) => {
   return n.length > 1 ? (n[0] + n[1]) / 2 : n[0];
 };
 
-export function huntDrops(h: Hunt): { top: HuntDrop[]; rare: HuntDrop[]; goldPerKill: number } {
+export interface HuntDropsData {
+  top: HuntDrop[];
+  rare: HuntDrop[];
+  goldPerKill: number;
+}
+
+export function huntDrops(h: Hunt): HuntDropsData {
   const totalW = h.creatures.reduce((a, c) => a + (c.weight ?? 1), 0) || 1;
   const acc = new Map<string, HuntDrop>();
   let gold = 0;

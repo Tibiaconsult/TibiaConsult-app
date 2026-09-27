@@ -1,3 +1,5 @@
+import { HUNTS } from "@/data/hunts";
+import { huntDrops } from "@/lib/hunt-loot";
 import HuntExplorer from "./HuntExplorer";
 
 export const metadata = { title: "Hunts" };
@@ -7,10 +9,10 @@ export default function HuntsPage() {
     <div>
       <h1>Hunts</h1>
       <p className="on-dark mb-4">
-        Busque a hunt pelo nome, cidade ou creature. Filtre por solo, com a sua vocação e level, ou por PT, com o level de cada membro. Clique
-        numa hunt para abrir a ficha com resistências, ataques, set e dicas.
+        Busque a hunt pelo nome, cidade ou creature. Filtre por solo, com a sua vocação e level, ou por PT, com o level de cada membro. Clique numa hunt para
+        abrir a ficha com resistências, ataques, set e dicas.
       </p>
-      <HuntExplorer />
+      <HuntExplorer drops={Object.fromEntries(HUNTS.map((h) => [h.id, huntDrops(h)]))} />
     </div>
   );
 }

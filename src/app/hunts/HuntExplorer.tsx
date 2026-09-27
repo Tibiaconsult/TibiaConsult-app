@@ -7,6 +7,7 @@ import { HUNTS, Hunt } from "@/data/hunts";
 import { getActive } from "@/lib/active";
 import { HUNT_RECS, REC_VOC_LABEL, RecVoc, SHARE_BONUS } from "@/data/hunt-recs";
 import HuntSheet from "./HuntSheet";
+import type { HuntDropsData } from "@/lib/hunt-loot";
 
 type Mode = "todas" | "solo" | "time";
 interface Member {
@@ -22,7 +23,7 @@ function bestElement(h: Hunt): string {
   return m ? m[1].trim() : h.element.split(":")[0];
 }
 
-export default function HuntExplorer() {
+export default function HuntExplorer({ drops }: { drops: Record<string, HuntDropsData> }) {
   const [q, setQ] = useState("");
   const [mode, setMode] = useState<Mode>("todas");
   const [voc, setVoc] = useState<RecVoc>("sorcerer");
@@ -222,7 +223,7 @@ export default function HuntExplorer() {
       <div ref={sheetRef}>
         {current ? (
           <Box title={`${current.name} · ${current.city}`}>
-            <HuntSheet h={current} />
+            <HuntSheet h={current} drops={drops[current.id]} />
           </Box>
         ) : (
           <p className="on-dark">Selecione uma hunt acima para abrir a ficha completa.</p>
