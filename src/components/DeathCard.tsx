@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { RashidRumor, RashidSays, TellRashid } from "@/components/Gossip";
 import { CommentThread, ReactionBar, type Me } from "@/components/Social";
+import { bozoJoke } from "@/lib/bozo";
 import { henricusLine } from "@/lib/henricus";
 import { deathKey } from "@/lib/social";
 import type { Gossip, ReactionMap } from "@/lib/social-client";
@@ -64,6 +65,7 @@ export default function DeathCard({
         <RashidRumor d={d} />
       </div>
       {(d.month_deaths ?? 0) >= 2 && <HenricusSays name={d.name} deaths={d.month_deaths!} />}
+      <BozoSays d={d} />
       {gossips.map((g) => (
         <div key={g.id} className="w-full pt-1">
           <RashidSays g={g} me={me} map={reactions} />
@@ -97,6 +99,27 @@ function HenricusSays({ name, deaths }: { name: string; deaths: number }) {
         <div className="mt-0.5 text-[10px] opacity-70">
           — Henricus, vendedor de bless em Thais · {l.badge} · {deaths} mortes em 30 dias
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** Bozo, o bobo da corte de Thais: piada de monstro (quando o matador casa) ou de vocação, em parte das mortes. */
+function BozoSays({ d }: { d: Death }) {
+  const joke = bozoJoke(d);
+  if (!joke) return null;
+  return (
+    <div className="w-full pt-1 flex items-start gap-1.5">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/bozo.webp" alt="Bozo" width={44} height={44} className="shrink-0" style={{ imageRendering: "pixelated" }} />
+      <div className="relative flex-1 rounded-lg px-2 py-1.5 text-[12px] leading-snug" style={{ background: "#e3f4df", color: "#1d3a14" }}>
+        <span
+          aria-hidden
+          className="absolute -left-1.5 top-3 w-0 h-0"
+          style={{ borderTop: "6px solid transparent", borderBottom: "6px solid transparent", borderRight: "7px solid #e3f4df" }}
+        />
+        🃏 {joke}
+        <div className="mt-0.5 text-[10px] opacity-70">— Bozo, bobo da corte de Thais</div>
       </div>
     </div>
   );
