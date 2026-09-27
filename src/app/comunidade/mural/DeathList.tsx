@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { RashidSays, TellRashid } from "@/components/Gossip";
+import { RashidRumor, RashidSays, TellRashid } from "@/components/Gossip";
 import { CommentThread, ReactionBar, useMe, usePostingChar } from "@/components/Social";
-import { deathCaption, deathKey } from "@/lib/social";
+import { deathKey } from "@/lib/social";
 import { Gossip, ReactionMap, loadCommentCounts, loadGossips, loadReactions } from "@/lib/social-client";
 
 export interface Death {
@@ -75,8 +75,8 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
             {d.by_player && <span className="tag tag-fire">PvP</span>}
             <span className="text-[11px] opacity-80 ml-auto">{when(d.died_at)}</span>
             <div className="w-full text-[12px] opacity-90">{d.reason}</div>
-            <div className="w-full text-[12px] italic" style={{ color: "#d8b98a" }}>
-              “{deathCaption(d)}”
+            <div className="w-full pt-1">
+              <RashidRumor d={d} />
             </div>
             {(gossips[key] ?? []).map((g) => (
               <div key={g.id} className="w-full pt-1">

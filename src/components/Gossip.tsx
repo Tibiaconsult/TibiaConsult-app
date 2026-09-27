@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ReactionBar, ReportButton, friendlyError, type Me } from "@/components/Social";
-import { gossipLines } from "@/lib/rashid";
+import { RumorDeath, gossipLines, rashidRumor } from "@/lib/rashid";
 import { timeAgo } from "@/lib/social";
 import { Gossip, ReactionMap, addGossip } from "@/lib/social-client";
 
@@ -36,6 +36,28 @@ export function RashidSays({ g, me, map, compact }: { g: Gossip; me?: Me; map?: 
             </span>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** O boato que o Rashid inventa para toda morte do mural. */
+export function RashidRumor({ d, compact }: { d: RumorDeath; compact?: boolean }) {
+  const r = rashidRumor(d);
+  return (
+    <div className="flex items-start gap-1.5">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/rashid.webp" alt="Rashid" width={compact ? 32 : 44} height={compact ? 32 : 44} className="shrink-0" style={{ imageRendering: "pixelated" }} />
+      <div className="relative flex-1 rounded-lg px-2 py-1.5 text-[12px] leading-snug" style={{ background: "#f3e3c3", color: "#3a1a00" }}>
+        <span
+          aria-hidden
+          className="absolute -left-1.5 top-3 w-0 h-0"
+          style={{ borderTop: "6px solid transparent", borderBottom: "6px solid transparent", borderRight: "7px solid #f3e3c3" }}
+        />
+        <div>
+          🗣️ {r.text} <i>{r.close}</i>
+        </div>
+        <div className="mt-0.5 text-[10px] opacity-70">— {r.sign}</div>
       </div>
     </div>
   );

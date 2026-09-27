@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { kindOf, timeAgo } from "@/lib/social";
-import { gossipLines } from "@/lib/rashid";
+import { RumorDeath, gossipLines, rashidRumor } from "@/lib/rashid";
+import { recentDeaths } from "@/components/GossipBoard";
 import { Gossip, hasDb, recentGossips } from "@/lib/social-client";
 import { createClient } from "@/lib/supabase/client";
 
@@ -32,6 +33,7 @@ export default function TavernPromo() {
   const [line, setLine] = useState(0);
   const [last, setLast] = useState<Last | null>(null);
   const [gossip, setGossip] = useState<Gossip | null>(null);
+  const [death, setDeath] = useState<RumorDeath | null>(null);
 
   useEffect(() => {
     const t = setInterval(() => setLine((l) => (l + 1) % LINES.length), 4500);
@@ -48,6 +50,7 @@ export default function TavernPromo() {
       .limit(1)
       .then(({ data }) => setLast((data?.[0] as Last) ?? null));
     recentGossips(1).then((g) => setGossip(g[0] ?? null));
+    recentDeaths(1).then((d) => setDeath(d[0] ?? null));
   }, []);
 
   return (
@@ -83,6 +86,11 @@ export default function TavernPromo() {
             <>
               <div className="text-[10px] opacity-75">🤫 Fofoca fresquinha · {timeAgo(gossip.created_at)}</div>
               <div className="line-clamp-3">{gossipLines(gossip).text}</div>
+            </>
+          ) : death && (!last || death.died_at > last.created_at) ? (
+            <>
+              <div className="text-[10px] opacity-75">🗣️ Boato do Rashid · {timeAgo(death.died_at)}</div>
+              <div className="line-clamp-3">{rashidRumor(death).text}</div>
             </>
           ) : last ? (
             <>
