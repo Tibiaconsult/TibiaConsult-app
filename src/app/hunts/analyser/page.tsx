@@ -12,8 +12,8 @@ export default function HuntAnalyserPage() {
     <div>
       <h1>Hunt Analyser da guild</h1>
       <p className="on-dark mb-4">
-        O ranking de hunts com números de verdade: cada um cola o Hunt Analyser do cliente depois de caçar e o site junta XP/h e lucro/h por hunt,
-        vocação e level. Nada de estimativa de fórum: é a média do que a turma fez.
+        O ranking de hunts com números de verdade: cada um cola o Hunt Analyser do cliente depois de caçar e o site junta XP/h e lucro/h por hunt, vocação e
+        level. Nada de estimativa de fórum: é a média do que a turma fez.
       </p>
       <HuntAnalyser hunts={hunts} />
     </div>

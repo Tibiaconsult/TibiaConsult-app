@@ -121,7 +121,8 @@ export default function TavernFeed({ guilds, initial }: { guilds: string[]; init
   // Vela Preta do mês: quem mais morreu, a morte mais palhaça e a mais comentada (últimos 30 dias)
   const podium = useMemo(() => {
     const month = (items ?? []).filter((i) => i.death && now - new Date(i.death.died_at).getTime() < 30 * DAY);
-    const best = (f: (i: TimelineItem) => number) => month.reduce<{ i: TimelineItem; v: number } | null>((b, i) => (f(i) > (b?.v ?? 0) ? { i, v: f(i) } : b), null);
+    const best = (f: (i: TimelineItem) => number) =>
+      month.reduce<{ i: TimelineItem; v: number } | null>((b, i) => (f(i) > (b?.v ?? 0) ? { i, v: f(i) } : b), null);
     return {
       deaths: best((i) => i.death?.month_deaths ?? 0),
       clown: best((i) => reactions.counts[i.id]?.palhaco ?? 0),

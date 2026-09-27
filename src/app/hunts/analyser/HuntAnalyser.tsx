@@ -157,8 +157,7 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
                     <td>{fmtK(Math.round(r.xp))}</td>
                     <td className={r.profit < 0 ? "bad" : ""}>{fmtK(Math.round(r.profit))}</td>
                     <td className="text-[11px]">
-                      {fmtK(Number(r.best.xp_h))} ·{" "}
-                      <Link href={`/char/${encodeURIComponent(r.best.char_name)}`}>{r.best.char_name}</Link> ({r.best.level})
+                      {fmtK(Number(r.best.xp_h))} · <Link href={`/char/${encodeURIComponent(r.best.char_name)}`}>{r.best.char_name}</Link> ({r.best.level})
                     </td>
                   </tr>
                 ))}
@@ -167,8 +166,7 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
           </div>
         )}
         <p className="muted text-[10px] mt-2">
-          Média das sessões dos últimos 180 dias. XP/h usa o &quot;XP Gain&quot; do analyser (com bônus de stamina, prey, boosted etc.); lucro/h é o
-          Balance.
+          Média das sessões dos últimos 180 dias. XP/h usa o &quot;XP Gain&quot; do analyser (com bônus de stamina, prey, boosted etc.); lucro/h é o Balance.
         </p>
       </Box>
 
@@ -179,8 +177,8 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
               const mine = me.chars.some((c) => c.name === r.char_name);
               return (
                 <li key={r.id}>
-                  <Link href={`/char/${encodeURIComponent(r.char_name)}`}>{r.char_name}</Link> ({r.level}) em{" "}
-                  <b>{byId.get(r.hunt_id)?.name ?? r.hunt_id}</b>: {fmtK(Number(r.xp_h))} XP/h · {fmtK(Number(r.profit_h))}/h em {r.minutes} min
+                  <Link href={`/char/${encodeURIComponent(r.char_name)}`}>{r.char_name}</Link> ({r.level}) em <b>{byId.get(r.hunt_id)?.name ?? r.hunt_id}</b>:{" "}
+                  {fmtK(Number(r.xp_h))} XP/h · {fmtK(Number(r.profit_h))}/h em {r.minutes} min
                   {mine && (
                     <button
                       type="button"
@@ -203,17 +201,7 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
   );
 }
 
-function SessionForm({
-  hunts,
-  byId,
-  me,
-  onSaved,
-}: {
-  hunts: HuntRef[];
-  byId: Map<string, HuntRef>;
-  me: ReturnType<typeof useMe>;
-  onSaved: () => void;
-}) {
+function SessionForm({ hunts, byId, me, onSaved }: { hunts: HuntRef[]; byId: Map<string, HuntRef>; me: ReturnType<typeof useMe>; onSaved: () => void }) {
   const [text, setText] = useState("");
   const [charId, setCharId] = useState(me.chars[0]?.id ?? "");
   const [level, setLevel] = useState("");
@@ -316,9 +304,7 @@ function SessionForm({
       </div>
       {s && s.xp === null && <p className="bad">Não achei o &quot;XP Gain&quot; no texto: copie o Hunt Analyser (não o Party Hunt Analyser).</p>}
       {msg && <p>{msg}</p>}
-      <p className="muted text-[10px]">
-        Aparecem no ranking o nome do char, o level, a hunt, XP/h e lucro/h. Dá para apagar as suas sessões na lista abaixo.
-      </p>
+      <p className="muted text-[10px]">Aparecem no ranking o nome do char, o level, a hunt, XP/h e lucro/h. Dá para apagar as suas sessões na lista abaixo.</p>
     </div>
   );
 }

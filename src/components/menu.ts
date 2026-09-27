@@ -98,6 +98,7 @@ export const MENU: MenuGroup[] = [
     icon: "forum",
     items: [
       { href: "/comunidade/taverna", label: "Taverna", keywords: "caixao e vela preta mortes mural deaths f level up rede social mortes fofoca rashid henricus comentarios humor" },
+      { href: "/comunidade/pt", label: "Procura-se PT", keywords: "party pt time lfg procurar grupo online agora" },
       { href: "/comunidade/ranking", label: "Ranking de XP", keywords: "experiencia ranking xp" },
       { href: "/comunidade/funcionario-do-mes", label: "Funcionário do Mês", keywords: "tempo online horas guildstats ranking online viciado" },
     ],
