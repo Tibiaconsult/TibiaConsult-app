@@ -55,7 +55,10 @@ export default function TermosPage() {
             </li>
             <li>Comentários, fofocas, reações e denúncias que você fizer na comunidade.</li>
             <li>
-              Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars), apagados depois de 60 dias. Se você ligar as notificações, o
+              Lembretes que você marcar (boss, stamina) e as creatures que você acompanha no Bestiary Tracker.
+            </li>
+            <li>
+              Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars, lembretes e boosted do dia), apagados depois de 60 dias. Se você ligar as notificações, o
               endereço de entrega que o navegador cria para este aparelho; desligar apaga o endereço.
             </li>
             <li>

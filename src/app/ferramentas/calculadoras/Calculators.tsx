@@ -6,6 +6,7 @@ import { setActiveVoc, useActive } from "@/lib/active";
 import Box from "@/components/Box";
 import ExerciseCalc from "./ExerciseCalc";
 import VocPicker from "./VocPicker";
+import { RemindButton } from "@/components/Reminders";
 import { StatVoc, blessEnhanced, blessRegular, expForLevel, staminaAfterOffline, staminaOfflineMinutes, twistOfFate, vocStats } from "@/lib/calcs";
 
 const fmt = (v: number) => Math.round(v).toLocaleString("pt-BR");
@@ -170,6 +171,23 @@ function StaminaCalc() {
           ["Horas verdes (bônus de 50%)", "de 42h a 39h"],
         ]}
       />
+      {!isNaN(a) && a < 2520 && (
+        <div className="flex flex-wrap items-center gap-2 mt-2 text-[12px]">
+          <span>Vai deslogar agora? Avise no celular quando a stamina:</span>
+          {a < 39 * 60 && (
+            <RemindButton
+              label="⏰ ficar verde (39:00)"
+              minutes={staminaOfflineMinutes(a, 39 * 60)}
+              r={{ kind: "stamina", ref: "verde", title: "💚 Stamina verde de novo", body: "Chegou a 39:00: bônus de 50% de exp liberado.", url: "/ferramentas/calculadoras" }}
+            />
+          )}
+          <RemindButton
+            label="⏰ encher (42:00)"
+            minutes={staminaOfflineMinutes(a, 2520)}
+            r={{ kind: "stamina", ref: "cheia", title: "💚 Stamina cheia (42:00)", body: "Stamina no máximo. Bora caçar.", url: "/ferramentas/calculadoras" }}
+          />
+        </div>
+      )}
       <p className="muted text-[10px] mt-2">
         Offline: 1 minuto de stamina a cada 3 minutos; acima de 39h, a cada 6 minutos; só começa depois de 10 minutos deslogado. Abaixo de 14h a
         exp cai pela metade e não há loot. Fonte: TibiaWiki, Stamina.
