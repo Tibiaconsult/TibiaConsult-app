@@ -7,6 +7,7 @@ import { NEWS, TICKER, formatDate } from "@/data/news";
 import { TIBIA } from "@/lib/icons";
 import type { Voc } from "@/lib/active";
 import { ALL_VOCS } from "@/components/voc-list";
+import HowTo from "@/components/HowTo";
 import HomePanel from "./HomePanel";
 
 export default async function Home() {
@@ -16,6 +17,7 @@ export default async function Home() {
   return (
     <div>
       <HomePanel initialVoc={initialVoc} />
+      <HowTo />
       <Box title="Hoje no Tibia">
         <div className="flex flex-wrap gap-6 items-center">
           <Boosted />
