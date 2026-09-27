@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { timeAgo } from "@/lib/social";
 import { BOZO_SAYS } from "@/lib/bozo";
+import { YASIR_SAYS } from "@/lib/yasir";
 import { gossipLines, rashidRumor } from "@/lib/rashid";
 import { hasDb } from "@/lib/social-client";
 import { TimelineItem, fetchTimeline, onSocialChange } from "@/lib/timeline";
@@ -21,10 +22,11 @@ const LINES = [
   "Viu uma morte patética? Me conta. Não conto pra ninguém. (Conto sim.)",
 ];
 
-// Rashid e Bozo se revezam no balcão: uma fala de cada
+// Rashid, Bozo e, de vez em quando, o Yasir se revezam no balcão
 const SPEAKERS = LINES.flatMap((text, i) => [
   { who: "Rashid", img: "/rashid.webp", text },
   ...(i < BOZO_SAYS.length ? [{ who: "Bozo", img: "/bozo.webp", text: BOZO_SAYS[i] }] : []),
+  ...(i % 3 === 2 && YASIR_SAYS[(i - 2) / 3] ? [{ who: "Yasir", img: "/yasir.webp", text: YASIR_SAYS[(i - 2) / 3] }] : []),
 ]);
 
 export default function TavernPromo() {
@@ -80,7 +82,11 @@ export default function TavernPromo() {
           </div>
         </div>
         <div className="relative text-[10px] opacity-80 -mt-1 mb-1.5">
-          {SPEAKERS[line].who === "Bozo" ? "Bozo, bobo da corte de Thais" : "Rashid, garoto-propaganda (e freguês) da Taverna"}
+          {SPEAKERS[line].who === "Bozo"
+            ? "Bozo, bobo da corte de Thais"
+            : SPEAKERS[line].who === "Yasir"
+              ? "Yasir, mercador oriental (o Rashid traduz)"
+              : "Rashid, garoto-propaganda (e freguês) da Taverna"}
         </div>
 
         <div className="relative rounded px-2 py-1.5 text-[11px] mb-2" style={{ background: "rgba(0,0,0,.35)", border: "1px solid #7a5230" }}>
