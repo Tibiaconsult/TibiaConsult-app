@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import { useEffect, useState } from "react";
 import { setActiveVoc, useActive } from "@/lib/active";
 import Box from "@/components/Box";
@@ -64,7 +65,7 @@ function ExpCalc() {
       </div>
       <div className="grid gap-3 sm:grid-cols-4">
         <Field label="Level atual">
-          <input type="number" className="w-full" value={level} min={1} onChange={(e) => setLevel(Number(e.target.value) || 1)} />
+          <NumberInput className="w-full" value={level} min={1} max={5000} onValue={setLevel} />
         </Field>
         <Field label="% para o próximo (barra)">
           <input type="number" className="w-full" value={pct} min={0} max={99} onChange={(e) => setPct(Math.min(99, Math.max(0, Number(e.target.value) || 0)))} />
@@ -110,7 +111,7 @@ function BlessCalc() {
     <Box title="Blessings">
       <div className="flex flex-wrap gap-4 items-end">
         <Field label="Level">
-          <input type="number" className="w-28" value={level} min={1} onChange={(ev) => setLevel(Number(ev.target.value) || 1)} />
+          <NumberInput className="w-28" value={level} min={1} max={5000} onValue={setLevel} />
         </Field>
         <label className="text-[12px] flex items-center gap-1">
           <input type="checkbox" checked={inquisition} onChange={(ev) => setInquisition(ev.target.checked)} /> comprar as 5 regulares no Henricus (Inquisition, +10%)

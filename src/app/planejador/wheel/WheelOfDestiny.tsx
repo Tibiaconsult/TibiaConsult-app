@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // os botões só leem os refs do motor no clique; o lint confunde isso com leitura durante o render
 /* eslint-disable react-hooks/refs */
+import NumberInput from "@/components/NumberInput";
 import SaveToChar from "@/components/SaveToChar";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CODE_PREFIX, QUARTER_COLOR, QUARTERS, VOC_NAMES, WodVoc, loadWodEngine, plain } from "@/lib/wod-engine";
@@ -430,7 +431,7 @@ export default function WheelOfDestiny() {
         ))}
         <label className="text-[12px] ml-2">
           <span className="font-bold block">Level</span>
-          <input type="number" className="w-24" value={level} min={51} onChange={(e) => setLevel(Number(e.target.value) || 0)} />
+          <NumberInput className="w-24" value={level} min={51} max={5000} onValue={setLevel} />
         </label>
         <label className="text-[12px]">
           <span className="font-bold block">Pontos extras</span>

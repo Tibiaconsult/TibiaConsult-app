@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Box from "@/components/Box";
@@ -291,7 +292,7 @@ export default function HomePanel({ initialVoc }: { initialVoc: Voc | null }) {
           <h2 className="mt-0">Hunts para o seu level</h2>
           <label className="text-[12px] flex items-center gap-2 mb-2">
             Level
-            <input type="number" className="w-24" min={8} value={level} onChange={(e) => setLevel(Math.max(8, Number(e.target.value) || 8))} />
+            <NumberInput className="w-24" min={8} max={5000} value={level} onValue={setLevel} />
           </label>
           <HuntList v={v} level={level} />
         </div>

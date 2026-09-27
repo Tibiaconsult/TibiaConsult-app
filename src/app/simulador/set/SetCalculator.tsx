@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import SaveToChar from "@/components/SaveToChar";
 import { useEffect, useMemo, useState } from "react";
 import { SLOTS } from "@/data/equipment";
@@ -232,7 +233,7 @@ export default function SetCalculator() {
       <div className="flex flex-wrap gap-4 items-end">
         <label>
           Level
-          <input type="number" className="mt-1 w-24" value={level} onChange={(e) => setLevel(Number(e.target.value) || 1)} />
+          <NumberInput className="mt-1 w-24" value={level} min={1} max={5000} onValue={setLevel} />
         </label>
         <label>
           Magic level base (sem o set)

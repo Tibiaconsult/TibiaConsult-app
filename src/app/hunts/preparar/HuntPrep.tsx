@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import Box from "@/components/Box";
@@ -17,7 +18,9 @@ import { EL_PT, SetVoc, incomingProfile, offenseRanking } from "@/lib/huntset";
 import { SORC_STANCE, charmNotes, charmRanking, comboPlan, imbueCartParam, sorcererSet, suggestImbuements, vocBuild } from "@/lib/huntprep";
 import { spellIcon } from "@/lib/icons";
 import { wikiImage } from "@/lib/md5";
-import { encodeSet } from "@/lib/set";
+import { computeSet, encodeSet } from "@/lib/set";
+import { DAMAGE_LABEL, PROTECTABLE, incomingDamage } from "@/lib/huntdamage";
+import { VOC_EQUIPMENT } from "@/data/voc-equipment";
 import { encodeBuild } from "@/lib/vocbuild";
 
 const SORC_SLOTS: [string, string][] = [
@@ -36,6 +39,16 @@ const SORC_IMB_ID: Record<string, string> = {
   quarascale: "quara-scale",
   cloudfabric: "cloud-fabric",
   lichshroud: "lich-shroud",
+};
+
+// imbuements de proteção no nível Powerful: elemento e % (TibiaWiki, Imbuing)
+const PROT_POWERFUL: Record<string, [string, number]> = {
+  "lich-shroud": ["death", 10],
+  "snake-skin": ["earth", 15],
+  "dragon-hide": ["fire", 15],
+  "quara-scale": ["ice", 15],
+  "cloud-fabric": ["energy", 15],
+  "demon-presence": ["holy", 15],
 };
 
 function ImbueIcon({ id }: { id: string }) {
@@ -68,6 +81,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
     [h],
   );
   const charms = useMemo(() => charmRanking(h), [h]);
+  const incomingDmg = useMemo(() => incomingDamage(h, voc), [h, voc]);
   const notes = charmNotes(h);
 
   const plan = useMemo(() => {
@@ -81,6 +95,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
       const imbues = rows.flatMap((r) => r.imbues.map((id) => ({ slot: r.label, id })));
       const code = encodeSet(set);
       return {
+        prot: computeSet(set).prot as Record<string, number>,
         rows,
         imbues,
         converted: null,
@@ -90,7 +105,15 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
     }
     const { build, imbues, converted } = vocBuild(h, voc, level);
     const code = encodeURIComponent(encodeBuild(build));
+    // proteção do set: atributos dos itens (TibiaWiki) + imbuements de proteção no nível Powerful
+    const prot: Record<string, number> = {};
+    for (const p of Object.values(build)) {
+      const it = VOC_EQUIPMENT[voc]?.find((r) => r.name === p.item);
+      for (const [el, v] of Object.entries(it?.res ?? {})) prot[el] = (prot[el] ?? 0) + v;
+      for (const im of p.imbues) if (PROT_POWERFUL[im.id]) prot[PROT_POWERFUL[im.id][0]] = (prot[PROT_POWERFUL[im.id][0]] ?? 0) + PROT_POWERFUL[im.id][1];
+    }
     return {
+      prot,
       rows: Object.entries(build).map(([label, p]) => ({ label, item: p.item, tier: p.tier, imbues: p.imbues.map((i) => i.id) })),
       imbues: imbues.map((i) => ({ slot: i.slot, id: i.id })),
       converted,
@@ -134,7 +157,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
         <div className="flex flex-wrap gap-4 items-end text-[12px]">
           <label>
             <span className="font-bold block">Level para os itens</span>
-            <input type="number" className="w-24" min={8} value={level} onChange={(e) => setManualLevel(Math.max(8, Number(e.target.value) || 8))} />
+            <NumberInput className="w-24" min={8} max={5000} value={level} onValue={setManualLevel} />
           </label>
           <div>
             <b>Recomendado solo:</b> {rec ? `${rec}+` : "não listado para a vocação"}
@@ -214,6 +237,60 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
         </div>
       </div>
 
+      <div className="h-4" />
+      <Box title="Dano que você toma">
+        {incomingDmg.rows.length === 0 ? (
+          <p className="text-[12px]">A TibiaWiki ainda não lista o dano dos ataques dos bichos desta hunt. Use os elementos acima como guia.</p>
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Elemento</th>
+                    <th>Maior hit</th>
+                    <th>De quem</th>
+                    <th>Peso no lure</th>
+                    <th>Proteção do set</th>
+                    <th>Maior hit com o set</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {incomingDmg.rows.map((r) => {
+                    const canProtect = PROTECTABLE.includes(r.el);
+                    const pr = canProtect ? (plan.prot[r.el] ?? 0) : null;
+                    const weak = canProtect && r.share >= 15 && (pr ?? 0) < 5;
+                    return (
+                      <tr key={r.el} className={weak ? "bg-[#fff0d0]" : ""}>
+                        <td className="font-bold whitespace-nowrap">
+                          {canProtect ? <span className={`tag tag-${r.el}`}>{DAMAGE_LABEL[r.el]}</span> : DAMAGE_LABEL[r.el]}
+                        </td>
+                        <td className="font-bold">{r.maxHit.toLocaleString("pt-BR")}</td>
+                        <td className="text-[11px]">
+                          {r.creature} · {r.attack}
+                        </td>
+                        <td>{Math.round(r.share)}%</td>
+                        <td className={weak ? "warn font-bold" : ""}>{pr === null ? "não se protege" : `${pr}%`}</td>
+                        <td>{pr === null ? "-" : Math.round(r.maxHit * (1 - pr / 100)).toLocaleString("pt-BR")}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {incomingDmg.rows.some((r) => PROTECTABLE.includes(r.el) && r.share >= 15 && (plan.prot[r.el] ?? 0) < 5) && (
+              <p className="warn text-[12px] mt-2">
+                As linhas destacadas pesam no lure e o set quase não protege: vale anel, amuleto ou imbuement desse elemento.
+              </p>
+            )}
+            <p className="muted text-[10px] mt-2">
+              Maior valor de cada ataque listado na TibiaWiki, sem crítico nem combo de vários bichos. Peso no lure = maior valor de cada ataque vezes quantos
+              desse bicho vêm. Proteção do set sugerido acima (itens e imbuements Powerful), sem a stance e a Wheel.
+              {incomingDmg.missing.length > 0 && ` Sem dano na wiki: ${incomingDmg.missing.join(", ")}.`}
+            </p>
+          </>
+        )}
+      </Box>
       <div className="h-4" />
       <Box title="Set">
         <div className="overflow-x-auto">
@@ -337,12 +414,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
       <Box title="Antes de sair">
         <ul className="list-disc pl-5 space-y-1 text-[12px]">
           {/* as dicas da ficha foram escritas para o sorcerer (stance, feitiços); para as outras vocações fica só o aviso */}
-          {voc === "sorcerer" &&
-            h.play
-              .filter((p) => !/charm/i.test(p))
-              .map((p) => (
-                <li key={p}>{p}</li>
-              ))}
+          {voc === "sorcerer" && h.play.filter((p) => !/charm/i.test(p)).map((p) => <li key={p}>{p}</li>)}
           <li>Acesso: {h.access}</li>
           {h.warning && <li className="warn">{h.warning}</li>}
         </ul>

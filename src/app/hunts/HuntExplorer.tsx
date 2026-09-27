@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Box from "@/components/Box";
 import { HUNTS, Hunt } from "@/data/hunts";
@@ -139,7 +140,7 @@ export default function HuntExplorer() {
               </label>
               <label className="text-[12px]">
                 <span className="font-bold block">Seu level</span>
-                <input type="number" className="w-24" value={level} min={8} onChange={(e) => setLevel(Number(e.target.value) || 0)} />
+                <NumberInput className="w-24" value={level} min={8} max={5000} onValue={setLevel} />
               </label>
               <span className="muted text-[11px]">Mostra as hunts que o TibiaPal recomenda para essa vocação até o seu level, das mais altas para as mais baixas.</span>
             </div>
