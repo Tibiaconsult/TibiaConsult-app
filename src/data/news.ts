@@ -26,7 +26,7 @@ export const TICKER: { date: string; text: string; href?: string }[] = [
   { date: "2026-09-26", text: "Bestiary Tracker: as 833 creatures, com charm points e progresso salvo por char.", href: "/ferramentas/bestiario" },
   { date: "2026-09-26", text: "Elder Druid, Elite Knight e Royal Paladin: magias, Wheel, gemas, armas e simulador com rotação automática.", href: "/vocacoes" },
   { date: "2026-09-26", text: "Hunts novas: Ingol (surface e subsolo), Norcferatu e Falcon Bastion.", href: "/hunts" },
-  { date: "2026-09-26", text: "Divisão de loot a partir do Party Hunt Analyser, com os comandos de transferência prontos.", href: "/ferramentas/loot" },
+  { date: "2026-09-26", text: "LootSplit a partir do Party Hunt Analyser, com os comandos de transferência prontos.", href: "/ferramentas/loot" },
   { date: "2026-09-26", text: "Novo layout no estilo do tibia.com, com menu lateral e ícones de itens e feitiços.", href: "/" },
   { date: "2026-09-26", text: "Simuladores novos: set com comparador, forja, custo de gemas e Magic Shield com mana.", href: "/simulador/set" },
   { date: "2026-09-26", text: "Planejadores de Wheel of Destiny e de proficiência da wand ligados ao simulador de dano.", href: "/planejador/wheel" },

@@ -426,7 +426,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
             Bestiary Tracker
           </Link>
           <Link className="tc-btn" href="/ferramentas/loot">
-            Divisão de loot
+            LootSplit
           </Link>
         </div>
       </Box>

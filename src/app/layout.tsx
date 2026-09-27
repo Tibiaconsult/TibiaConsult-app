@@ -13,7 +13,7 @@ const medieval = MedievalSharp({ weight: "400", subsets: ["latin"], variable: "-
 
 export const metadata: Metadata = {
   title: { default: "TibiaConsult", template: "%s · TibiaConsult" },
-  description: "Referência e simuladores de Tibia para Sorcerer, Druid, Knight, Paladin e Monk: cooldowns, rotações, dano, set, forja, gemas, hunts e divisão de loot.",
+  description: "Referência e simuladores de Tibia para Sorcerer, Druid, Knight, Paladin e Monk: cooldowns, rotações, dano, set, forja, gemas, hunts e LootSplit.",
   applicationName: "TibiaConsult",
   appleWebApp: { capable: true, title: "TibiaConsult", statusBarStyle: "black-translucent" },
 };
