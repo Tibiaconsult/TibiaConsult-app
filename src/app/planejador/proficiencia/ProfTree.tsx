@@ -20,7 +20,7 @@ const XP: Record<"standard" | "knight" | "crossbow", number[]> = {
   knight: [1250, 20000, 80000, 300000, 1500000, 6000000, 20000000, 40000000, 60000000],
   crossbow: [600, 8000, 30000, 150000, 650000, 2500000, 10000000, 20000000, 30000000],
 };
-// XP por criatura (dificuldade do bestiário), sem e com influência máxima e fiendish
+// XP por creature (dificuldade do bestiário), sem e com influência máxima e fiendish
 const KILL_XP: [string, number, number, number][] = [
   ["Medium", 100, 150, 250],
   ["Hard", 165, 247, 412],
@@ -187,7 +187,7 @@ export default function ProfTree({ voc, weapons }: { voc: ProfVoc; weapons: Prof
           )}
           <p className="muted text-[10px] mt-2">
             ★ Sugestão do site (não há recomendação oficial): prioriza dano e crítico das magias principais da vocação, crítico geral e o skill ou
-            ML dela; depois sustento; por último bônus que só valem contra um tipo de criatura. Passe o mouse no perk para ver o motivo.
+            ML dela; depois sustento; por último bônus que só valem contra um tipo de creature. Passe o mouse no perk para ver o motivo.
           </p>
         </div>
 
@@ -233,11 +233,11 @@ export default function ProfTree({ voc, weapons }: { voc: ProfVoc; weapons: Prof
             ))}
           </div>
           <div className="muted text-[11px]">
-            Ou, só matando bichos com a arma na mão:{" "}
+            Ou, só matando creatures com a arma na mão:{" "}
             {KILL_XP.map(([d, a, , f]) => `${fmt(need / a)} ${d} (${fmt(need / f)} fiendish)`).join(" · ")}.
           </div>
           <p className="muted text-[10px]">
-            Catalisadores: Lesser 5.000, normal 25.000 e Greater 100.000 de XP (TibiaWiki). XP por bicho segue a dificuldade do bestiário; criatura
+            Catalisadores: Lesser 5.000, normal 25.000 e Greater 100.000 de XP (TibiaWiki). XP por creature segue a dificuldade do bestiário; creature
             influenciada dá +10% por nível de influência e fiendish, bem mais. Só a arma equipada na hora da morte ganha XP.
           </p>
         </div>

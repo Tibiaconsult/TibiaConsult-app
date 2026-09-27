@@ -29,12 +29,12 @@ export function itemIcon(name: string): string {
   return ext ? `/items/${encodeURIComponent(slug)}.${ext}` : wikiImage(first);
 }
 
-// criaturas com o mesmo nome de um item: na TibiaWiki o sprite da criatura leva "(Creature)"
+// creatures com o mesmo nome de um item: na TibiaWiki o sprite da creature leva "(Creature)"
 const CREATURE_ALIAS: Record<string, string> = {
   Sabretooth: "Sabretooth (Creature)",
 };
 
-/** Sprite de uma criatura (TibiaWiki). */
+/** Sprite de uma creature (TibiaWiki). */
 export function creatureIcon(name: string): string {
   return wikiImage(CREATURE_ALIAS[name] ?? name);
 }

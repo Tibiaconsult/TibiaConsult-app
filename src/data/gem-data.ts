@@ -8,9 +8,9 @@ import type { WodVocId } from "./wod-vocs";
 export const GEM_ITEM: Record<WodVocId, string> = { knight: "Guardian", paladin: "Marksman", sorcerer: "Sage", druid: "Mystic", monk: "Spiritualist" };
 
 export const GEM_TIERS = [
-  { prefix: "Lesser ", label: "Lesser", mods: "1 mod básico", vr: "Vessel Resonance I", drop: "criaturas influenciadas", reveal: "125 mil" },
+  { prefix: "Lesser ", label: "Lesser", mods: "1 mod básico", vr: "Vessel Resonance I", drop: "creatures influenciadas", reveal: "125 mil" },
   { prefix: "", label: "Regular", mods: "2 mods básicos", vr: "Vessel Resonance II", drop: "bosses Archfoe com loot cooperativo", reveal: "1 kk" },
-  { prefix: "Greater ", label: "Greater", mods: "2 básicos + 1 supremo", vr: "Vessel Resonance III", drop: "criaturas fiendish (e, raramente, Archfoe co-op)", reveal: "6 kk" },
+  { prefix: "Greater ", label: "Greater", mods: "2 básicos + 1 supremo", vr: "Vessel Resonance III", drop: "creatures fiendish (e, raramente, Archfoe co-op)", reveal: "6 kk" },
 ] as const;
 
 /** Grau IV = valor do motor; graus I a III = I×1, ×1,1 e ×1,2 (grau IV é +50% sobre o I). */

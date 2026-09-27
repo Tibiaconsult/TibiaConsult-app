@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS, REC_SOURCE, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
+import { creatureHref } from "@/lib/creature-labels";
 import { creatureIcon } from "@/lib/icons";
 import VocSets from "./VocSets";
 
@@ -52,7 +53,7 @@ export default function HuntSheet({ h }: { h: Hunt }) {
         <table>
           <thead>
             <tr>
-              <th>Bicho</th>
+              <th>Creature</th>
               <th>HP</th>
               <th>Exp</th>
               <th>Fís</th>
@@ -71,7 +72,9 @@ export default function HuntSheet({ h }: { h: Hunt }) {
                 <td className="font-bold whitespace-nowrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={creatureIcon(c.name)} alt="" width={32} height={32} loading="lazy" className="sprite inline-block align-middle mr-1" />
-                  {c.name}
+                  <Link href={creatureHref(c.name)} title="Ficha da creature: atributos, bestiário e loot">
+                    {c.name}
+                  </Link>
                 </td>
                 <td>{c.hp.toLocaleString("pt-BR")}</td>
                 <td>{c.exp.toLocaleString("pt-BR")}</td>

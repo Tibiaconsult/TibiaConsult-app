@@ -95,7 +95,7 @@ const BASE_HUNTS: Hunt[] = [
       "Nada de fogo natural: Great Fire Wave e Hell's Core só entram convertidos em energia. Hell's Core depois de um feitiço de energia vira um burst de energia em 73 sqm (conversão confirmada no jogo); o Rage continua mais barato em mana.",
       "Charms: Zap (energia) nos três; Poison (terra, 110%) empata ou passa o Zap e não depende de spell.",
     ],
-    warning: "Os feitiços dos bichos ainda não constam na TibiaWiki: proteções a definir depois de uma sessão de teste.",
+    warning: "Os feitiços das creatures ainda não constam na TibiaWiki: proteções a definir depois de uma sessão de teste.",
   },
 ];
 

@@ -474,7 +474,7 @@ export default function DamageSimulator() {
         </div>
       </div>
 
-      <h2>Hunt ou grupo de bichos</h2>
+      <h2>Hunt ou grupo de creatures</h2>
       <div className="grid gap-3 sm:grid-cols-3">
         <label>
           Hunt
@@ -501,13 +501,13 @@ export default function DamageSimulator() {
         </label>
       </div>
       <details className="border border-[#b98a5a] rounded p-3 bg-white/40">
-        <summary className="cursor-pointer font-bold">Bichos do grupo ({members.length}) e peso no lure</summary>
+        <summary className="cursor-pointer font-bold">Creatures do grupo ({members.length}) e peso no lure</summary>
         <div className="overflow-x-auto mt-2">
           <table>
             <thead>
               <tr>
                 <th></th>
-                <th>Bicho</th>
+                <th>Creature</th>
                 <th>Hunt</th>
                 <th>Peso</th>
                 {ELEMENTS.map((e) => (
@@ -568,7 +568,7 @@ export default function DamageSimulator() {
           </div>
         ))}
       </div>
-      <p className="muted text-[11px]">Mesma wave (base 150) em cada elemento, sem stance, ponderada pelo peso de cada bicho e pela mitigação.</p>
+      <p className="muted text-[11px]">Mesma wave (base 150) em cada elemento, sem stance, ponderada pelo peso de cada creature e pela mitigação.</p>
 
       <h2>DPS das rotações neste grupo</h2>
       <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>

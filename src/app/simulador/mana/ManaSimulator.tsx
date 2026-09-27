@@ -168,7 +168,7 @@ export default function ManaSimulator() {
         </tbody>
       </table>
       <ul className="list-disc pl-5 text-[12px]">
-        <li>Mana leech tem retorno decrescente quando o mesmo golpe acerta vários bichos (TibiaWiki, Imbuing); o campo de aproveitamento em área é o seu ajuste para isso.</li>
+        <li>Mana leech tem retorno decrescente quando o mesmo golpe acerta várias creatures (TibiaWiki, Imbuing); o campo de aproveitamento em área é o seu ajuste para isso.</li>
         <li>Não entram a regeneração natural nem a mana gerada pelo ataque da wand (que agora gera mana), então o gasto real em potions tende a ser menor.</li>
         <li>Potions: média e preço de NPC da TibiaWiki (26/09/2026).</li>
       </ul>

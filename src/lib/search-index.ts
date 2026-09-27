@@ -53,7 +53,11 @@ export function buildIndex(): SearchEntry[] {
   for (const im of IMBUEMENTS)
     push({ label: im.name, kind: `Imbuement · ${im.pt}`, href: `/ferramentas/imbuements#${im.id}`, extra: im.materials.map((m) => m.item).join(" ") });
 
-  for (const b of BESTIARY) push({ label: b[0], kind: "Criatura · Bestiary", href: `/ferramentas/bestiario?q=${encodeURIComponent(b[0])}` });
+  // creatures das hunts têm ficha própria (atributos, bestiário e loot)
+  const withSheet = new Set(HUNTS.flatMap((h) => h.creatures.map((c) => c.name)));
+  for (const name of withSheet) push({ label: name, kind: "Creature · ficha e loot", href: `/criaturas/${encodeURIComponent(name)}` });
+
+  for (const b of BESTIARY) push({ label: b[0], kind: "Creature · Bestiary", href: `/ferramentas/bestiario?q=${encodeURIComponent(b[0])}` });
 
   return out;
 }

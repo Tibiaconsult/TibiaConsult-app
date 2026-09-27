@@ -81,7 +81,7 @@ export default function VocSets({ h }: { h: Hunt }) {
                 .join(" · ")}
             </span>
             <span>
-              <b>Bichos batem com:</b>{" "}
+              <b>Creatures batem com:</b>{" "}
               {auto.incoming
                 .slice(0, 4)
                 .map(([el]) => EL_PT[el])
@@ -113,7 +113,7 @@ export default function VocSets({ h }: { h: Hunt }) {
           </table>
           <p className="muted text-[10px] mt-1">
             Sugestão automática: o elemento de ataque sai das resistências dos
-            bichos; cada peça é a de maior proteção contra os elementos que
+            creatures; cada peça é a de maior proteção contra os elementos que
             aparecem nos ataques deles, entre os itens de level 250+ da vocação
             até o level escolhido. Não é um set testado em jogo.
           </p>

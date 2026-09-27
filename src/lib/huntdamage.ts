@@ -1,6 +1,6 @@
 // Dano que a hunt causa em você, pelos dados da TibiaWiki (src/data/creature-damage.ts):
-// o maior hit de cada elemento (com o bicho e o ataque) e o peso de cada elemento no lure,
-// somando o maior valor de cada ataque vezes o peso do bicho no lure. É uma estimativa para escolher proteções.
+// o maior hit de cada elemento (com a creature e o ataque) e o peso de cada elemento no lure,
+// somando o maior valor de cada ataque vezes o peso da creature no lure. É uma estimativa para escolher proteções.
 
 import { CREATURE_DAMAGE, DamageElement } from "@/data/creature-damage";
 import type { Hunt } from "@/data/hunts";

@@ -185,7 +185,7 @@ const DRUID: VocationData = {
     "Outras peças de druid com sprite e atributos no Meu char: Arboreal Crown e Tome, Soulshroud, Soulstrider, Norcferatu Bonecloak (earth ML +6), Mystical Dragon Robe, Sanguine Galoshes, Stag Boots e Charged Arboreal Ring.",
   tips: [
     "Hunt de gelo: Strong Ice Wave a cada 4 s, Eternal Winter no focus, Ice Burst quando o lure estiver cheio e com vida alta.",
-    "Hunt de terra: Terra Wave e Wrath of Nature. Forked Thorns entra quando os bichos estão espalhados.",
+    "Hunt de terra: Terra Wave e Wrath of Nature. Forked Thorns entra quando as creatures estão espalhadas.",
     "Elemental Synthesis soma 10% do ML no gelo e na terra: em ML 110 são 11 níveis a mais nas magias de dano.",
   ],
 };
@@ -278,7 +278,7 @@ const KNIGHT: VocationData = {
   tips: [
     "Solo: Fierce Berserk a cada 6 s, Front Sweep entre eles e Annihilation no alvo mais forte.",
     "Arma de duas mãos dobra o bônus de dano do Combat Mastery; escudo dobra a redução de dano.",
-    "Shield Bash e Shield Slam cortam 50% do próximo ataque do bicho: bons para segurar a party.",
+    "Shield Bash e Shield Slam cortam 50% do próximo ataque da creature: bons para segurar a party.",
   ],
 };
 

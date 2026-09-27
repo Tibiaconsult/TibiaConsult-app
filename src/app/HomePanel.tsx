@@ -64,7 +64,7 @@ function tasks(v: Voc, level: number) {
       icon: spellIcon("Avatar of Storm"),
     },
     { href: `/rotacoes?voc=${v}#montador`, title: "Combos", text: "Montador com validação de cooldown e linha do tempo.", icon: spellIcon("hells-core") },
-    { href: `/hunts`, title: "Fichas de hunt", text: "Resistência de cada bicho, ataques e level recomendado.", icon: itemIcon("Sanguine Coil") },
+    { href: `/hunts`, title: "Fichas de hunt", text: "Resistência de cada creature, ataques e level recomendado.", icon: itemIcon("Sanguine Coil") },
   ];
 }
 

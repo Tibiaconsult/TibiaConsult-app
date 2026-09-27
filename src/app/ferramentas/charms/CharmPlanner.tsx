@@ -241,7 +241,7 @@ export default function CharmPlanner() {
               usar {fmt(bestiary.points)} do Bestiary ({bestiary.from})
             </button>
           )}
-          <span className="muted block text-[10px] mt-1">Os que ainda não gastou. O Bestiary Tracker soma os pontos de todas as criaturas completas.</span>
+          <span className="muted block text-[10px] mt-1">Os que ainda não gastou. O Bestiary Tracker soma os pontos de todas as creatures completas.</span>
         </label>
         <div className="border border-[#b98a5a] rounded p-3 bg-white/40">
           <div className="muted text-[11px]">Custo do plano (major)</div>
@@ -288,19 +288,19 @@ export default function CharmPlanner() {
           )}
         </div>
         <p className="muted text-[10px] mt-1">
-          O charm de dano tira 5% da vida máxima do bicho, limitado a 2 vezes o seu level, e depois aplica a resistência: vale o elemento que mais entra no
+          O charm de dano tira 5% da vida máxima da creature, limitado a 2 vezes o seu level, e depois aplica a resistência: vale o elemento que mais entra no
           lure.
         </p>
       </div>
 
       <div>
         <h2 className="mt-0">Charms major</h2>
-        <p className="muted text-[11px] mb-1">Pagos em charm points. Só entram em criatura com o bestiário completo.</p>
+        <p className="muted text-[11px] mb-1">Pagos em charm points. Só entram em creature com o bestiário completo.</p>
         {table("major")}
       </div>
       <div>
         <h2>Charms minor</h2>
-        <p className="muted text-[11px] mb-1">Pagos em Minor Charm Echoes. Entram em criatura com o estágio 2 do bestiário.</p>
+        <p className="muted text-[11px] mb-1">Pagos em Minor Charm Echoes. Entram em creature com o estágio 2 do bestiário.</p>
         {table("minor")}
       </div>
       <div className="flex flex-wrap gap-3 items-center">

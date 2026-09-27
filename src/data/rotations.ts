@@ -20,7 +20,7 @@ export const ROTATIONS: RotationPreset[] = [
     name: "Energia",
     element: "energy",
     stance: "energy",
-    description: "Master of Thunder + Aura of Exposed Weakness. Bichos alinhados na frente (beam) ou em leque (wave).",
+    description: "Master of Thunder + Aura of Exposed Weakness. Creatures alinhadas na frente (beam) ou em leque (wave).",
     cycle: [
       { t: 0, spellId: "energy-wave", note: "abre o ciclo" },
       { t: 2, spellId: "great-energy-beam", note: "Beam Mastery corta 1 s de tudo por alvo no feixe" },
@@ -32,7 +32,7 @@ export const ROTATIONS: RotationPreset[] = [
       { t: 4, spellId: "ultimate-energy-strike", note: "+35% do Focus Mastery" },
       { t: 6, spellId: "energy-wave", note: "volta ao ciclo" },
     ],
-    runes: "Thunderstorm no lugar da Great Fire Wave quando os bichos estiverem espalhados.",
+    runes: "Thunderstorm no lugar da Great Fire Wave quando as creatures estiverem espalhadas.",
     singleTarget: "Ultimate Energy Strike (30 s) > Strong Energy Strike (8 s) > SD a cada 2 s entre eles.",
     wheel: "Beam Mastery T2 + Energy Wave T1/T2. Gema: Revelation Mastery Beam Mastery ou base do Great Energy Beam.",
   },

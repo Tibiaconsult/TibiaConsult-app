@@ -1,4 +1,4 @@
-// Criatura e boss boostados do dia, pela API pública do TibiaData (api.tibiadata.com), que lê o tibia.com.
+// Creature e boss boostados do dia, pela API pública do TibiaData (api.tibiadata.com), que lê o tibia.com.
 // Atualiza a cada 30 minutos; se a API falhar, a caixa simplesmente não aparece.
 
 interface BoostedItem {
@@ -26,7 +26,7 @@ export async function getBoosted(): Promise<{ creature: BoostedItem | null; boss
 export default async function Boosted({ compact = false }: { compact?: boolean }) {
   const { creature, boss } = await getBoosted();
   if (!creature && !boss) return null;
-  const items = [creature && { label: "Criatura", ...creature }, boss && { label: "Boss", ...boss }].filter(Boolean) as (BoostedItem & { label: string })[];
+  const items = [creature && { label: "Creature", ...creature }, boss && { label: "Boss", ...boss }].filter(Boolean) as (BoostedItem & { label: string })[];
   return (
     <div className={compact ? "space-y-2" : "flex flex-wrap gap-4"}>
       {items.map((i) => (
@@ -34,7 +34,7 @@ export default async function Boosted({ compact = false }: { compact?: boolean }
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={i.image_url} alt="" width={48} height={48} className="sprite" />
           <div className="text-[12px] leading-tight">
-            <div className="muted text-[10px]">{i.label === "Criatura" ? "Criatura boostada hoje" : "Boss boostado hoje"}</div>
+            <div className="muted text-[10px]">{i.label === "Creature" ? "Creature boostada hoje" : "Boss boostado hoje"}</div>
             <div className="font-bold">{i.name}</div>
           </div>
         </div>

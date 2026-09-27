@@ -193,7 +193,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
               ))}
             </div>
             <p className="text-[12px]">
-              <b>Os bichos batem com:</b>{" "}
+              <b>As creatures batem com:</b>{" "}
               {incoming
                 .slice(0, 4)
                 .map(([el]) => EL_PT[el])
@@ -240,7 +240,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
       <div className="h-4" />
       <Box title="Dano que você toma">
         {incomingDmg.rows.length === 0 ? (
-          <p className="text-[12px]">A TibiaWiki ainda não lista o dano dos ataques dos bichos desta hunt. Use os elementos acima como guia.</p>
+          <p className="text-[12px]">A TibiaWiki ainda não lista o dano dos ataques das creatures desta hunt. Use os elementos acima como guia.</p>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -284,8 +284,8 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
               </p>
             )}
             <p className="muted text-[10px] mt-2">
-              Maior valor de cada ataque listado na TibiaWiki, sem crítico nem combo de vários bichos. Peso no lure = maior valor de cada ataque vezes quantos
-              desse bicho vêm. Proteção do set sugerido acima (itens e imbuements Powerful), sem a stance e a Wheel.
+              Maior valor de cada ataque listado na TibiaWiki, sem crítico nem combo de várias creatures. Peso no lure = maior valor de cada ataque vezes quantos
+              dessa creature vêm. Proteção do set sugerido acima (itens e imbuements Powerful), sem a stance e a Wheel.
               {incomingDmg.missing.length > 0 && ` Sem dano na wiki: ${incomingDmg.missing.join(", ")}.`}
             </p>
           </>
@@ -340,7 +340,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
         <p className="muted text-[10px] mt-2">
           {voc === "sorcerer"
             ? "Parte do set recomendado do Master Sorcerer; as peças trocam pelas de maior proteção contra os ataques da hunt quando o montador conhece o item."
-            : "Cada peça é a de maior proteção contra os elementos dos ataques dos bichos, entre os itens da vocação até o level escolhido."}{" "}
+            : "Cada peça é a de maior proteção contra os elementos dos ataques das creatures, entre os itens da vocação até o level escolhido."}{" "}
           Sugestão automática, não um set testado em jogo.
         </p>
       </Box>

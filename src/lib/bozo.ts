@@ -9,7 +9,7 @@ function hash(s: string): number {
   return Math.abs(h);
 }
 
-// piada pelo bicho que matou (a primeira que casar com o nome do matador)
+// piada pela creature que matou (a primeira que casar com o nome do matador)
 const MONSTER: [RegExp, (n: string, k: string) => string][] = [
   [/beholder|bonebeast|eye/i, (n, k) => `Por que o ${k} é tão feio? Porque o pai e a mãe também eram. E por que ${n} morreu pra ele? Aí nem eu sei.`],
   [/cyclops/i, (n, k) => `Quantos olhos tem um ${k}? Um pra cada ponto de QI do adversário. Hoje, ${n} empatou com ele.`],

@@ -10,7 +10,7 @@ export const metadata = { title: "Dano e DPS" };
 
 const INTRO: Record<string, string> = {
   sorcerer:
-    "Informe o char, a stance e o alvo. O simulador calcula min, média e máximo de cada feitiço, aplica crit, resistência e mitigação do bicho, e dá o dano por ciclo e por minuto de cada rotação. Set, Wheel e proficiência entram direto.",
+    "Informe o char, a stance e o alvo. O simulador calcula min, média e máximo de cada feitiço, aplica crit, resistência e mitigação da creature, e dá o dano por ciclo e por minuto de cada rotação. Set, Wheel e proficiência entram direto.",
   druid: "Level, magic level, stance e Wheel. O simulador calcula cada magia contra a hunt escolhida e monta a rotação que mais causa dano.",
   knight: "Skill, ataque da arma, stance e Wheel. As magias seguem o elemento da arma, divididas na proporção do ataque físico e elemental.",
   paladin: "Distance, munição, magic level e stance. As magias de distance seguem o elemento da munição; as holy usam o magic level.",

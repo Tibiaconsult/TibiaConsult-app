@@ -19,7 +19,7 @@ export default async function PrepararPage({ searchParams }: { searchParams: Pro
       {hunt ? (
         <>
           <p className="on-dark mb-4">
-            Set, imbuements, combo e charm montados a partir das resistências e dos ataques dos bichos desta hunt. Cada parte abre na ferramenta própria para
+            Set, imbuements, combo e charm montados a partir das resistências e dos ataques das creatures desta hunt. Cada parte abre na ferramenta própria para
             ajustar e, com login, dá para salvar no seu char.
           </p>
           <HuntPrep key={`${hunt.id}-${voc}`} h={hunt} voc={voc} />

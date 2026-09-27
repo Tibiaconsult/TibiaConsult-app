@@ -1,4 +1,4 @@
-// Hunts adicionais para Master Sorcerer 800+. Bichos, HP, exp, mitigação e resistências: TibiaWiki, 26/09/2026.
+// Hunts adicionais para Master Sorcerer 800+. Creatures, HP, exp, mitigação e resistências: TibiaWiki, 26/09/2026.
 // Lista de áreas: sugestões do TibiaPal para sorcerer 600-1000+. Peso no lure = 1 para todos (ajuste no simulador).
 import type { Hunt } from "./hunts";
 
@@ -31,7 +31,7 @@ export const EXTRA_HUNTS: Hunt[] = [
     name: "Asura Citadel",
     city: "Marapur",
     access: "Shards of a Broken Moon Quest (Summer Update 2026). Dificuldade comparável à Asura Vaults. TibiaPal: solo 800+, earth mastery.",
-    floors: ["Andar de cima: True Asuras e as criaturas novas.", "Andar de baixo: mais variedade de bichos novos."],
+    floors: ["Andar de cima: True Asuras e as creatures novas.", "Andar de baixo: mais variedade de creatures novas."],
     creatures: [
       c("True Midnight Asura", 9000, 7313, 3.45, [100, 0, 70, 90, 90, 110, 110], "Melee até 450, Death Missile 500-650, Smoke Beam 500-700, Life Drain Beam 100-240, Mana Drain Beam 50-280."),
       c("True Frost Flower Asura", 4000, 7069, 3.36, [100, 80, 70, 0, 110, 110, 110], "Melee até 250, Ice Missile 200-275, Manadrain Beam 150-225, cura própria."),
@@ -114,7 +114,7 @@ export const EXTRA_HUNTS: Hunt[] = [
     id: "putrefactory",
     name: "Putrefactory (Rotten Blood)",
     city: "Norte de Darama",
-    access: "Rotten Blood Quest; uma das quatro áreas acessadas pelo Blood Vestibule. Bichos de 27 a 33 mil de HP e 21 a 23 mil de exp.",
+    access: "Rotten Blood Quest; uma das quatro áreas acessadas pelo Blood Vestibule. Creatures de 27 a 33 mil de HP e 21 a 23 mil de exp.",
     floors: ["Oozing Carcass, Sopping Carcass, Rotten Man-Maggot e Meandering Mushroom."],
     creatures: [
       c("Oozing Carcass", 27500, 20980, 4.97, [100, 60, 125, 65, 110, 75, 120], "A TibiaWiki ainda não lista."),
@@ -141,7 +141,7 @@ export const EXTRA_HUNTS: Hunt[] = [
     ],
     element: "EQUILIBRADA: death 95 a 110%, fogo 80 a 110%, energia 90 a 120%. Death tem a menor variação.",
     set: SET_ENERGIA,
-    play: ["Master of Decay tende a ganhar por pouco; confira no simulador com o peso real de cada bicho.", "Shrieking Cry-Stal: Energy Chain até 1356 e fear."],
+    play: ["Master of Decay tende a ganhar por pouco; confira no simulador com o peso real de cada creature.", "Shrieking Cry-Stal: Energy Chain até 1356 e fear."],
   },
   {
     id: "podzilla-quaras",
@@ -164,8 +164,8 @@ export const EXTRA_HUNTS: Hunt[] = [
     city: "Ilha entre Roshamuul e Marapur",
     access: "Winter Update 2022. A The Cradle of Monsters Quest acontece na ilha. Os andares de baixo são chamados de Deeper Ingol.",
     floors: [
-      "Surface e todos os andares do subsolo têm os mesmos 6 bichos comuns (TibiaWiki).",
-      "A proporção entre eles muda muito de andar para andar. Não localizei a proporção exata por andar: ajuste o peso de cada bicho no simulador conforme o andar que você faz.",
+      "Surface e todos os andares do subsolo têm as mesmas 6 creatures comuns (TibiaWiki).",
+      "A proporção entre eles muda muito de andar para andar. Não localizei a proporção exata por andar: ajuste o peso de cada creature no simulador conforme o andar que você faz.",
       "Raros em qualquer andar: Killer Rabbit e Berserker Chicken (fracos, sem peso na conta).",
     ],
     creatures: [
@@ -176,7 +176,7 @@ export const EXTRA_HUNTS: Hunt[] = [
       c("Crape Man", 9150, 5040, 3.4, [85, 115, 100, 105, 100, 90, 95], "Melee até 271, Crab Claw Snap 116-313, Energy Ball 331-383, Energy Wave 314-369."),
       c("Boar Man", 9200, 7100, 3.45, [90, 95, 110, 95, 85, 85, 95], "Melee até 498, Throwing Knife 375-392 de life drain, Death Strike 386-480, Energy Wave 311-400."),
     ],
-    element: "FOGO ou DEATH, conforme o andar: com peso igual nos 6 bichos, fogo dá 103% e death 101%. O TibiaPal indica death na surface, -1 e -2 e fogo no -3. Energia é a pior: 75% em Harpy e Liodile.",
+    element: "FOGO ou DEATH, conforme o andar: com peso igual nas 6 creatures, fogo dá 103% e death 101%. O TibiaPal indica death na surface, -1 e -2 e fogo no -3. Energia é a pior: 75% em Harpy e Liodile.",
     set: SET_FOGO,
     play: [
       "Master of Flames. Se o andar tiver muito Crape Man (death 115%), confira death no simulador.",
@@ -190,8 +190,8 @@ export const EXTRA_HUNTS: Hunt[] = [
     city: "Yalahar (Vengoth)",
     access: "Atualização 15.10. Fortress na superfície de Vengoth; Dungeons no subsolo, com a NPC Anaztassja Moroia e o boss Vladrukh. TibiaWiki recomenda 550+ nos Dungeons.",
     floors: [
-      "Norcferatu Fortress (superfície): os 6 bichos abaixo.",
-      "Norcferatu Dungeons (subsolo): os mesmos 6 bichos e o boss Vladrukh.",
+      "Norcferatu Fortress (superfície): as 6 creatures abaixo.",
+      "Norcferatu Dungeons (subsolo): as mesmas 6 creatures e o boss Vladrukh.",
     ],
     creatures: [
       c("Dworc Shadowstalker", 8900, 8930, 2.99, [95, 60, 100, 105, 105, 105, 95], "Fica invisível por uns 5 segundos, Life Drain até 625."),
@@ -217,13 +217,13 @@ export const EXTRA_HUNTS: Hunt[] = [
     access: "Parte da The Secret Library Quest. Level 250+ para entrar. O castelo tem muitas salas pequenas e buracos para o andar de baixo; o subsolo é mais largo e melhor para caçar.",
     floors: [
       "Castelo (em ruínas): Falcon Knight e Falcon Paladin, com salas pequenas.",
-      "Subsolo: os mesmos bichos, área mais larga. Bosses: os 5 Falcon Leaders e o Thawing Dragon Lord.",
+      "Subsolo: as mesmas creatures, área mais larga. Bosses: os 5 Falcon Leaders e o Thawing Dragon Lord.",
     ],
     creatures: [
       c("Falcon Knight", 9000, 6300, 3.78, [70, 50, 110, 100, 100, 100, 100], "Melee até 400, Earth Berserk 400-500, Holy Beam 290-360, Strong Haste."),
       c("Falcon Paladin", 8500, 6900, 3.68, [90, 50, 110, 100, 100, 100, 100], "Melee até 250, Royal Spear 400-550, Bolt 200-500, Energy Burst 350-530, Energy Beam 250-350."),
     ],
-    element: "FOGO ou ENERGIA: os dois dão 100% nos dois bichos. Death é o pior (50%).",
+    element: "FOGO ou ENERGIA: os dois dão 100% nas duas creatures. Death é o pior (50%).",
     set: SET_FOGO,
     play: [
       "Master of Flames ou Master of Thunder dão o mesmo dano por hit; escolha pelo set que você já tem.",
