@@ -21,7 +21,7 @@ interface Step {
   scene: React.ReactNode;
 }
 
-const ICON = "/icon-192.png";
+const ICON = "/icon-192-tc.png";
 const GOLD = "#f3d27a";
 
 /* ---------- peças das cenas ---------- */
