@@ -7,7 +7,7 @@ export default function TavernaPage() {
     <div>
       <h1>Causos da Taverna</h1>
       <p className="on-dark mb-4">
-        Morreu de um jeito ridículo? Caiu o drop da vida? Esqueceu a bless? Conta aqui. Só chars verificados postam, então todo causo tem dono de verdade.
+        Morreu de um jeito ridículo? Caiu o drop da vida? Esqueceu a bless? Conta aqui. Libere seu char com um clique e bota a história na mesa.
       </p>
       <TavernFeed />
     </div>

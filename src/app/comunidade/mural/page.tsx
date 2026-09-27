@@ -25,7 +25,7 @@ export default async function MuralPage() {
           {deaths.length === 0 ? (
             <p className="text-[13px]">
               Nenhuma vela acesa por enquanto. Quer entrar no mural? Cadastre seu char em <Link href="/meus-chars">Meus chars</Link> e ligue a opção de aparecer
-              (precisa verificar o char).
+              (um clique, no quadro Comunidade do char).
             </p>
           ) : (
             <DeathList deaths={deaths} />

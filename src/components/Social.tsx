@@ -11,17 +11,22 @@ import { createClient } from "@/lib/supabase/client";
 
 export interface Me {
   userId: string | null;
-  /** chars verificados da conta: só eles postam e comentam */
+  /** chars liberados na comunidade: só eles postam e comentam */
   chars: { id: string; name: string }[];
+  /** chars da conta ainda não liberados (um clique libera) */
+  locked: { id: string; name: string }[];
   isAdmin: boolean;
   loaded: boolean;
+  /** libera o char na comunidade (public_profile); devolve a mensagem de erro, se houver */
+  release: (id: string) => Promise<string | null>;
 }
 
-const NOBODY: Me = { userId: null, chars: [], isAdmin: false, loaded: false };
+type CharRow = { id: string; name: string; public_profile: boolean };
+const NOBODY = { userId: null, chars: [], locked: [], isAdmin: false, loaded: false };
 
-/** Conta logada e seus chars verificados. */
+/** Conta logada, seus chars liberados e os que ainda faltam liberar. */
 export function useMe(): Me {
-  const [me, setMe] = useState<Me>(NOBODY);
+  const [state, setState] = useState<Omit<Me, "release"> & { rows: CharRow[] }>({ ...NOBODY, rows: [] });
   useEffect(() => {
     if (!hasDb()) return;
     const sb = createClient();
@@ -29,18 +34,30 @@ export function useMe(): Me {
       const {
         data: { user },
       } = await sb.auth.getUser();
-      if (!user) return setMe({ ...NOBODY, loaded: true });
+      if (!user) return setState({ ...NOBODY, rows: [], loaded: true });
       const [{ data: chars }, { data: admin }] = await Promise.all([
-        sb.from("chars").select("id, name").eq("user_id", user.id).eq("verified", true).order("name"),
+        sb.from("chars").select("id, name, public_profile").eq("user_id", user.id).order("name"),
         sb.rpc("is_admin"),
       ]);
-      setMe({ userId: user.id, chars: (chars ?? []) as Me["chars"], isAdmin: admin === true, loaded: true });
+      setState({ ...split((chars ?? []) as CharRow[]), userId: user.id, isAdmin: admin === true, loaded: true });
     })();
   }, []);
-  return me;
+
+  async function release(id: string) {
+    const { error } = await createClient().from("chars").update({ public_profile: true, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) return error.message.replace(/^.*?esse char/i, "Esse char");
+    setState((s) => ({ ...s, ...split(s.rows.map((r) => (r.id === id ? { ...r, public_profile: true } : r))) }));
+    return null;
+  }
+  return { ...state, release };
 }
 
-/** Char com que a pessoa posta: o ativo da barra do topo, se for verificado; senão o primeiro verificado. */
+function split(rows: CharRow[]) {
+  const pick = (r: CharRow) => ({ id: r.id, name: r.name });
+  return { rows, chars: rows.filter((r) => r.public_profile).map(pick), locked: rows.filter((r) => !r.public_profile).map(pick) };
+}
+
+/** Char com que a pessoa posta: o ativo da barra do topo, se estiver liberado; senão o primeiro liberado. */
 export function usePostingChar(me: Me): [string | null, (id: string) => void] {
   const { char } = useActive();
   const [picked, setPicked] = useState<string | null>(null);
@@ -48,29 +65,60 @@ export function usePostingChar(me: Me): [string | null, (id: string) => void] {
   return [valid(picked) ?? valid(char?.id) ?? me.chars[0]?.id ?? null, setPicked];
 }
 
-/** Aviso para quem ainda não pode postar, ou seletor do char quando há mais de um verificado. */
-export function PostingAs({ me, charId, setCharId, dark }: { me: Me; charId: string | null; setCharId: (id: string) => void; dark?: boolean }) {
-  if (!me.loaded) return null;
+/** Um clique para liberar o char na comunidade (ou o convite para entrar / cadastrar um char). */
+export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
+  const { char } = useActive();
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
   const link = dark ? { color: "#f3d27a" } : undefined;
+  if (!me.loaded) return null;
   if (!me.userId)
     return (
       <p className="text-[12px]">
         <Link href="/entrar" style={link}>
           Entre
         </Link>{" "}
-        e verifique seu char para postar, comentar e reagir.
+        para postar, comentar e reagir.
       </p>
     );
-  if (!me.chars.length)
+  if (!me.locked.length)
     return (
       <p className="text-[12px]">
-        Para postar e comentar, verifique um char em{" "}
+        Cadastre seu char em{" "}
         <Link href="/meus-chars" style={link}>
           Meus chars
         </Link>{" "}
-        (leva 1 minuto: um código no comentário do char no tibia.com). Reagir você já pode.
+        para postar e comentar. Reagir você já pode.
       </p>
     );
+  const target = me.locked.find((c) => c.id === char?.id) ?? me.locked[0];
+  return (
+    <div className="text-[12px] space-y-1">
+      <button
+        type="button"
+        className="tc-btn"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setMsg(await me.release(target.id));
+          setBusy(false);
+        }}
+      >
+        {busy ? "Liberando..." : `🍺 Liberar ${target.name} na comunidade`}
+      </button>
+      <p className="opacity-80">
+        Com um clique o char pode postar e comentar, e aparece no mural, no ranking, no Funcionário do Mês e no perfil público. Dá para desligar quando quiser
+        em Meus chars.
+      </p>
+      {msg && <p className="bad">{msg}</p>}
+    </div>
+  );
+}
+
+/** Quem está postando, com seletor quando há mais de um char liberado; ou o botão de liberar. */
+export function PostingAs({ me, charId, setCharId, dark }: { me: Me; charId: string | null; setCharId: (id: string) => void; dark?: boolean }) {
+  if (!me.loaded) return null;
+  if (!me.chars.length) return <ReleaseChar me={me} dark={dark} />;
   if (me.chars.length === 1) return <span className="text-[11px] opacity-80">postando como {me.chars[0].name}</span>;
   return (
     <label className="text-[11px]">
@@ -193,7 +241,7 @@ export function ReportButton({ type, id, me, dark }: { type: "post" | "comment";
 
 /** Tradução das mensagens do banco para o jogador. */
 export function friendlyError(msg: string): string {
-  if (/verifique o char|linguagem ofensiva|por hora|tente de novo|não encontrado/i.test(msg)) return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
+  if (/libere o char|linguagem ofensiva|por hora|tente de novo|não encontrado/i.test(msg)) return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
   if (/check constraint|violates/i.test(msg)) return "Texto curto ou longo demais.";
   return `Não foi possível enviar: ${msg}`;
 }
@@ -285,26 +333,7 @@ export function CommentThread({
               </button>
             </form>
           ) : (
-            me.loaded && (
-              <p className="opacity-80">
-                {me.userId ? (
-                  <>
-                    Para comentar,{" "}
-                    <Link href="/meus-chars" style={link}>
-                      verifique um char
-                    </Link>
-                    .
-                  </>
-                ) : (
-                  <>
-                    <Link href="/entrar" style={link}>
-                      Entre
-                    </Link>{" "}
-                    para comentar.
-                  </>
-                )}
-              </p>
-            )
+            <ReleaseChar me={me} dark={dark} />
           )}
           {msg && <p className="bad">{msg}</p>}
         </div>

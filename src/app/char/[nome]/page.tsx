@@ -46,7 +46,7 @@ export default async function CharProfilePage({ params }: Props) {
       <h1>{p.name}</h1>
       <p className="on-dark mb-4">
         {p.vocation ?? "?"} · level {p.level ?? "?"}
-        {p.world ? ` · ${p.world}` : ""} · ✔️ char verificado{p.verified_at ? ` desde ${date(p.verified_at)}` : ""}
+        {p.world ? ` · ${p.world}` : ""} · no TibiaConsult desde {date(p.joined_at)}
       </p>
 
       <Box title="📋 Ficha">

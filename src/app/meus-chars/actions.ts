@@ -108,23 +108,15 @@ export async function deleteChar(form: FormData) {
   redirect("/meus-chars");
 }
 
-// Verificação do char: o dono cola o código no comentário do char no tibia.com e o banco confere pela API (008, 013).
-// Postar e comentar na Taverna e no mural exige char verificado.
-export async function startVerify(form: FormData) {
+// Comunidade: um clique libera (ou tira) o char da Taverna, mural, ranking, Funcionário do Mês e perfil público.
+// O banco impede que o mesmo char fique liberado em duas contas (015).
+export async function setCommunity(form: FormData) {
   const id = text(form, "id");
   if (!id) return;
+  const on = form.get("on") === "1";
   const { supabase } = await requireUser();
-  const { error } = await supabase.rpc("start_verify", { p_char: id });
+  const { error } = await supabase.from("chars").update({ public_profile: on, updated_at: new Date().toISOString() }).eq("id", id);
   revalidatePath(`/meus-chars/${id}`);
-  redirect(`/meus-chars/${id}?verif=${encodeURIComponent(error ? error.message : "codigo")}#verificar`);
-}
-
-export async function checkVerify(form: FormData) {
-  const id = text(form, "id");
-  if (!id) return;
-  const { supabase } = await requireUser();
-  // check_verify já atualiza level e mortes do char por dentro quando dá certo
-  const { data, error } = await supabase.rpc("check_verify", { p_char: id });
-  revalidatePath(`/meus-chars/${id}`);
-  redirect(`/meus-chars/${id}?verif=${encodeURIComponent(error ? error.message : String(data))}#verificar`);
+  if (error) redirect(`/meus-chars/${id}?erro=${encodeURIComponent(error.message)}#comunidade`);
+  redirect(`/meus-chars/${id}#comunidade`);
 }
