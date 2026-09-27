@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SAMPLE, parseSession, split } from "@/lib/lootsplit";
+import { SAMPLE, parseSession, split, splitSummary } from "@/lib/lootsplit";
 
 const fmt = (v: number) => Math.round(v).toLocaleString("pt-BR");
 
@@ -33,6 +33,7 @@ export default function LootSplit() {
   const spender = top("supplies");
 
   const allCommands = result.transfers.map((t) => `${t.from}: transfer ${t.amount} to ${t.to}`).join("\n");
+  const summary = useMemo(() => (session.members.length ? splitSummary(session, result) : ""), [session, result]);
 
   return (
     <div className="space-y-4">
@@ -53,6 +54,16 @@ export default function LootSplit() {
 
       {session.members.length > 0 && (
         <>
+          <div className="rounded p-3" style={{ background: "#2a1a08", border: "2px solid #d9a441", color: "#f5e6c8" }}>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <b style={{ color: "#f3d27a" }}>📋 Split pronto para colar no chat ou no Discord</b>
+              <button type="button" className="tc-btn ml-auto" onClick={() => copy(summary)}>
+                {copied === summary ? "✔ copiado" : "Copiar split"}
+              </button>
+            </div>
+            <pre className="whitespace-pre-wrap text-[12px] font-mono leading-snug m-0">{summary}</pre>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-4">
             {[
               ["Saldo total do grupo", fmt(result.total)],
