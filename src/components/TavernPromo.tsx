@@ -101,9 +101,9 @@ export default function TavernPromo() {
           ) : top.level ? (
             <>
               <div className="text-[10px] opacity-75">
-                🎉 Level up · {top.level.name} chegou no {top.level.level} {timeAgo(top.level.at)}
+                🎉 Level up · {top.level.name} chegou no {top.level.milestone ?? top.level.level} {timeAgo(top.level.at)}
               </div>
-              <div className="line-clamp-3">{levelLine(top.level)}</div>
+              <div className="line-clamp-3">{levelLine({ ...top.level, level: top.level.milestone ?? top.level.level })}</div>
             </>
           ) : top.gossips.length ? (
             <>

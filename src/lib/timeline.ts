@@ -1,5 +1,5 @@
 // Linha do tempo da Taverna: as mortes do mural, com o boato do Rashid, o Henricus e as fofocas, e os marcos de level
-// (25, 50, 75, 100, 150...) comemorados pelo Rashid, do mais recente para o mais antigo.
+// (de 50 em 50) comemorados pelo Rashid, do mais recente para o mais antigo.
 // A mesma função alimenta o feed da Taverna e o banner do Rashid, então os dois mostram sempre a mesma coisa no topo.
 // Uma fofoca nova "sobe" a morte para o topo, como um tópico respondido.
 

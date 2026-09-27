@@ -9,12 +9,11 @@ import Box from "@/components/Box";
 import DeathCard from "@/components/DeathCard";
 import HenricusBoard from "@/components/HenricusBoard";
 import JoinInvite from "@/components/JoinInvite";
-import LevelCard, { LevelStrip } from "@/components/LevelCard";
+import LevelCard from "@/components/LevelCard";
 import { PushToggle } from "@/components/Notifications";
 import { ReleaseChar, useMe, usePostingChar } from "@/components/Social";
 import { ReactionMap } from "@/lib/social-client";
-import type { LevelUp } from "@/lib/levelup";
-import { TimelineItem, fetchExtras, fetchLevelUps, fetchTimeline, notifySocial, onSocialChange } from "@/lib/timeline";
+import { TimelineItem, fetchExtras, fetchTimeline, notifySocial, onSocialChange } from "@/lib/timeline";
 
 const EMPTY: ReactionMap = { counts: {}, mine: {} };
 
@@ -25,15 +24,13 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
   const [items, setItems] = useState<TimelineItem[] | null>(null);
   const [reactions, setReactions] = useState<ReactionMap>(EMPTY);
   const [comments, setComments] = useState<Record<string, number>>({});
-  const [ups, setUps] = useState<LevelUp[]>([]);
 
   const load = useCallback(
     (alive: () => boolean = () => true) =>
       fetchTimeline(guild).then(async (list) => {
-        const [x, recent] = await Promise.all([fetchExtras(list, me.userId), fetchLevelUps(guild, 1)]);
+        const x = await fetchExtras(list, me.userId);
         if (!alive()) return;
         setItems(list);
-        setUps(recent);
         setReactions(x.reactions);
         setComments(x.comments);
       }),
@@ -80,7 +77,6 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
         </div>
       )}
       {me.chars.length > 0 && <PushToggle compact />}
-      <LevelStrip ups={ups} />
       <Box title="🍺 Na mesa da Taverna">
         {items === null ? (
           <p className="muted">Abrindo a taverna...</p>

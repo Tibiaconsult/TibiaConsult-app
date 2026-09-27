@@ -1,4 +1,4 @@
-// Level up na Taverna: o Rashid comemora os marcos (25, 50, 75, 100 e de 50 em 50) sem perder a chance de zoar.
+// Level up na Taverna: o Rashid comemora os marcos de 50 em 50 (50, 100, 150...) sem perder a chance de zoar.
 // Sempre a mesma frase para o mesmo char e level.
 
 export interface LevelUp {

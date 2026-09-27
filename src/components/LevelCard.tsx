@@ -1,7 +1,6 @@
 "use client";
 
-// Marco de level na Taverna (25, 50, 75, 100 e de 50 em 50): o Rashid comemora, a galera reage e comenta.
-// Também a faixa "Subiram de level" com todos os level ups recentes.
+// Marco de level na Taverna (de 50 em 50): o Rashid comemora, a galera reage e comenta.
 
 import Link from "next/link";
 import { CommentThread, ReactionBar, type Me } from "@/components/Social";
@@ -25,6 +24,7 @@ export default function LevelCard({
   comments: number;
 }) {
   const key = levelKey(u.name, u.level);
+  const mark = u.milestone ?? u.level;
   return (
     <div
       id={key}
@@ -36,7 +36,7 @@ export default function LevelCard({
         {u.name}
       </Link>
       <span className="text-[12px]">
-        chegou no <b style={GOLD}>level {u.level}</b>
+        chegou no <b style={GOLD}>level {mark}</b>
         {u.vocation ? ` · ${u.vocation}` : ""}
         {u.world ? ` · ${u.world}` : ""}
       </span>
@@ -51,7 +51,7 @@ export default function LevelCard({
             className="absolute -left-1.5 top-3 w-0 h-0"
             style={{ borderTop: "6px solid transparent", borderBottom: "6px solid transparent", borderRight: "7px solid #fff3c4" }}
           />
-          🍻 {levelLine(u)}
+          🍻 {levelLine({ ...u, level: mark })}
           <div className="mt-0.5 text-[10px] opacity-70">
             — Rashid, erguendo a caneca · subiu do {u.from_level} para o {u.level}
           </div>
@@ -62,29 +62,6 @@ export default function LevelCard({
         <div className="flex-1 min-w-[200px]">
           <CommentThread type="level" targetKey={key} count={comments} me={me} charId={charId} dark />
         </div>
-      </div>
-    </div>
-  );
-}
-
-/** Faixa com todos que subiram de level nas últimas 24 horas. */
-export function LevelStrip({ ups }: { ups: LevelUp[] }) {
-  if (!ups.length) return null;
-  return (
-    <div className="rounded p-2 mb-3 text-[12px]" style={{ background: "#241a14", color: "#e8dcc8", border: "1px solid #5a4632" }}>
-      <b style={GOLD}>⬆️ Subiram de level nas últimas 24 h</b>
-      <div className="flex flex-wrap gap-1.5 mt-1">
-        {ups.map((u) => (
-          <Link
-            key={u.name + u.level}
-            href={`/char/${encodeURIComponent(u.name)}`}
-            className="rounded-full px-2 py-0.5 !no-underline whitespace-nowrap"
-            style={{ background: "#3a2a1a", color: "#e8dcc8", border: "1px solid #5a4632" }}
-            title={`${u.name}: ${u.from_level} → ${u.level}`}
-          >
-            {u.name} <b style={GOLD}>{u.level}</b>
-          </Link>
-        ))}
       </div>
     </div>
   );

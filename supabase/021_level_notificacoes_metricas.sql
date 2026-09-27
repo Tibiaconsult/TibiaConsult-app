@@ -2,7 +2,7 @@
 --
 -- Level up: todo snapshot novo (guildas a cada 3 h, chars na rotação de 10 min) compara com o maior level já visto do char.
 --   Passou do maior level: vira um level up. Perder level na morte e recuperar não conta de novo.
---   Os marcos (25, 50, 75, 100 e depois de 50 em 50) aparecem na Taverna.
+--   Só os marcos de 50 em 50 (50, 100, 150...) aparecem na Taverna e viram aviso.
 -- Notificações: comentário na morte ou no level do seu char, fofoca nova, morte e level up do seu char.
 --   O sino do site lê a tabela; o push vai por /api/push, chamado pelo pg_cron a cada minuto só quando há algo a enviar.
 --   As chaves (senha do /api/push e as chaves VAPID) ficam em private.settings, inseridas fora deste arquivo.
@@ -31,11 +31,10 @@ create table if not exists public.level_ups (
 create index if not exists level_ups_at on public.level_ups (at desc);
 alter table public.level_ups enable row level security;
 
--- marco cruzado entre dois levels: 25, 50, 75, 100, 150, 200...
+-- marco cruzado entre dois levels: 50, 100, 150, 200...
 create or replace function public.level_milestone(a integer, b integer) returns integer
 language sql immutable set search_path = public as $$
-  select case when b >= 100 and b / 50 > a / 50 then (b / 50) * 50
-              when b < 100 and b / 25 > a / 25 then (b / 25) * 25 end
+  select case when b / 50 > a / 50 then (b / 50) * 50 end
 $$;
 
 create or replace function public.snap_level_up() returns trigger
@@ -175,9 +174,10 @@ create trigger deaths_notify after insert on public.char_deaths for each row exe
 create or replace function public.levels_notify() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  perform public.tc_notify_owners(new.lname, null, 'level', '🎉 ' || new.name || ' chegou no level ' || new.level || '!',
+  if new.milestone is null then return null; end if;
+  perform public.tc_notify_owners(new.lname, null, 'level', '🎉 ' || new.name || ' chegou no level ' || new.milestone || '!',
     'O Rashid ergueu a caneca na Taverna. O Henricus já reajustou o preço da bless.',
-    case when new.milestone is not null then '/comunidade/taverna#' || new.lname || '|lvl' || new.level else '/char/' || replace(new.name, ' ', '%20') end);
+    '/comunidade/taverna#' || new.lname || '|lvl' || new.level);
   return null;
 end $$;
 drop trigger if exists levels_notify on public.level_ups;
