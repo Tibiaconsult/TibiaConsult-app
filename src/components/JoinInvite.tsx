@@ -37,15 +37,10 @@ export default function JoinInvite({ compact }: { compact?: boolean }) {
       style={{ background: "linear-gradient(#3a2410, #1e140c)", color: "#f3e3c3", border: "1px solid #8a6a2a" }}
     >
       <div className="flex items-start gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/rashid.webp"
-          alt="Rashid"
-          width={compact ? 36 : 52}
-          height={compact ? 36 : 52}
-          className="shrink-0 tc-rashid"
-          style={{ imageRendering: "pixelated" }}
-        />
+        {!compact && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/rashid.webp" alt="Rashid" width={52} height={52} className="shrink-0 tc-rashid" style={{ imageRendering: "pixelated" }} />
+        )}
         <div>
           <b style={GOLD} className={compact ? "" : "text-[15px]"}>
             Seu char já está aqui. 👀
