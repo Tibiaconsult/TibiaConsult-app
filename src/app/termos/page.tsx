@@ -84,7 +84,7 @@ export default function TermosPage() {
             </li>
             <li>
               Zoeira é bem-vinda; ofensa não. Proibido: preconceito, ataques pessoais, ameaças, dados pessoais de terceiros, golpes, venda de itens ou contas e
-              divulgação de bot/cheat. Palavrões leves são mascarados e termos ofensivos são bloqueados automaticamente.
+              divulgação de bot/cheat. Palavrão é liberado; termos preconceituosos são bloqueados automaticamente.
             </li>
             <li>
               Qualquer conta pode denunciar. Com 3 denúncias o conteúdo fica oculto até a moderação analisar. A moderação pode apagar conteúdo e remover contas

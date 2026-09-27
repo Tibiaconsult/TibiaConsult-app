@@ -36,11 +36,11 @@ create table if not exists public.blocked_words (
   action text not null check (action in ('mask', 'block'))
 );
 alter table public.blocked_words enable row level security;
+-- Palavrão é liberado (decisão de 27/09/2026); só termos preconceituosos são recusados. "mask" fica disponível se precisar.
 insert into public.blocked_words (word, action) values
-  ('porra', 'mask'), ('caralho', 'mask'), ('merda', 'mask'), ('puta', 'mask'), ('foda', 'mask'), ('fdp', 'mask'),
-  ('pqp', 'mask'), ('vsf', 'mask'), ('tnc', 'mask'), ('arrombado', 'mask'), ('buceta', 'mask'), ('cacete', 'mask'),
   ('viado', 'block'), ('traveco', 'block'), ('retardado', 'block'), ('mongoloide', 'block'), ('crioulo', 'block')
 on conflict (word) do nothing;
+delete from public.blocked_words where action = 'mask';
 
 create or replace function public.tc_clean_text(p text) returns text
 language plpgsql stable security definer set search_path = public as $$
