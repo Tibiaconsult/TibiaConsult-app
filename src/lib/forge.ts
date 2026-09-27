@@ -4,7 +4,9 @@
 // Convergência: garantida, aceita itens diferentes do mesmo slot, 130 dust + gold maior. Bônus de sorte da fusão não entram.
 
 export const FUSION_GOLD = [8_000_000, 20_000_000, 40_000_000, 65_000_000, 100_000_000, 250_000_000, 750_000_000, 2_500_000_000, 8_000_000_000, 15_000_000_000];
-export const CONVERGENCE_GOLD = [55_000_000, 110_000_000, 170_000_000, 300_000_000, 875_000_000, 2_350_000_000, 6_950_000_000, 21_250_000_000, 50_000_000_000, 125_000_000_000];
+export const CONVERGENCE_GOLD = [
+  55_000_000, 110_000_000, 170_000_000, 300_000_000, 875_000_000, 2_350_000_000, 6_950_000_000, 21_250_000_000, 50_000_000_000, 125_000_000_000,
+];
 export const FUSION_DUST = 100;
 export const CONVERGENCE_DUST = 130;
 

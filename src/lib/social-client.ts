@@ -5,7 +5,7 @@ import type { ReactionId } from "@/lib/social";
 
 export const hasDb = () => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
-export type TargetType = "post" | "death" | "comment";
+export type TargetType = "post" | "death" | "comment" | "gossip";
 
 export interface ReactionMap {
   counts: Record<string, Partial<Record<ReactionId, number>>>;
@@ -76,8 +76,39 @@ export async function removeRow(table: "posts" | "comments", id: string): Promis
   return error?.message ?? null;
 }
 
-export async function report(type: "post" | "comment", id: string, reason: string | null): Promise<string | null> {
+export async function report(type: "post" | "comment" | "gossip", id: string, reason: string | null): Promise<string | null> {
   const { error } = await createClient().from("reports").insert({ target_type: type, target_id: id, reason });
   if (error && /duplicate|unique/i.test(error.message)) return "Você já denunciou isso. Obrigado!";
   return error?.message ?? null;
+}
+
+// ---------------------------------------------------------------- fofocas pro Rashid (017)
+
+export interface Gossip {
+  id: string;
+  death_key: string;
+  about: string;
+  body: string;
+  created_at: string;
+}
+const GOSSIP_COLS = "id, death_key, about, body, created_at";
+
+/** Fofocas de várias mortes do mural de uma vez. */
+export async function loadGossips(keys: string[]): Promise<Record<string, Gossip[]>> {
+  if (!hasDb() || !keys.length) return {};
+  const { data } = await createClient().from("gossips").select(GOSSIP_COLS).eq("hidden", false).in("death_key", keys).order("created_at");
+  const out: Record<string, Gossip[]> = {};
+  for (const g of (data ?? []) as Gossip[]) (out[g.death_key] ??= []).push(g);
+  return out;
+}
+
+export async function recentGossips(n: number): Promise<Gossip[]> {
+  if (!hasDb()) return [];
+  const { data } = await createClient().from("gossips").select(GOSSIP_COLS).eq("hidden", false).order("created_at", { ascending: false }).limit(n);
+  return (data ?? []) as Gossip[];
+}
+
+export async function addGossip(deathKey: string, body: string): Promise<{ gossip?: Gossip; error?: string }> {
+  const { data, error } = await createClient().from("gossips").insert({ death_key: deathKey, body }).select(GOSSIP_COLS).single();
+  return error ? { error: error.message } : { gossip: data as Gossip };
 }

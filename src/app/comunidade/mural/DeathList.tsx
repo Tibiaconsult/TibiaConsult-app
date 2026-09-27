@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { RashidSays, TellRashid } from "@/components/Gossip";
 import { CommentThread, ReactionBar, useMe, usePostingChar } from "@/components/Social";
 import { deathCaption, deathKey } from "@/lib/social";
-import { ReactionMap, loadCommentCounts, loadReactions } from "@/lib/social-client";
+import { Gossip, ReactionMap, loadCommentCounts, loadGossips, loadReactions } from "@/lib/social-client";
 
 export interface Death {
   name: string;
@@ -35,13 +36,18 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
   const [charId] = usePostingChar(me);
   const [reactions, setReactions] = useState<ReactionMap>({ counts: {}, mine: {} });
   const [comments, setComments] = useState<Record<string, number>>({});
+  const [gossips, setGossips] = useState<Record<string, Gossip[]>>({});
+  const [gossipReactions, setGossipReactions] = useState<ReactionMap>({ counts: {}, mine: {} });
 
   useEffect(() => {
     if (!me.loaded) return;
     const keys = deaths.map((d) => deathKey(d.name, d.died_at));
-    Promise.all([loadReactions("death", keys, me.userId), loadCommentCounts("death", keys)]).then(([r, c]) => {
+    Promise.all([loadReactions("death", keys, me.userId), loadCommentCounts("death", keys), loadGossips(keys)]).then(async ([r, c, g]) => {
       setReactions(r);
       setComments(c);
+      setGossips(g);
+      const ids = Object.values(g).flatMap((list) => list.map((x) => x.id));
+      setGossipReactions(await loadReactions("gossip", ids, me.userId));
     });
   }, [deaths, me.loaded, me.userId]);
 
@@ -50,7 +56,12 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
       {deaths.map((d) => {
         const key = deathKey(d.name, d.died_at);
         return (
-          <li key={key} className="border border-[#5a4632] rounded p-2 flex flex-wrap gap-x-3 gap-y-1 items-baseline" style={{ background: "#241a14" }}>
+          <li
+            key={key}
+            id={key}
+            className="scroll-mt-24 border border-[#5a4632] rounded p-2 flex flex-wrap gap-x-3 gap-y-1 items-baseline"
+            style={{ background: "#241a14" }}
+          >
             <span className="text-[16px]">⚰️</span>
             <Link href={`/char/${encodeURIComponent(d.name)}`} className="font-bold text-[14px]" style={GOLD}>
               {d.name}
@@ -67,8 +78,14 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
             <div className="w-full text-[12px] italic" style={{ color: "#d8b98a" }}>
               “{deathCaption(d)}”
             </div>
+            {(gossips[key] ?? []).map((g) => (
+              <div key={g.id} className="w-full pt-1">
+                <RashidSays g={g} me={me} map={gossipReactions} />
+              </div>
+            ))}
             <div className="w-full flex flex-wrap items-start gap-3 pt-1">
               <ReactionBar type="death" targetKey={key} map={reactions} me={me} only={["f", "kkk", "palhaco"]} dark />
+              <TellRashid deathKey={key} who={d.name} me={me} onSent={(g) => setGossips((all) => ({ ...all, [key]: [...(all[key] ?? []), g] }))} />
               <div className="flex-1 min-w-[200px]">
                 <CommentThread type="death" targetKey={key} count={comments[key] ?? 0} me={me} charId={charId} dark />
               </div>

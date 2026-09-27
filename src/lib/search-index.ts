@@ -38,15 +38,20 @@ export function buildIndex(): SearchEntry[] {
   for (const v of VOC_IDS)
     for (const s of VOCATIONS[v].spells) push({ label: s.name, kind: `Magia · ${VOC_LABEL[v]}`, href: `/cooldowns?voc=${v}#spell-${s.id}`, extra: s.words });
 
-  for (const slot of SLOTS) for (const it of slot.items) for (const name of it.name.split(" / ")) push({ label: name.trim(), kind: `Item · Sorcerer · ${slot.name}`, href: `/equipamento#${slot.id}` });
-  for (const v of VOC_IDS) for (const r of VOC_EQUIPMENT[v] ?? []) push({ label: r.name, kind: `Item · ${VOC_LABEL[v]} · ${r.slot}`, href: `/equipamento?voc=${v}&slot=${encodeURIComponent(r.slot)}` });
+  for (const slot of SLOTS)
+    for (const it of slot.items)
+      for (const name of it.name.split(" / ")) push({ label: name.trim(), kind: `Item · Sorcerer · ${slot.name}`, href: `/equipamento#${slot.id}` });
+  for (const v of VOC_IDS)
+    for (const r of VOC_EQUIPMENT[v] ?? [])
+      push({ label: r.name, kind: `Item · ${VOC_LABEL[v]} · ${r.slot}`, href: `/equipamento?voc=${v}&slot=${encodeURIComponent(r.slot)}` });
   for (const r of [...JEWELRY, ...AMMO]) {
     const v = r.vocs.length === 1 ? r.vocs[0] : "knight";
     const who = r.vocs.length ? r.vocs.map((x) => VOC_LABEL[x]).join(", ") : "todas";
     push({ label: r.name, kind: `Item · ${r.slot} · ${who}`, href: `/equipamento?voc=${v}&slot=${encodeURIComponent(r.slot)}` });
   }
 
-  for (const im of IMBUEMENTS) push({ label: im.name, kind: `Imbuement · ${im.pt}`, href: `/ferramentas/imbuements#${im.id}`, extra: im.materials.map((m) => m.item).join(" ") });
+  for (const im of IMBUEMENTS)
+    push({ label: im.name, kind: `Imbuement · ${im.pt}`, href: `/ferramentas/imbuements#${im.id}`, extra: im.materials.map((m) => m.item).join(" ") });
 
   for (const b of BESTIARY) push({ label: b[0], kind: "Criatura · Bestiary", href: `/ferramentas/bestiario?q=${encodeURIComponent(b[0])}` });
 

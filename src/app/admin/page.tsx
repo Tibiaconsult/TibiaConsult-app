@@ -27,9 +27,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   // Moderação: tudo que tem denúncia ou está oculto
   const { data: reports } = await ctx.supabase.from("reports").select("target_type, target_id, reason").limit(500);
-  const reported = { post: new Set<string>(), comment: new Set<string>() };
-  for (const r of reports ?? []) reported[r.target_type as "post" | "comment"].add(r.target_id);
-  const [{ data: modPosts }, { data: modComments }] = await Promise.all([
+  const reported = { post: new Set<string>(), comment: new Set<string>(), gossip: new Set<string>() };
+  for (const r of reports ?? []) reported[r.target_type as "post" | "comment" | "gossip"]?.add(r.target_id);
+  const none = "00000000-0000-0000-0000-000000000000";
+  const [{ data: modPosts }, { data: modComments }, { data: modGossips }, { data: gossipAuthors }] = await Promise.all([
     ctx.supabase
       .from("posts")
       .select("id, char_name, body, hidden, created_at")
@@ -38,12 +39,24 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     ctx.supabase
       .from("comments")
       .select("id, char_name, body, hidden, created_at, target_type, target_key")
-      .or(`hidden.eq.true,id.in.(${[...reported.comment, "00000000-0000-0000-0000-000000000000"].join(",")})`)
+      .or(`hidden.eq.true,id.in.(${[...reported.comment, none].join(",")})`)
       .order("created_at", { ascending: false }),
+    ctx.supabase
+      .from("gossips")
+      .select("id, about, body, hidden, created_at")
+      .or(`hidden.eq.true,id.in.(${[...reported.gossip, none].join(",")})`)
+      .order("created_at", { ascending: false }),
+    ctx.supabase.rpc("admin_gossips"),
   ]);
+  const authorOf = new Map(((gossipAuthors ?? []) as { id: string; author: string }[]).map((a) => [a.id, a.author]));
   const queue = [
     ...(modPosts ?? []).map((x) => ({ ...x, type: "post" as const })),
     ...(modComments ?? []).map((x) => ({ ...x, type: "comment" as const })),
+    ...(modGossips ?? []).map((x) => ({
+      ...x,
+      char_name: `Fofoca sobre ${x.about} (contada por ${authorOf.get(x.id) ?? "?"})`,
+      type: "gossip" as const,
+    })),
   ].sort((a, b) => b.created_at.localeCompare(a.created_at));
   const reasons = (type: string, id: string) => (reports ?? []).filter((r) => r.target_type === type && r.target_id === id);
 
@@ -84,7 +97,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               return (
                 <div key={q.type + q.id} className="border border-[#b98a5a] rounded p-3 bg-white/40">
                   <div className="flex flex-wrap gap-2 items-center text-[11px]">
-                    <span className="tag tag-physical">{q.type === "post" ? "Causo" : "Comentário"}</span>
+                    <span className="tag tag-physical">{q.type === "post" ? "Causo" : q.type === "gossip" ? "Fofoca" : "Comentário"}</span>
                     {q.hidden && <span className="tag tag-death">oculto</span>}
                     <b>{q.char_name}</b>
                     <span className="muted">{new Date(q.created_at).toLocaleString("pt-BR")}</span>

@@ -11,7 +11,15 @@ import { EquipRow, VOC_EQUIPMENT } from "@/data/voc-equipment";
 export type SetVoc = "sorcerer" | "druid" | "knight" | "paladin" | "monk";
 
 const PT: Record<string, Element> = { físico: "physical", fogo: "fire", gelo: "ice", terra: "earth", energia: "energy", death: "death", holy: "holy" };
-export const EL_PT: Record<Element, string> = { physical: "físico", fire: "fogo", ice: "gelo", earth: "terra", energy: "energia", death: "death", holy: "holy" };
+export const EL_PT: Record<Element, string> = {
+  physical: "físico",
+  fire: "fogo",
+  ice: "gelo",
+  earth: "terra",
+  energy: "energia",
+  death: "death",
+  holy: "holy",
+};
 
 const INCOMING: [Element, RegExp][] = [
   ["physical", /melee|físic|physical|explosion|bolt|spear|stone|pedra|blast|scratch|claw|knife|arrow|bomb/gi],
@@ -89,7 +97,11 @@ export interface SetPick {
   why: string;
 }
 
-export function suggestSet(h: Hunt, voc: SetVoc, maxLevel: number): { picks: SetPick[]; offense: { el: Element; pct: number }[]; incoming: [Element, number][] } {
+export function suggestSet(
+  h: Hunt,
+  voc: SetVoc,
+  maxLevel: number,
+): { picks: SetPick[]; offense: { el: Element; pct: number }[]; incoming: [Element, number][] } {
   const prof = incomingProfile(h);
   const incomingTot = Object.values(prof).reduce((a, b) => a + b, 0) || 1;
   const incoming = (Object.entries(prof) as [Element, number][]).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
@@ -118,7 +130,14 @@ export function suggestSet(h: Hunt, voc: SetVoc, maxLevel: number): { picks: Set
     return {
       slot,
       item: cand,
-      why: slot === "Arma" ? (mage && best && (cand.sk?.[`${best} magic level`] ?? 0) > 0 ? `${EL_PT[best]} ML +${cand.sk[`${best} magic level`]}, ML +${cand.sk["magic level"] ?? 0}` : "maior level disponível até o level escolhido") : useful.length ? `protege de ${useful.map((el) => `${EL_PT[el]} +${res[el]}%`).join(", ")}` : "melhor opção disponível no level",
+      why:
+        slot === "Arma"
+          ? mage && best && (cand.sk?.[`${best} magic level`] ?? 0) > 0
+            ? `${EL_PT[best]} ML +${cand.sk[`${best} magic level`]}, ML +${cand.sk["magic level"] ?? 0}`
+            : "maior level disponível até o level escolhido"
+          : useful.length
+            ? `protege de ${useful.map((el) => `${EL_PT[el]} +${res[el]}%`).join(", ")}`
+            : "melhor opção disponível no level",
     };
   });
   return { picks, offense, incoming };

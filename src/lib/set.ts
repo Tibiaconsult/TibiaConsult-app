@@ -76,7 +76,12 @@ export const IMBUEMENTS: Record<string, { label: string; slots: SlotId[]; values
   dragonhide: { label: "Dragon Hide (fogo %)", slots: ["armor", "spellbook"], values: [3, 8, 15], apply: (s, v) => (s.prot.fire = (s.prot.fire ?? 0) + v) },
   snakeskin: { label: "Snake Skin (terra %)", slots: ["armor", "spellbook"], values: [3, 8, 15], apply: (s, v) => (s.prot.earth = (s.prot.earth ?? 0) + v) },
   quarascale: { label: "Quara Scale (gelo %)", slots: ["armor", "spellbook"], values: [3, 8, 15], apply: (s, v) => (s.prot.ice = (s.prot.ice ?? 0) + v) },
-  cloudfabric: { label: "Cloud Fabric (energia %)", slots: ["armor", "spellbook"], values: [3, 8, 15], apply: (s, v) => (s.prot.energy = (s.prot.energy ?? 0) + v) },
+  cloudfabric: {
+    label: "Cloud Fabric (energia %)",
+    slots: ["armor", "spellbook"],
+    values: [3, 8, 15],
+    apply: (s, v) => (s.prot.energy = (s.prot.energy ?? 0) + v),
+  },
   lichshroud: { label: "Lich Shroud (death %)", slots: ["armor", "spellbook"], values: [2, 5, 10], apply: (s, v) => (s.prot.death = (s.prot.death ?? 0) + v) },
   swiftness: { label: "Swiftness (velocidade)", slots: ["boots"], values: [10, 15, 30], apply: (s, v) => (s.speed += v) },
 };
@@ -141,9 +146,30 @@ export function computeSet(set: SetChoice): SetTotals {
 /** Set recomendado para o Master Sorcerer 800+ (ponto de partida do comparador). */
 export function recommendedSet(): SetChoice {
   const s = emptySet();
-  s.wand = { item: "Sanguine Coil", tier: 0, imbues: [{ kind: "epiphany", level: 3 }, { kind: "void", level: 3 }] };
-  s.helmet = { item: "Moonsilver Nimbus Hat", tier: 0, imbues: [{ kind: "epiphany", level: 3 }, { kind: "void", level: 3 }] };
-  s.armor = { item: "Soulmantle", tier: 0, imbues: [{ kind: "vampirism", level: 3 }, { kind: "lichshroud", level: 3 }] };
+  s.wand = {
+    item: "Sanguine Coil",
+    tier: 0,
+    imbues: [
+      { kind: "epiphany", level: 3 },
+      { kind: "void", level: 3 },
+    ],
+  };
+  s.helmet = {
+    item: "Moonsilver Nimbus Hat",
+    tier: 0,
+    imbues: [
+      { kind: "epiphany", level: 3 },
+      { kind: "void", level: 3 },
+    ],
+  };
+  s.armor = {
+    item: "Soulmantle",
+    tier: 0,
+    imbues: [
+      { kind: "vampirism", level: 3 },
+      { kind: "lichshroud", level: 3 },
+    ],
+  };
   s.legs = { item: "Soulshanks", tier: 0, imbues: [] };
   s.boots = { item: "Sanguine Boots", tier: 0, imbues: [{ kind: "swiftness", level: 3 }] };
   s.spellbook = { item: "Arcanomancer Folio", tier: 0, imbues: [{ kind: "dragonhide", level: 3 }] };
@@ -156,7 +182,10 @@ export function recommendedSet(): SetChoice {
 export function encodeSet(set: SetChoice): string {
   const parts = (Object.keys(set) as SlotId[]).map((slot) => {
     const c = set[slot];
-    const imb = c.imbues.filter((i) => i.level > 0).map((i) => `${i.kind}${i.level}`).join("+");
+    const imb = c.imbues
+      .filter((i) => i.level > 0)
+      .map((i) => `${i.kind}${i.level}`)
+      .join("+");
     return [slot, c.item ?? "", c.tier, imb].join("~");
   });
   return encodeURIComponent(parts.join("|"));

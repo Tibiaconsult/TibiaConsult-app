@@ -82,7 +82,11 @@ export const MENU: MenuGroup[] = [
       { href: "/simulador/forja", label: "Forja", keywords: "tier fusao convergencia exaltation" },
       { href: "/simulador/gemas", label: "Gemas: custo", keywords: "sage gem grade fragmentos" },
       { href: "/simulador/mana", label: "Magic Shield e mana", keywords: "utamo sustain potion" },
-      { href: "/ferramentas/calculadoras", label: "Exp, exercise, stamina e bless", keywords: "calculadora experiencia exercise weapons stamina blessing treino" },
+      {
+        href: "/ferramentas/calculadoras",
+        label: "Exp, exercise, stamina e bless",
+        keywords: "calculadora experiencia exercise weapons stamina blessing treino",
+      },
     ],
   },
   {

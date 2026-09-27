@@ -1,25 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { RASHID_PLACES as PLACES, tibiaWeekday } from "@/lib/rashid";
 
-// Rashid muda de cidade a cada server save (10h no horário de Berlim). Fonte: TibiaWiki, Rashid (consulta em 26/09/2026).
-const PLACES: Record<number, { city: string; where: string }> = {
-  1: { city: "Svargrond", where: "taverna do Dankwart, ao sul do templo" },
-  2: { city: "Liberty Bay", where: "taverna do Lyonel, a oeste do depot" },
-  3: { city: "Port Hope", where: "taverna do Clyde, a oeste do depot" },
-  4: { city: "Ankrahmun", where: "taverna do Arito, acima do correio" },
-  5: { city: "Darashia", where: "taverna da Miraia, ao sul das guildhalls" },
-  6: { city: "Edron", where: "taverna da Mirabell, acima do depot" },
-  0: { city: "Carlin", where: "depot, um andar acima" },
-};
-
-function tibiaWeekday(now: Date): number {
-  // horário de Berlim menos 10 horas = "dia do Tibia"
-  const berlin = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-  berlin.setHours(berlin.getHours() - 10);
-  return berlin.getDay();
-}
-
+// Rashid muda de cidade a cada server save (10h no horário de Berlim).
 export default function Rashid() {
   const [day, setDay] = useState<number | null>(null);
   /* eslint-disable react-hooks/set-state-in-effect */

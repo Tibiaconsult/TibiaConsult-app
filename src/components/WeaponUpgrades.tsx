@@ -14,8 +14,8 @@ export default function WeaponUpgrades({ voc }: { voc: string }) {
   return (
     <div className="space-y-4">
       <p className="text-[12px]">
-        Sanguine e Grand Sanguine são itens diferentes, e o mesmo vale para Moonsilver e Stellar Moonsilver. Ataque, skill, magic level e proteção
-        são iguais; a versão melhorada tem perks de proficiência mais fortes. Os demais perks são iguais nas duas.
+        Sanguine e Grand Sanguine são itens diferentes, e o mesmo vale para Moonsilver e Stellar Moonsilver. Ataque, skill, magic level e proteção são iguais; a
+        versão melhorada tem perks de proficiência mais fortes. Os demais perks são iguais nas duas.
       </p>
       {groups.map((g) => (
         <div key={g.top + g.kinds.join()}>

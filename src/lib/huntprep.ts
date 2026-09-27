@@ -76,7 +76,9 @@ export interface ImbuePick {
 /** Elementos que mais batem, sem o físico (não há imbuement de proteção física). */
 function protOrder(h: Hunt): Element[] {
   // com dano da wiki para os bichos: ordem pelo peso do dano de cada elemento no lure
-  const dmg = incomingDamage(h).rows.filter((r) => PROT_IMB[r.el as Element]).map((r) => r.el as Element);
+  const dmg = incomingDamage(h)
+    .rows.filter((r) => PROT_IMB[r.el as Element])
+    .map((r) => r.el as Element);
   if (dmg.length) return dmg;
   // sem dados: elementos citados no texto dos ataques da ficha
   const p = incomingProfile(h);
