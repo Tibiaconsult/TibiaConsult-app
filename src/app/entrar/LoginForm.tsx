@@ -11,9 +11,9 @@ type Mode = "senha" | "link" | "criar";
 /** Versão do texto de /termos aceita no cadastro (fica gravada nos metadados da conta). */
 const TERMS_VERSION = "2026-09-26";
 
-export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
+export default function LoginForm({ next = "/minha-area", create = false }: { next?: string; create?: boolean }) {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>("senha");
+  const [mode, setMode] = useState<Mode>(create ? "criar" : "senha");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");

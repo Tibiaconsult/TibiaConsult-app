@@ -109,10 +109,27 @@ export default async function CharProfilePage({ params }: Props) {
 
       {!p.registered && (
         <Box title="💬 Esse char é seu?">
-          <p className="text-[12px]">
-            {p.name} ainda não tem conta no site. <Link href="/entrar">Entre</Link>, cadastre o char em <Link href="/meus-chars">Meus chars</Link> e libere na
-            comunidade para comentar as mortes na <Link href="/comunidade/taverna">Taverna</Link> e contar fofoca pro Rashid.
-          </p>
+          <div className="flex items-start gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/rashid.webp" alt="Rashid" width={48} height={48} className="shrink-0" style={{ imageRendering: "pixelated" }} />
+            <div className="text-[12px] space-y-1.5">
+              <p>
+                <b>
+                  O Rashid já anda falando de {p.name} na <Link href="/comunidade/taverna">Taverna</Link>.
+                </b>{" "}
+                Quer responder? Crie a conta, cadastre o char e libere com um clique: você comenta as mortes e os level ups, conta fofoca pro Rashid e recebe
+                aviso no celular quando alguém zoar a sua morte.
+              </p>
+              <p className="flex flex-wrap gap-2 items-center">
+                <Link href="/entrar?modo=criar&next=/meus-chars" className="tc-btn !no-underline">
+                  Criar conta grátis
+                </Link>
+                <span className="muted text-[11px]">
+                  Já tem conta? <Link href="/entrar?next=/meus-chars">Entre</Link> e cadastre o char em Meus chars.
+                </span>
+              </p>
+            </div>
+          </div>
         </Box>
       )}
     </div>

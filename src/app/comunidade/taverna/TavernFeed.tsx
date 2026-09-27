@@ -8,6 +8,9 @@ import { useCallback, useEffect, useState } from "react";
 import Box from "@/components/Box";
 import DeathCard from "@/components/DeathCard";
 import HenricusBoard from "@/components/HenricusBoard";
+import JoinInvite from "@/components/JoinInvite";
+import LevelCard from "@/components/LevelCard";
+import { PushToggle } from "@/components/Notifications";
 import { ReleaseChar, useMe, usePostingChar } from "@/components/Social";
 import { ReactionMap } from "@/lib/social-client";
 import { TimelineItem, fetchExtras, fetchTimeline, notifySocial, onSocialChange } from "@/lib/timeline";
@@ -34,6 +37,17 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
     [guild, me.userId],
   );
 
+  // veio de um aviso (/comunidade/taverna#chave): rola até o item quando a lista chegar
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    if (scrolled || !items?.length || !window.location.hash) return;
+    const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.style.outline = "2px solid #f3d27a";
+    requestAnimationFrame(() => setScrolled(true));
+  }, [items, scrolled]);
+
   useEffect(() => {
     if (!me.loaded) return;
     let alive = true;
@@ -47,7 +61,8 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
 
   return (
     <>
-      {me.loaded && !charId && (
+      {me.loaded && !me.userId && <JoinInvite />}
+      {me.loaded && me.userId && !charId && (
         <Box title="💬 Quer comentar?">
           <ReleaseChar me={me} />
         </Box>
@@ -61,6 +76,7 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
           ))}
         </div>
       )}
+      {me.chars.length > 0 && <PushToggle compact />}
       <Box title="🍺 Na mesa da Taverna">
         {items === null ? (
           <p className="muted">Abrindo a taverna...</p>
@@ -70,15 +86,19 @@ export default function TavernFeed({ guilds }: { guilds: string[] }) {
           <ul className="space-y-3">
             {items.map((it) => (
               <li key={it.id}>
-                <DeathCard
-                  d={it.death}
-                  gossips={it.gossips}
-                  me={me}
-                  charId={charId}
-                  reactions={reactions}
-                  comments={comments[it.id] ?? 0}
-                  onGossip={() => notifySocial()}
-                />
+                {it.level ? (
+                  <LevelCard u={it.level} me={me} charId={charId} reactions={reactions} comments={comments[it.id] ?? 0} />
+                ) : (
+                  <DeathCard
+                    d={it.death}
+                    gossips={it.gossips}
+                    me={me}
+                    charId={charId}
+                    reactions={reactions}
+                    comments={comments[it.id] ?? 0}
+                    onGossip={() => notifySocial()}
+                  />
+                )}
               </li>
             ))}
           </ul>

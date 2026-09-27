@@ -5,7 +5,8 @@ import type { ReactionId } from "@/lib/social";
 
 export const hasDb = () => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
-export type TargetType = "post" | "death" | "comment" | "gossip";
+export type TargetType = "post" | "death" | "comment" | "gossip" | "level";
+export type CommentTarget = "post" | "death" | "level";
 
 export interface ReactionMap {
   counts: Record<string, Partial<Record<ReactionId, number>>>;
@@ -43,7 +44,7 @@ export interface Comment {
 }
 
 /** Quantos comentários cada alvo tem (para mostrar "3 comentários" sem carregar tudo). */
-export async function loadCommentCounts(type: "post" | "death", keys: string[]): Promise<Record<string, number>> {
+export async function loadCommentCounts(type: CommentTarget, keys: string[]): Promise<Record<string, number>> {
   if (!hasDb() || !keys.length) return {};
   const { data } = await createClient().from("comments").select("target_key").eq("target_type", type).in("target_key", keys);
   const out: Record<string, number> = {};
@@ -51,7 +52,7 @@ export async function loadCommentCounts(type: "post" | "death", keys: string[]):
   return out;
 }
 
-export async function loadComments(type: "post" | "death", key: string): Promise<Comment[]> {
+export async function loadComments(type: CommentTarget, key: string): Promise<Comment[]> {
   const { data } = await createClient()
     .from("comments")
     .select("id, user_id, char_name, body, created_at")
@@ -62,7 +63,7 @@ export async function loadComments(type: "post" | "death", key: string): Promise
   return (data ?? []) as Comment[];
 }
 
-export async function addComment(charId: string, type: "post" | "death", key: string, body: string): Promise<{ comment?: Comment; error?: string }> {
+export async function addComment(charId: string, type: CommentTarget, key: string, body: string): Promise<{ comment?: Comment; error?: string }> {
   const { data, error } = await createClient()
     .from("comments")
     .insert({ char_id: charId, target_type: type, target_key: key, body })

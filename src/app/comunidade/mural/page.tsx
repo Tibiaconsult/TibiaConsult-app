@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import DeathList, { Death } from "./DeathList";
 import { GuildTabs, loadGuilds, pickGuild } from "@/components/Guilds";
+import JoinInvite from "@/components/JoinInvite";
 
 export const metadata = { title: "Caixão e Vela Preta" };
 export const dynamic = "force-dynamic";
@@ -23,6 +24,7 @@ export default async function MuralPage({ searchParams }: { searchParams: Promis
         O mural das mortes da nossa turma: deixe seu F, ria (com respeito) e comente. Aparecem todos os membros das guildas acompanhadas e os chars liberados na
         comunidade. As mortes vêm do tibia.com, que mostra as dos últimos 30 dias; daqui para a frente o mural guarda todas.
       </p>
+      <JoinInvite />
       <GuildTabs guilds={guilds} current={guild} href={(x) => (x ? `/comunidade/mural?g=${encodeURIComponent(x)}` : "/comunidade/mural")} />
       <section className="tc-panel">
         <div className="tc-title">🕯️ Descansem em paz 🕯️</div>

@@ -54,6 +54,14 @@ export default function TermosPage() {
               público mesmo sem conta. Quem não quiser aparecer pede pelo <Link href="/feedback">Reportar ou sugerir</Link> e o char sai de todas as páginas.
             </li>
             <li>Comentários, fofocas, reações e denúncias que você fizer na comunidade.</li>
+            <li>
+              Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars), apagados depois de 60 dias. Se você ligar as notificações, o
+              endereço de entrega que o navegador cria para este aparelho; desligar apaga o endereço.
+            </li>
+            <li>
+              Contagem de visitas: a página vista, o dia e um código aleatório criado no seu navegador, sem IP e sem cookie de terceiros. Serve só para saber
+              quantas pessoas usam o site. Apagado depois de 180 dias.
+            </li>
           </ul>
           <p>
             Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você liberar um char na

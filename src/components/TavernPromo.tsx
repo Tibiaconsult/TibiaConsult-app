@@ -5,9 +5,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import JoinInvite from "@/components/JoinInvite";
 import { timeAgo } from "@/lib/social";
 import { BOZO_SAYS } from "@/lib/bozo";
 import { YASIR_SAYS } from "@/lib/yasir";
+import { levelLine } from "@/lib/levelup";
 import { gossipLines, rashidRumor } from "@/lib/rashid";
 import { hasDb } from "@/lib/social-client";
 import { TimelineItem, fetchTimeline, onSocialChange } from "@/lib/timeline";
@@ -96,6 +98,13 @@ export default function TavernPromo() {
             <div>
               Ninguém morreu ainda. <b style={{ color: "#f3d27a" }}>Por enquanto.</b>
             </div>
+          ) : top.level ? (
+            <>
+              <div className="text-[10px] opacity-75">
+                🎉 Level up · {top.level.name} chegou no {top.level.milestone ?? top.level.level} {timeAgo(top.level.at)}
+              </div>
+              <div className="line-clamp-3">{levelLine({ ...top.level, level: top.level.milestone ?? top.level.level })}</div>
+            </>
           ) : top.gossips.length ? (
             <>
               <div className="text-[10px] opacity-75">🤫 Fofoca fresquinha · {timeAgo(top.gossips[top.gossips.length - 1].created_at)}</div>
@@ -120,6 +129,9 @@ export default function TavernPromo() {
             Entrar na Taverna →
           </Link>
         )}
+        <div className="relative mt-2">
+          <JoinInvite compact />
+        </div>
       </div>
     </div>
   );
