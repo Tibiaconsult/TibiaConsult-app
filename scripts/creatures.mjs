@@ -119,22 +119,37 @@ function loot(field) {
   return items;
 }
 
-/** Chance real de cada item: o bloco {{Loot2}} com mais kills da página Loot Statistics. */
+/** Chance real de cada item pela página Loot Statistics. Cada bloco {{Loot2}} é de uma versão do jogo e o loot muda entre elas
+ * (ex.: Gore Horn deixa Crystal Coin em 30% na 8.6 e 20% na 14.00), então vale o bloco da versão mais nova que tenha pelo menos
+ * MIN_KILLS kills; se nenhum tiver, o de mais kills. */
+const MIN_KILLS = 200;
+const lootKey = (n) => n.trim().replace(/\s*\(item\)$/i, "").toLowerCase();
+const verKey = (v) => (v ?? "").split(/[^\d]+/).filter(Boolean).slice(0, 3).map(Number);
+const newer = (a, b) => {
+  const x = verKey(a);
+  const y = verKey(b);
+  for (let i = 0; i < 3; i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) > (y[i] ?? 0);
+  return false;
+};
 function lootStats(txt) {
-  let best = null;
+  const blocks = [];
   for (const t of templates(txt ?? "")) {
     if (!/^Loot2/i.test(t)) continue;
     const p = params(t);
     const kills = num(p.find((x) => /^kills\s*=/i.test(x))?.split("=")[1]);
-    if (!kills || (best && best.kills >= kills)) continue;
+    if (!kills) continue;
+    const version = p.find((x) => /^version\s*=/i.test(x))?.split("=")[1].trim() ?? "";
     const drops = {};
     for (const x of p) {
       const m = x.match(/^([^,=]+),\s*times:\s*(\d+)/);
-      if (m && m[1].trim() !== "Empty") drops[m[1].trim().toLowerCase()] = Number(m[2]);
+      const name = m && lootKey(m[1]);
+      if (m && name !== "empty") drops[name] = (drops[name] ?? 0) + Number(m[2]);
     }
-    best = { kills, drops };
+    blocks.push({ kills, version, drops });
   }
-  return best;
+  const enough = blocks.filter((b) => b.kills >= MIN_KILLS);
+  if (enough.length) return enough.reduce((a, b) => (newer(b.version, a.version) ? b : a));
+  return blocks.reduce((a, b) => (b.kills > a.kills ? b : a), blocks[0] ?? null);
 }
 
 const MODS = ["physical", "earth", "fire", "death", "energy", "holy", "ice", "hpdrain", "drown", "heal"];
@@ -178,7 +193,7 @@ for (let k = 0; k < list.length; k += 25) {
       location: clean((ib.location ?? "").replace(/<[^>]+>/g, " ")).slice(0, 400) || null,
       kills: stats?.kills ?? null,
       loot: loot(ib.loot).map((it) => {
-        const times = stats?.drops[it.name.toLowerCase()];
+        const times = stats?.drops[lootKey(it.name)];
         return { ...it, chance: stats && times !== undefined ? Math.round((times / stats.kills) * 1000) / 10 : null };
       }),
     };
