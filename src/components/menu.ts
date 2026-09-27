@@ -20,7 +20,9 @@ export const MENU: MenuGroup[] = [
     icon: "news",
     items: [
       { href: "/", label: "Bem-vindo", keywords: "home inicio boosted rashid" },
-      { href: "/novidades", label: "Novidades", keywords: "noticias atualizacoes" },
+      { href: "/tibia/calendario", label: "Calendário do Tibia", keywords: "eventos double xp rapid respawn halloween natal evento calendario" },
+      { href: "/tibia/noticias", label: "Notícias do Tibia", keywords: "news noticias tibia.com anuncio atualizacao" },
+      { href: "/novidades", label: "Novidades do site", keywords: "atualizacoes changelog site" },
       { href: "/instalar", label: "Instalar o app", keywords: "app instalar celular pc windows barra de tarefas fixar tela inicial iphone android" },
       { href: "/feedback", label: "Reportar ou sugerir", keywords: "bug erro sugestao feedback" },
     ],

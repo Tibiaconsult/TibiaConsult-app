@@ -102,12 +102,6 @@ export async function loadGossips(keys: string[]): Promise<Record<string, Gossip
   return out;
 }
 
-export async function recentGossips(n: number): Promise<Gossip[]> {
-  if (!hasDb()) return [];
-  const { data } = await createClient().from("gossips").select(GOSSIP_COLS).eq("hidden", false).order("created_at", { ascending: false }).limit(n);
-  return (data ?? []) as Gossip[];
-}
-
 export async function addGossip(deathKey: string, body: string): Promise<{ gossip?: Gossip; error?: string }> {
   const { data, error } = await createClient().from("gossips").insert({ death_key: deathKey, body }).select(GOSSIP_COLS).single();
   return error ? { error: error.message } : { gossip: data as Gossip };

@@ -8,6 +8,7 @@ import { useActive } from "@/lib/active";
 import { REACTIONS, ReactionId, timeAgo } from "@/lib/social";
 import { Comment, ReactionMap, TargetType, addComment, hasDb, loadComments, removeRow, report, setReaction } from "@/lib/social-client";
 import { createClient } from "@/lib/supabase/client";
+import { notifySocial } from "@/lib/timeline";
 
 export interface Me {
   userId: string | null;
@@ -285,6 +286,7 @@ export function CommentThread({
     if (r.error) return setMsg(friendlyError(r.error));
     setList((l) => [...(l ?? []), r.comment!]);
     setText("");
+    notifySocial();
   }
 
   const link = dark ? { color: "#f3d27a" } : undefined;
