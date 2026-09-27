@@ -1,4 +1,4 @@
-// Level mínimo recomendado por vocação (solo) e para time, por hunt.
+// Level mínimo recomendado por vocação (solo) e para PT, por hunt.
 // Fonte: TibiaPal, Hunting Places (tibiapal.com/hunting), abas Knight, Paladin, Monk, Sorcerer, Druid e Teamhunts,
 // dados refeitos depois do rebalanceamento de 06/2026. Consulta em 26/09/2026.
 // Quando o TibiaPal separa andares com levels diferentes, vale o menor e o detalhe vai em `detail`.
@@ -37,35 +37,35 @@ export const HUNT_RECS: Record<string, HuntRec> = {
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
     detail: "TibiaPal: Warzone 9 (knight não listado).",
   },
-  "grounds-of-plague": { solo: { knight: 700, monk: 500 }, team: 500, style: { knight: "Energia", monk: "Energia" }, detail: "TibiaPal: Feru Plague Seal. Time: Feru Seals a partir de 500." },
+  "grounds-of-plague": { solo: { knight: 700, monk: 500 }, team: 500, style: { knight: "Energia", monk: "Energia" }, detail: "TibiaPal: Feru Plague Seal. PT: Feru Seals a partir de 500." },
   "grounds-of-fire": {
     solo: { paladin: 1000, sorcerer: 800, druid: 600, monk: 600 },
     team: 500,
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Avalanche", monk: "Físico" },
-    detail: "TibiaPal: Feru Mazoran (o Mazoran é o boss do Grounds of Fire). Time: Feru Seals a partir de 500.",
+    detail: "TibiaPal: Feru Mazoran (o Mazoran é o boss do Grounds of Fire). PT: Feru Seals a partir de 500.",
   },
   "grounds-of-destruction": {
     solo: { paladin: 1000, sorcerer: 800, druid: 600, monk: 600 },
     team: 500,
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Thunderstorm", monk: "Energia" },
-    detail: "TibiaPal: Feru Juggernauts. Time: Feru Seals a partir de 500.",
+    detail: "TibiaPal: Feru Juggernauts. PT: Feru Seals a partir de 500.",
   },
   "grounds-of-undeath": {
     solo: { paladin: 800, sorcerer: 800, druid: 600, monk: 600 },
     team: 500,
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Glacier + Thunderstorm", monk: "Físico ou energia" },
-    detail: "TibiaPal: Feru Undead Dragons. Time: Feru Seals a partir de 500.",
+    detail: "TibiaPal: Feru Undead Dragons. PT: Feru Seals a partir de 500.",
   },
   "grounds-of-damnation": {
     solo: { knight: 800, paladin: 1000, monk: 600 },
     team: 500,
     style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", monk: "Físico" },
-    detail: "TibiaPal: Feru DT Seal (Dark Torturer). Time: Feru Seals a partir de 500.",
+    detail: "TibiaPal: Feru DT Seal (Dark Torturer). PT: Feru Seals a partir de 500.",
   },
   ...Object.fromEntries(
     ["grounds-of-deceit", "grounds-of-despair"].map((id) => [
       id,
-      { solo: {}, team: 500, detail: "O TibiaPal cita também os selos Pumin e Infernatil e a Feru Way sem dizer a qual Ground correspondem; aqui fica só o nível de time (Feru Seals, 500+)." },
+      { solo: {}, team: 500, detail: "O TibiaPal cita também os selos Pumin e Infernatil e a Feru Way sem dizer a qual Ground correspondem; aqui fica só o level de PT (Feru Seals, 500+)." },
     ]),
   ),
   "cobra-bastion": {
@@ -93,18 +93,18 @@ export const HUNT_RECS: Record<string, HuntRec> = {
   ...Object.fromEntries(
     ["ebb-and-flow", "furious-crater", "claustrophobic-inferno", "rotten-wasteland", "mirrored-nightmare"].map((id) => [
       id,
-      { solo: {}, team: 600, detail: "O TibiaPal lista as áreas do Soul War só como hunt de time, a partir de 600." },
+      { solo: {}, team: 600, detail: "O TibiaPal lista as áreas do Soul War só como hunt de PT, a partir de 600." },
     ]),
   ),
   ...Object.fromEntries(
-    ["monster-graveyard", "sparkling-pools"].map((id) => [id, { solo: {}, team: 600, detail: "O TibiaPal lista Gnomprona só como hunt de time, a partir de 600." }]),
+    ["monster-graveyard", "sparkling-pools"].map((id) => [id, { solo: {}, team: 600, detail: "O TibiaPal lista Gnomprona só como hunt de PT, a partir de 600." }]),
   ),
   ...Object.fromEntries(
-    ["jaded-roots", "gloom-pillars", "darklight-core"].map((id) => [id, { solo: {}, team: 800, detail: "O TibiaPal lista Rotten Blood só como hunt de time, a partir de 800." }]),
+    ["jaded-roots", "gloom-pillars", "darklight-core"].map((id) => [id, { solo: {}, team: 800, detail: "O TibiaPal lista Rotten Blood só como hunt de PT, a partir de 800." }]),
   ),
-  "radiant-ascendancy": { solo: {}, team: 1000, detail: "O TibiaPal lista Radiant Ascendancy como hunt de time, a partir de 1000." },
-  "radiant-skyhold": { solo: {}, team: 1200, detail: "O TibiaPal lista Radiant Skyhold como hunt de time, a partir de 1200." },
-  "unhallowed-crypt": { solo: {}, team: 800, detail: "O TibiaPal lista Unhallowed Crypt como hunt de time, a partir de 800." },
+  "radiant-ascendancy": { solo: {}, team: 1000, detail: "O TibiaPal lista Radiant Ascendancy como hunt de PT, a partir de 1000." },
+  "radiant-skyhold": { solo: {}, team: 1200, detail: "O TibiaPal lista Radiant Skyhold como hunt de PT, a partir de 1200." },
+  "unhallowed-crypt": { solo: {}, team: 800, detail: "O TibiaPal lista Unhallowed Crypt como hunt de PT, a partir de 800." },
   "forsaken-crypt": {
     solo: { paladin: 1000, sorcerer: 1000, druid: 1000 },
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", druid: "Forked Thorns + Forked Glacier" },
@@ -123,7 +123,7 @@ export const HUNT_RECS: Record<string, HuntRec> = {
   ...Object.fromEntries(
     ["secret-library-fire", "secret-library-energy", "secret-library-ice"].map((id) => [
       id,
-      { solo: { monk: 1000 }, team: 500, style: { monk: "Terra" }, detail: "TibiaPal: monk solo 1000+ nas alas de energia, fogo e gelo; time a partir de 500." },
+      { solo: { monk: 1000 }, team: 500, style: { monk: "Terra" }, detail: "TibiaPal: monk solo 1000+ nas alas de energia, fogo e gelo; PT a partir de 500." },
     ]),
   ),
 
@@ -158,12 +158,12 @@ export const HUNT_RECS: Record<string, HuntRec> = {
   putrefactory: {
     solo: {},
     team: 800,
-    detail: "O TibiaPal lista Rotten Blood só como hunt de time, a partir de 800.",
+    detail: "O TibiaPal lista Rotten Blood só como hunt de PT, a partir de 800.",
   },
   "crystal-enigma": {
     solo: {},
     team: 600,
-    detail: "O TibiaPal lista Gnomprona só como hunt de time, a partir de 600.",
+    detail: "O TibiaPal lista Gnomprona só como hunt de PT, a partir de 600.",
   },
   "podzilla-quaras": {
     solo: { paladin: 1000, sorcerer: 800, druid: 800, monk: 1000 },
@@ -179,7 +179,7 @@ export const HUNT_RECS: Record<string, HuntRec> = {
     solo: { knight: 600, paladin: 600, sorcerer: 600, druid: 500, monk: 600 },
     team: 400,
     style: { sorcerer: "Fogo", druid: "Forked Thorns + Forked Glacier", knight: "Gelo ou terra", monk: "Terra" },
-    detail: "Fortress a partir dos levels acima. Dungeons: knight 800, paladin 600 (oeste) e 700 (leste), druid 600, monk 700. Time: Dungeons a partir de 400.",
+    detail: "Fortress a partir dos levels acima. Dungeons: knight 800, paladin 600 (oeste) e 700 (leste), druid 600, monk 700. PT: Dungeons a partir de 400.",
   },
   "falcon-bastion": {
     solo: { paladin: 500, sorcerer: 400, druid: 400, monk: 400 },
