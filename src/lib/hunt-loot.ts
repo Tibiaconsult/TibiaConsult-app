@@ -36,7 +36,10 @@ export interface HuntDropsData {
 export function huntDrops(h: Hunt): HuntDropsData {
   // peso de cada creature no lure: a quantidade no respawn, quando existe; senão o peso da ficha
   const spawn = HUNT_SPAWNS[h.id]?.counts;
-  const weight = (c: Hunt["creatures"][number]) => (spawn ? (spawn[c.name] ?? 0) : (c.weight ?? 1));
+  // creature da ficha sem spawn no arquivo (aparece por mecânica, como as Apparitions, ou faltou no Canary): entra com a
+  // menor quantidade do respawn, para o loot dela não sumir da conta
+  const minSpawn = spawn ? Math.min(...Object.values(spawn)) : 1;
+  const weight = (c: Hunt["creatures"][number]) => (spawn ? (spawn[c.name] ?? minSpawn) : (c.weight ?? 1));
   const totalW = h.creatures.reduce((a, c) => a + weight(c), 0) || 1;
   const acc = new Map<string, HuntDrop>();
   let gold = 0;
@@ -56,7 +59,7 @@ export function huntDrops(h: Hunt): HuntDropsData {
       const d = acc.get(l.name) ?? { item: l.name, value, chance: 0, from: [], perKill: 0 };
       d.perKill += ev;
       d.chance = Math.max(d.chance, chance);
-      d.from.push(c.name);
+      if (!d.from.includes(c.name)) d.from.push(c.name);
       acc.set(l.name, d);
     }
   }

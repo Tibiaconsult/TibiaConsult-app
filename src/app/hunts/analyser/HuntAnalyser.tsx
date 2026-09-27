@@ -18,6 +18,8 @@ interface SessionRow {
   level: number;
   hunt_id: string;
   minutes: number;
+  xp: number;
+  balance: number;
   xp_h: number;
   profit_h: number;
   created_at: string;
@@ -66,7 +68,7 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
   const load = () =>
     createClient()
       .from("hunt_sessions")
-      .select("id, char_name, vocation, level, hunt_id, minutes, xp_h, profit_h, created_at")
+      .select("id, char_name, vocation, level, hunt_id, minutes, xp, balance, xp_h, profit_h, created_at")
       .gte("created_at", new Date(Date.now() - 180 * 86_400_000).toISOString())
       .order("created_at", { ascending: false })
       .limit(2000)
@@ -77,18 +79,20 @@ export default function HuntAnalyser({ hunts }: { hunts: HuntRef[] }) {
 
   const ranking = useMemo(() => {
     const [, lo, hi] = BANDS[band];
-    const m = new Map<string, { n: number; xp: number; profit: number; best: SessionRow }>();
+    // médias ponderadas pelo tempo: XP e lucro somados divididos pelas horas somadas (uma sessão de 5 min não pesa como uma de 6 h)
+    const m = new Map<string, { n: number; xp: number; profit: number; min: number; best: SessionRow }>();
     for (const r of rows ?? []) {
       if ((voc && vocKey(r.vocation) !== voc) || r.level < lo || r.level > hi) continue;
-      const a = m.get(r.hunt_id) ?? { n: 0, xp: 0, profit: 0, best: r };
+      const a = m.get(r.hunt_id) ?? { n: 0, xp: 0, profit: 0, min: 0, best: r };
       a.n++;
-      a.xp += Number(r.xp_h);
-      a.profit += Number(r.profit_h);
+      a.xp += Number(r.xp);
+      a.profit += Number(r.balance);
+      a.min += Number(r.minutes);
       if (Number(r.xp_h) > Number(a.best.xp_h)) a.best = r;
       m.set(r.hunt_id, a);
     }
     return [...m]
-      .map(([id, a]) => ({ id, n: a.n, xp: a.xp / a.n, profit: a.profit / a.n, best: a.best }))
+      .map(([id, a]) => ({ id, n: a.n, xp: (a.xp * 60) / (a.min || 1), profit: (a.profit * 60) / (a.min || 1), best: a.best }))
       .sort((a, b) => (sort === "xp" ? b.xp - a.xp : b.profit - a.profit));
   }, [rows, voc, band, sort]);
 

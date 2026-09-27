@@ -15,6 +15,9 @@ export const SUPPLY_PRICE: Record<string, number> = {
   "Ultimate Mana Potion": 488,
   "Great Mana Potion": 158,
   "Strong Mana Potion": 108,
+  "Mana Potion": 56,
+  "Strong Health Potion": 115,
+  "Health Potion": 50,
   "Avalanche Rune": 64,
   "Great Fireball Rune": 64,
   "Thunderstorm Rune": 52,
@@ -28,16 +31,20 @@ export interface Supply {
 }
 
 function potions(voc: Voc, level: number): Supply[] {
+  // requisitos de level da TibiaWiki: Great 80+, Ultimate 130+, Supreme 200+, Strong 50+ (Great Mana liberada para todas em 2026)
   const out: Supply[] = [];
+  const mana = level >= 80 ? "Great Mana Potion" : level >= 50 ? "Strong Mana Potion" : "Mana Potion";
   if (voc === "knight") {
-    const hp = level >= 200 ? "Supreme Health Potion" : level >= 130 ? "Ultimate Health Potion" : "Great Health Potion";
+    const hp =
+      level >= 200 ? "Supreme Health Potion" : level >= 130 ? "Ultimate Health Potion" : level >= 80 ? "Great Health Potion" : level >= 50 ? "Strong Health Potion" : "Health Potion";
     out.push({ item: hp, why: "cura principal do knight" });
-    out.push({ item: level >= 80 ? "Great Mana Potion" : "Strong Mana Potion", why: "mana para as magias de área" });
+    out.push({ item: mana, why: "mana para as magias de área" });
   } else if (voc === "paladin" || voc === "monk") {
-    out.push({ item: level >= 130 ? "Ultimate Spirit Potion" : "Great Spirit Potion", why: "cura e mana juntas" });
-    out.push({ item: "Great Mana Potion", why: "quando sobra vida e falta mana" });
+    if (level >= 80) out.push({ item: level >= 130 ? "Ultimate Spirit Potion" : "Great Spirit Potion", why: "cura e mana juntas" });
+    else out.push({ item: level >= 50 ? "Strong Health Potion" : "Health Potion", why: "cura (Great Spirit só a partir do level 80)" });
+    out.push({ item: mana, why: level >= 80 ? "quando sobra vida e falta mana" : "mana para as magias" });
   } else {
-    out.push({ item: level >= 130 ? "Ultimate Mana Potion" : "Great Mana Potion", why: "mana para atacar e curar (a vida vem da magia)" });
+    out.push({ item: level >= 130 ? "Ultimate Mana Potion" : mana, why: "mana para atacar e curar (a vida vem da magia)" });
   }
   return out;
 }

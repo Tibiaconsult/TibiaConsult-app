@@ -23,7 +23,8 @@ export default function GemCost() {
   const n = (s: string) => Number(s.replace(/\./g, "")) || 0;
   const m = MODS[size];
   const reveal = GEM_REVEAL[size];
-  const basic = gemUpgradeCost("basic", 1, basicTo, size === "greater" ? n(fragPriceGreater) : n(fragPriceLesser));
+  // mods básicos sobem com lesser fragments em qualquer gema; só o supremo usa greater
+  const basic = gemUpgradeCost("basic", 1, basicTo, n(fragPriceLesser));
   const supreme = m.supreme ? gemUpgradeCost("supreme", 1, supremeTo, n(fragPriceGreater)) : { gold: 0, fragments: 0, total: 0 };
   const basicTotal = { gold: basic.gold * m.basic, fragments: basic.fragments * m.basic, total: basic.total * m.basic };
   const total = n(gemPrice) + reveal + basicTotal.total + supreme.total;
@@ -92,7 +93,7 @@ export default function GemCost() {
           <tr>
             <td>Mods básicos ({m.basic}) até o grade {basicTo}</td>
             <td>
-              {kk(basicTotal.gold)} + {basicTotal.fragments} fragmentos {size === "greater" ? "greater" : "lesser"}
+              {kk(basicTotal.gold)} + {basicTotal.fragments} fragmentos lesser
             </td>
           </tr>
           {m.supreme > 0 && (
