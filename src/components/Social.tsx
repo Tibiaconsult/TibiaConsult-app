@@ -242,7 +242,7 @@ export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" 
 
 /** Tradução das mensagens do banco para o jogador. */
 export function friendlyError(msg: string): string {
-  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural/i.test(msg))
+  if (/libere o char|libere seu char|linguagem ofensiva|por hora|tente de novo|não encontrado|já contou|não está no mural|fora da realidade|horário muito longe|horário inválido|lembretes ativos/i.test(msg))
     return msg.charAt(0).toUpperCase() + msg.slice(1) + ".";
   if (/check constraint|violates/i.test(msg)) return "Texto curto ou longo demais.";
   return `Não foi possível enviar: ${msg}`;

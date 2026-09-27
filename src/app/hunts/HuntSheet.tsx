@@ -3,6 +3,7 @@ import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS, REC_SOURCE, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
 import { creatureHref } from "@/lib/creature-labels";
 import { creatureIcon } from "@/lib/icons";
+import GuildHuntStats from "./GuildHuntStats";
 import VocSets from "./VocSets";
 
 function pct(v: number) {
@@ -48,6 +49,7 @@ export default function HuntSheet({ h }: { h: Hunt }) {
           <p className="muted text-[10px] mt-1">Fonte: {REC_SOURCE}.</p>
         </div>
       )}
+      <GuildHuntStats huntId={h.id} />
 
       <div className="overflow-x-auto mt-4">
         <table>
