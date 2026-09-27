@@ -42,10 +42,11 @@ const STEPS: [string, React.ReactNode][] = [
 
 const TABS: [string, string, string][] = [
   ["Montar", "Set, Wheel, combos e proficiência: monte e teste antes de gastar gold no jogo.", "/simulador/set"],
-  ["Hunt", "Fichas, mapa com respawn e rotas dos jogadores, preparar, creatures e loot, Bestiary sem limite de 📌, charms e bosstiary.", "/hunts"],
+  ["Hunt", "Fichas com supplies e drops, preparar, Hunt Analyser da guild, creatures e loot, Bestiary sem limite de 📌, charms e bosstiary.", "/hunts"],
+  ["Mapa do Tibia", "O mapa completo, andar por andar, com o respawn de cada hunt e as rotas desenhadas pelos jogadores.", "/mapa"],
   ["Calculadoras", "Dano e DPS por rotação, forja, gemas, mana, exp, exercise, stamina, bless e LootSplit.", "/simulador"],
   ["Consultar", "Cooldowns, gemas e equipamento por vocação, para tirar dúvida rápida.", "/cooldowns"],
-  ["Comunidade", "Taverna (as mortes da guild zoadas pelos NPCs), ranking de XP e Funcionário do Mês.", "/comunidade/taverna"],
+  ["Comunidade", "Taverna (mortes e level ups da guild, zoados pelos NPCs), ranking de XP e Funcionário do Mês.", "/comunidade/taverna"],
 ];
 
 export default function HowTo() {

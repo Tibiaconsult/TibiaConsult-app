@@ -6,6 +6,15 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-09-27", text: "Rotas dos jogadores: desenhe no mapa o caminho que você faz numa hunt e ajude outros jogadores a caçar melhor. As mais úteis recebem 👍.", href: "/hunts" },
+  { date: "2026-09-27", text: "Mapa com o respawn: cada creature no lugar em que nasce, com a quantidade, e o total da área na ficha da hunt.", href: "/mapa" },
+  { date: "2026-09-27", text: "Ficha da hunt com supplies por vocação e level, drops que pagam a hunt e link direto para a rota no TibiaRoute.", href: "/hunts" },
+  { date: "2026-09-27", text: "Mapa do Tibia completo, andar por andar, com os marcadores da comunidade e o 📍 de cada hunt.", href: "/mapa" },
+  { date: "2026-09-27", text: "Hunt Analyser da guild: cole o do jogo e veja o XP/h e o lucro/h reais da turma em cada hunt.", href: "/hunts/analyser" },
+  { date: "2026-09-27", text: "Avisos no celular: boss liberado, stamina cheia, boosted que falta no seu bestiary e XP em dobro.", href: "/notificacoes" },
+  { date: "2026-09-27", text: "Bestiary Tracker com 📌 sem limite, as creatures que mais rendem charm e aviso quando uma delas é a boosted.", href: "/ferramentas/bestiario" },
+  { date: "2026-09-27", text: "Taverna nova: mortes e level ups da guild no mesmo lugar, com o Caixão e Vela Preta e o pódio do mês.", href: "/comunidade/taverna" },
+  { date: "2026-09-27", text: "Lista de creatures com HP, fraquezas, loot e onde caçar cada uma.", href: "/criaturas" },
   { date: "2026-09-26", text: "Gemas nos vessels da roda: escolha pequena, média ou grande e os mods pelos ícones do jogo, com sugestão.", href: "/planejador/wheel" },
   { date: "2026-09-26", text: "Botão de sair da conta na barra lateral e na barra do topo.", href: "/minha-area" },
   { date: "2026-09-26", text: "Proficiência de arma das cinco vocações: árvore de cada arma com os ícones do jogo, perk sugerido, catalisadores e a evolução com Dust.", href: "/planejador/proficiencia" },
@@ -35,6 +44,26 @@ export const TICKER: { date: string; text: string; href?: string }[] = [
 ];
 
 export const NEWS: NewsEntry[] = [
+  {
+    date: "2026-09-27",
+    title: "Mapa, respawn e rotas dos jogadores",
+    body: [
+      "O site ganhou o mapa completo do Tibia, andar por andar, e cada ficha de hunt abre direto nele: com o respawn desenhado (cada creature no lugar em que nasce e quantas são), o total da área e os links para a rota no TibiaRoute quando existe.",
+      "E agora você pode ajudar outros jogadores: conhece bem uma hunt? No mapa da ficha, clique em Desenhar a minha rota, marque o caminho que você faz (trocando de andar com as setas), escreva as dicas e publique. Quem vier depois vê a sua rota, e as que mais ajudam recebem 👍 e sobem para o topo.",
+      "A ficha também mostra os supplies para a sua vocação e level e os drops que pagam a hunt, calculados pelo loot e pelo respawn de cada creature.",
+    ],
+    href: "/hunts",
+  },
+  {
+    date: "2026-09-27",
+    title: "O site agora lembra você do que importa",
+    body: [
+      "Ligue os avisos no celular e o TibiaConsult avisa quando o boss que você matou libera de novo, quando a stamina enche, quando a boosted do dia é uma creature que falta no seu bestiary e quando começa XP em dobro.",
+      "Depois da hunt, cole o Hunt Analyser do jogo no Hunt Analyser da guild: o site guarda o XP/h e o lucro/h por hunt e monta o ranking com os números reais da turma.",
+      "Na Taverna, mortes e level ups da guild ficam no mesmo lugar, com o Caixão e Vela Preta e o pódio do mês.",
+    ],
+    href: "/notificacoes",
+  },
   {
     date: "2026-09-26",
     title: "Chegaram Druid, Knight e Paladin",
