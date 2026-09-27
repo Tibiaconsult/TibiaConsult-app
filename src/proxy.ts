@@ -1,8 +1,21 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isLootSplitHost } from "@/lib/lootsplit-app";
 
-// Renova a sessão do Supabase a cada request e protege as rotas privadas.
+// Renova a sessão do Supabase a cada request e protege as rotas privadas. No endereço do LootSplit, só aponta para ele.
 export async function proxy(request: NextRequest) {
+  // endereço próprio do LootSplit: a raiz é o LootSplit e o manifesto tem escopo "/" (app separado do TibiaConsult)
+  if (isLootSplitHost(request.headers.get("host"))) {
+    const path = request.nextUrl.pathname;
+    const to = path === "/" ? "/lootsplit" : path === "/manifest.webmanifest" || path === "/lootsplit/manifest.webmanifest" ? "/lootsplit/app-manifest" : null;
+    if (to) {
+      const url = request.nextUrl.clone();
+      url.pathname = to;
+      return NextResponse.rewrite(url);
+    }
+    return NextResponse.next({ request });
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return NextResponse.next({ request });
