@@ -108,7 +108,7 @@ export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
         {busy ? "Liberando..." : `🍺 Liberar ${target.name} na comunidade`}
       </button>
       <p className="opacity-80">
-        Com um clique o char pode comentar e contar fofoca pro Rashid, e aparece no mural, no ranking, no Funcionário do Mês e no perfil público. Dá para
+        Com um clique o char pode comentar e contar fofoca pro Rashid, e aparece na Taverna, no ranking, no Funcionário do Mês e no perfil público. Dá para
         desligar quando quiser em Meus chars.
       </p>
       {msg && <p className="bad">{msg}</p>}

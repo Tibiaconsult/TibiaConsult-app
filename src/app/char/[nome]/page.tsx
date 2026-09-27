@@ -61,7 +61,7 @@ export default async function CharProfilePage({ params }: Props) {
           ))}
         </div>
         <p className="muted text-[11px] mt-2">
-          🪦 {p.fs} F recebidos no mural · 🤡 {p.clowns} reações de palhaço nas mortes · ⏱️ {fmtOnline(p.online_month ?? 0)} online neste mês
+          🪦 {p.fs} F recebidos no Caixão e Vela Preta · 🤡 {p.clowns} reações de palhaço nas mortes · ⏱️ {fmtOnline(p.online_month ?? 0)} online neste mês
           {p.wins > 0 && ` · 🏅 ${p.wins}x Funcionário do Mês`}
         </p>
       </Box>
@@ -103,7 +103,7 @@ export default async function CharProfilePage({ params }: Props) {
           </ul>
         )}
         <p className="text-[11px] mt-2">
-          Deixe seu F no <Link href="/comunidade/mural">Caixão e Vela Preta</Link>.
+          Deixe seu F no <Link href="/comunidade/taverna?ver=mortes">Caixão e Vela Preta</Link>, na Taverna.
         </p>
       </Box>
 
