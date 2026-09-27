@@ -3,6 +3,7 @@
 
 import { CREATURES } from "@/data/creatures";
 import type { Hunt } from "@/data/hunts";
+import { HUNT_SPAWNS } from "@/data/hunt-spawns";
 import { ITEM_VALUES } from "@/data/item-values";
 
 // chance estimada quando a wiki não tem estatística: só a raridade
@@ -33,13 +34,16 @@ export interface HuntDropsData {
 }
 
 export function huntDrops(h: Hunt): HuntDropsData {
-  const totalW = h.creatures.reduce((a, c) => a + (c.weight ?? 1), 0) || 1;
+  // peso de cada creature no lure: a quantidade no respawn, quando existe; senão o peso da ficha
+  const spawn = HUNT_SPAWNS[h.id]?.counts;
+  const weight = (c: Hunt["creatures"][number]) => (spawn ? (spawn[c.name] ?? 0) : (c.weight ?? 1));
+  const totalW = h.creatures.reduce((a, c) => a + weight(c), 0) || 1;
   const acc = new Map<string, HuntDrop>();
   let gold = 0;
   for (const c of h.creatures) {
     const cr = CREATURES[c.name];
     if (!cr) continue;
-    const share = (c.weight ?? 1) / totalW;
+    const share = weight(c) / totalW;
     for (const l of cr.loot) {
       const value = Math.max(...(ITEM_VALUES[l.name] ?? [0, 0]));
       const chance = l.chance ?? RARITY_CHANCE[l.rarity ?? ""] ?? 0;

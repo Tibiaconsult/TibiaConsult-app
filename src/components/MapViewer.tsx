@@ -5,8 +5,9 @@
 // arquivo do computador do jogador: tudo vem do próprio site.
 
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { LayerGroup, Map as LMap, ImageOverlay } from "leaflet";
+import { creatureIcon } from "@/lib/icons";
 
 // limites do mapa (bounds.json do tibia-map-data): 1 pixel = 1 sqm
 const X0 = 31744;
@@ -23,6 +24,15 @@ export interface MapPoint {
   /** conteúdo do balão ao clicar (HTML já escapado); sem ele, o clique abre o href */
   popup?: string;
 }
+
+/** Spawns de um andar (scripts/spawns.mjs): nomes das creatures, nomes das hunts e [x, y, creature, quantidade, hunt]. */
+interface SpawnFloor {
+  c: string[];
+  h: string[];
+  s: [number, number, number, number, number][];
+}
+// creatures só aparecem com zoom suficiente: longe, viram uma nuvem de ícones
+const SPAWN_MIN_ZOOM = 0;
 
 const floorFile = (z: number) => `/mapa/floor-${String(z).padStart(2, "0")}.png`;
 export const floorName = (z: number) => (z === 7 ? "térreo" : z < 7 ? `+${7 - z} (acima)` : `-${z - 7} (subsolo)`);
@@ -58,10 +68,55 @@ export default function MapViewer({
   const layer = useRef<ImageOverlay | null>(null);
   const markLayer = useRef<LayerGroup | null>(null);
   const pointLayer = useRef<LayerGroup | null>(null);
+  const spawnLayer = useRef<LayerGroup | null>(null);
+  const spawnData = useRef<SpawnFloor | null>(null);
   const [z, setZ] = useState(center.z);
   const [pos, setPos] = useState<string>("");
   const [showMarks, setShowMarks] = useState(true);
+  const [showSpawns, setShowSpawns] = useState(true);
+  const [spawnHint, setSpawnHint] = useState(false);
   const [ready, setReady] = useState(false);
+
+  // desenha só as creatures que estão na tela (o andar inteiro pode ter mais de mil blocos)
+  const drawSpawns = useRef<() => void>(() => {});
+  const draw = useCallback(() => {
+    const m = map.current;
+    const layer = spawnLayer.current;
+    if (!m || !layer) return;
+    layer.clearLayers();
+    const d = spawnData.current;
+    const far = m.getZoom() < SPAWN_MIN_ZOOM;
+    setSpawnHint(!!d?.s.length && far && showSpawns);
+    if (!d || !showSpawns || far) return;
+    import("leaflet").then((L) => {
+      if (spawnData.current !== d) return;
+      const b = m.getBounds().pad(0.1);
+      const size = m.getZoom() >= 2 ? 32 : m.getZoom() >= 1 ? 24 : 18;
+      for (const [x, y, ci, n, hi] of d.s) {
+        const ll = L.latLng(-(y - Y0) - 0.5, x - X0 + 0.5);
+        if (!b.contains(ll)) continue;
+        const name = d.c[ci];
+        const icon = L.divIcon({
+          className: "",
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size / 2],
+          html:
+            `<div style="position:relative;width:${size}px;height:${size}px"><img src="${creatureIcon(name)}" alt="" width="${size}" height="${size}" style="image-rendering:pixelated"/>` +
+            (n > 1
+              ? `<span style="position:absolute;right:-4px;bottom:-4px;background:#000c;color:#fff;font:bold 10px/12px sans-serif;padding:0 3px;border-radius:6px">${n}</span>`
+              : "") +
+            `</div>`,
+        });
+        L.marker(ll, { icon, keyboard: false })
+          .bindTooltip(`${n}x ${name} · ${d.h[hi]}`, { direction: "top" })
+          .addTo(layer);
+      }
+    });
+  }, [showSpawns]);
+  useEffect(() => {
+    drawSpawns.current = draw;
+    draw();
+  }, [draw]);
 
   // cria o mapa uma vez
   useEffect(() => {
@@ -85,6 +140,7 @@ export default function MapViewer({
         [0, W],
       ]).addTo(m);
       markLayer.current = L.layerGroup().addTo(m);
+      spawnLayer.current = L.layerGroup().addTo(m);
       pointLayer.current = L.layerGroup().addTo(m);
       m.setView([-(center.y - Y0) - 0.5, center.x - X0 + 0.5], zoom);
       m.on("mousemove", (e) => {
@@ -92,6 +148,7 @@ export default function MapViewer({
         const y = Math.floor(-e.latlng.lat) + Y0;
         setPos(`${x}, ${y}`);
       });
+      m.on("moveend zoomend", () => drawSpawns.current());
       map.current = m;
       setReady(true);
     });
@@ -123,6 +180,16 @@ export default function MapViewer({
         if (p.popup) mk.bindPopup(p.popup, { offset: [0, -18], maxWidth: 280 });
         else if (p.href) mk.on("click", () => (window.location.href = p.href!));
       }
+      spawnData.current = null;
+      drawSpawns.current();
+      fetch(`/mapa/spawns-${String(z).padStart(2, "0")}.json`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d: SpawnFloor | null) => {
+          if (!alive) return;
+          spawnData.current = d;
+          drawSpawns.current();
+        })
+        .catch(() => {});
       if (!showMarks) return;
       try {
         const res = await fetch(`/mapa/markers-${String(z).padStart(2, "0")}.json`);
@@ -160,6 +227,10 @@ export default function MapViewer({
         <label className="ml-2 inline-flex items-center gap-1">
           <input type="checkbox" checked={showMarks} onChange={(e) => setShowMarks(e.target.checked)} /> marcadores
         </label>
+        <label className="ml-2 inline-flex items-center gap-1">
+          <input type="checkbox" checked={showSpawns} onChange={(e) => setShowSpawns(e.target.checked)} /> creatures
+        </label>
+        {spawnHint && <span className="muted">(dê zoom para ver as creatures)</span>}
         <span className="ml-auto muted font-mono">{pos && `${pos}, ${z}`}</span>
       </div>
       <div ref={box} className="tc-map rounded border border-[#5a4632]" style={{ height, background: "#000" }} />

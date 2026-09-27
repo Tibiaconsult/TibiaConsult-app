@@ -2,7 +2,7 @@ import { HUNTS, Hunt } from "@/data/hunts";
 import { HUNT_RECS, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
 import { TIBIAROUTE, tibiaRouteUrl } from "@/data/tibiaroute";
 import { creatureIcon } from "@/lib/icons";
-import { HUNT_MAPS } from "@/lib/hunt-map";
+import { HUNT_SPAWNS, huntPoint } from "@/lib/hunt-map";
 import MapPage from "./MapPage";
 
 export const metadata = {
@@ -32,6 +32,7 @@ function popup(h: Hunt): string {
     `<div style="font-size:12px"><b>${esc(h.name)}</b>` +
     (lv ? `<div style="font-size:11px;margin:2px 0">Level: ${esc(lv)}</div>` : "") +
     `<div style="margin:4px 0">${mobs}</div>` +
+    (HUNT_SPAWNS[h.id] ? `<div style="font-size:11px;margin-bottom:4px">👾 Respawn: ${HUNT_SPAWNS[h.id].total} creatures (aprox.)</div>` : "") +
     `<a href="/hunts?h=${h.id}">Ficha da hunt</a> · <a href="/hunts/preparar?h=${h.id}">Preparar</a>` +
     (TIBIAROUTE[h.id]?.[0] ? ` · <a href="${tibiaRouteUrl(TIBIAROUTE[h.id][0].slug)}" target="_blank" rel="noreferrer">Rota (TibiaRoute)</a>` : "") +
     `</div>`
@@ -41,8 +42,8 @@ function popup(h: Hunt): string {
 export default async function MapaPage({ searchParams }: { searchParams: Promise<{ hunt?: string; x?: string; y?: string; z?: string }> }) {
   const q = await searchParams;
   const points = HUNTS.flatMap((h) => {
-    const m = HUNT_MAPS[h.id];
-    return m?.x !== undefined ? [{ id: h.id, x: m.x, y: m.y!, z: m.z!, label: h.name, href: `/hunts?h=${h.id}`, popup: popup(h) }] : [];
+    const m = huntPoint(h.id);
+    return m ? [{ id: h.id, x: m.x, y: m.y, z: m.z, label: h.name, href: `/hunts?h=${h.id}`, popup: popup(h) }] : [];
   }).sort((a, b) => a.label.localeCompare(b.label));
   const fromHunt = q.hunt ? points.find((p) => p.id === q.hunt) : undefined;
   const n = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : undefined);
@@ -51,8 +52,8 @@ export default async function MapaPage({ searchParams }: { searchParams: Promise
     <div>
       <h1>Mapa do Tibia</h1>
       <p className="on-dark mb-4">
-        O minimapa completo do jogo, andar por andar, com os marcadores da comunidade (escadas, buracos, NPCs) e 📍 nas hunts do site. Arraste, dê zoom e troque
-        de andar. Passe o mouse para ver a coordenada.
+        O minimapa completo do jogo, andar por andar, com os marcadores da comunidade (escadas, buracos, NPCs), 📍 nas hunts do site e as creatures de cada
+        respawn (dê zoom para ver). Arraste, dê zoom e troque de andar. Passe o mouse para ver a coordenada.
       </p>
       <MapPage points={points} start={{ x: start.x, y: start.y, z: start.z }} startId={fromHunt?.id ?? ""} />
     </div>
