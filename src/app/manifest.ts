@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "TibiaConsult",
     short_name: "TibiaConsult",
-    description: "Referência e simuladores do Master Sorcerer: cooldowns, rotações, dano, set, gemas e hunts.",
+    description: "Tibia para todas as vocações: simuladores, set, Wheel, hunts, ferramentas e comunidade.",
     start_url: "/",
     display: "standalone",
     background_color: "#051122",
