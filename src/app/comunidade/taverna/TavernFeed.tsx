@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Box from "@/components/Box";
 import GossipBoard from "@/components/GossipBoard";
+import HenricusBoard from "@/components/HenricusBoard";
 import { CommentThread, PostingAs, ReactionBar, ReportButton, friendlyError, useMe, usePostingChar } from "@/components/Social";
 import { POST_KINDS, PostKind, kindOf, timeAgo } from "@/lib/social";
 import { ReactionMap, hasDb, loadCommentCounts, loadReactions, removeRow } from "@/lib/social-client";
@@ -68,6 +69,7 @@ export default function TavernFeed() {
     <>
       <Composer me={me} charId={charId} setCharId={setCharId} onPosted={(p) => setPosts((l) => [p, ...(l ?? [])])} />
       <GossipBoard />
+      <HenricusBoard />
       <div className="flex flex-wrap gap-1 mb-3">
         <button type="button" className={`tc-btn !py-0.5 !px-3 ${filter ? "opacity-60" : ""}`} onClick={() => setFilter(null)}>
           Todos
