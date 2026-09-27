@@ -19,6 +19,8 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
   const [msg, setMsg] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
   const [unconfirmed, setUnconfirmed] = useState(false);
+  // "esqueci a senha": o link do e-mail volta direto para a caixa de senha da Minha área
+  const [forgot, setForgot] = useState(false);
 
   async function resend() {
     setStatus("sending");
@@ -28,7 +30,7 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
     setMsg("Enviamos um novo link de confirmação. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico) e depois entre com a senha.");
   }
 
-  const redirectTo = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
+  const redirectTo = () => `${window.location.origin}/auth/confirm?next=${encodeURIComponent(forgot ? "/minha-area#senha" : next)}`;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +46,11 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
           setMsg(/signup|not allowed|not found/i.test(error.message) ? "Não há conta com esse e-mail. Crie a conta na aba \"Criar conta\"." : error.message)
         );
       setStatus("sent");
-      setMsg("Link enviado. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico).");
+      setMsg(
+        forgot
+          ? "Link enviado. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico): ele entra na conta e abre a Minha área, onde você cria a senha nova."
+          : "Link enviado. Abra o e-mail neste mesmo navegador (olhe também o lixo eletrônico).",
+      );
       return;
     }
     if (mode === "criar") {
@@ -81,7 +87,7 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
             ["link", "Link por e-mail"],
           ] as [Mode, string][]
         ).map(([m, label]) => (
-          <button key={m} type="button" role="tab" aria-selected={mode === m} className={mode === m ? "is-active" : ""} onClick={() => (setMode(m), setStatus("idle"), setMsg(null), setUnconfirmed(false))}>
+          <button key={m} type="button" role="tab" aria-selected={mode === m} className={mode === m ? "is-active" : ""} onClick={() => (setMode(m), setStatus("idle"), setMsg(null), setUnconfirmed(false), setForgot(false))}>
             {label}
           </button>
         ))}
@@ -127,7 +133,17 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
               Reenviar e-mail de confirmação
             </button>
           )}
-          {mode === "senha" && <p className="muted text-[11px]">Entrou antes só pelo link? Use a aba &quot;Link por e-mail&quot; ou crie uma senha na aba &quot;Criar conta&quot; com o mesmo e-mail.</p>}
+          {mode === "senha" && (
+            <p className="text-[12px]">
+              <button type="button" className="underline font-bold" onClick={() => (setMode("link"), setForgot(true), setStatus("idle"), setMsg(null), setUnconfirmed(false))}>
+                Esqueci a senha
+              </button>{" "}
+              <span className="muted text-[11px]">ou só entrou pelo link até hoje: receba o link por e-mail e crie a senha na Minha área.</span>
+            </p>
+          )}
+          {mode === "link" && forgot && (
+            <p className="muted text-[11px]">Depois de entrar pelo link, a Minha área abre na caixa &quot;Senha da conta&quot; para você criar a senha nova.</p>
+          )}
         </form>
       )}
     </div>

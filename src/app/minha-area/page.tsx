@@ -8,6 +8,7 @@ import { WHEEL_MILESTONES } from "@/data/wheel-milestones";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { VOCATIONS } from "../meus-chars/vocations";
 import UseCharButton from "./UseCharButton";
+import PasswordForm from "./PasswordForm";
 import LogoutButton from "@/components/LogoutButton";
 
 export const metadata = { title: "Minha área" };
@@ -140,6 +141,10 @@ export default async function MinhaAreaPage() {
           </Box>
         );
       })}
+
+      <Box title="Senha da conta" id="senha">
+        <PasswordForm />
+      </Box>
 
       <Box title="Suas sugestões e relatos">
         {(feedback ?? []).length === 0 ? (
