@@ -20,7 +20,8 @@ export const MENU: MenuGroup[] = [
     icon: "news",
     items: [
       { href: "/", label: "Bem-vindo", keywords: "home inicio boosted rashid" },
-      { href: "/tibia/calendario", label: "Calendário do Tibia", keywords: "noticias news tibia.com eventos double xp rapid respawn halloween natal evento calendario" },
+      { href: "/tibia/calendario", label: "Calendário do Tibia", keywords: "eventos double xp rapid respawn halloween natal evento calendario" },
+      { href: "/tibia/noticias", label: "Notícias do Tibia", keywords: "news noticias tibia.com anuncio atualizacao" },
       { href: "/novidades", label: "Novidades do site", keywords: "atualizacoes changelog site" },
       { href: "/instalar", label: "Instalar o app", keywords: "app instalar celular pc windows barra de tarefas fixar tela inicial iphone android" },
       { href: "/feedback", label: "Reportar ou sugerir", keywords: "bug erro sugestao feedback" },
@@ -54,9 +55,9 @@ export const MENU: MenuGroup[] = [
     label: "Montar",
     icon: "abouttibia",
     items: [
-      { href: "/simulador/set", label: "Set", keywords: "equipamento itens por slot armas montador equipamento inventario itens" },
-      { href: "/planejador/wheel", label: "Wheel e gemas", keywords: "gemas mods supremos basicos sage gem builds prontas roda de habilidade wheel wod pontos" },
-      { href: "/rotacoes", label: "Rotações, combos e cooldowns", keywords: "cooldowns magias spells tempo grupo combo rotacao sequencia magias" },
+      { href: "/simulador/set", label: "Set", keywords: "montador equipamento inventario itens" },
+      { href: "/planejador/wheel", label: "Wheel of Destiny", keywords: "roda de habilidade wheel wod pontos" },
+      { href: "/rotacoes", label: "Rotações e combos", keywords: "combo rotacao sequencia magias" },
       { href: "/planejador/proficiencia", label: "Proficiência e catalisadores", keywords: "proficiency perks catalyst catalisador dust po evolucao arma" },
     ],
   },
@@ -93,12 +94,21 @@ export const MENU: MenuGroup[] = [
     ],
   },
   {
+    id: "consultar",
+    label: "Consultar",
+    icon: "library",
+    items: [
+      { href: "/cooldowns", label: "Cooldowns", keywords: "magias spells tempo grupo" },
+      { href: "/gemas", label: "Gemas", keywords: "mods supremos basicos sage gem" },
+      { href: "/equipamento", label: "Equipamento", keywords: "itens por slot armas" },
+    ],
+  },
+  {
     id: "comunidade",
     label: "Comunidade",
     icon: "forum",
     items: [
       { href: "/comunidade/taverna", label: "Taverna", keywords: "caixao e vela preta mortes mural deaths f level up rede social mortes fofoca rashid henricus comentarios humor" },
-      { href: "/comunidade/pt", label: "Procura-se PT", keywords: "party pt time lfg procurar grupo online agora" },
       { href: "/comunidade/ranking", label: "Ranking de XP", keywords: "experiencia ranking xp" },
       { href: "/comunidade/funcionario-do-mes", label: "Funcionário do Mês", keywords: "tempo online horas guildstats ranking online viciado" },
     ],

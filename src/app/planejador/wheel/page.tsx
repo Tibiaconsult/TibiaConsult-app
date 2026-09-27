@@ -9,8 +9,8 @@ export default function WheelPage() {
     <div>
       <h1>Wheel of Destiny</h1>
       <p className="on-dark mb-4">
-        Builds prontas das cinco vocações para carregar com um clique e ajustar, e o que o planner do tibia.com não faz: levar a build direto para o
-        simulador de dano (sorcerer) e salvar no seu char. Mesmo motor do planner oficial.
+        A roda completa das cinco vocações, fatia por fatia, com gemas, revelations e builds prontas. Usa o mesmo motor e o mesmo código do planner
+        do tibia.com. Para o sorcerer, o botão &quot;usar no simulador de dano&quot; leva a build direto para o cálculo.
       </p>
       <p className="on-dark text-[12px] mb-3 flex flex-wrap gap-2">
         <Link className="tc-btn !py-0.5" href="/gemas">
