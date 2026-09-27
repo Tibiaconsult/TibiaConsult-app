@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordProblem } from "@/lib/password";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -54,7 +55,8 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
       return;
     }
     if (mode === "criar") {
-      if (password.length < 8) return (setStatus("error"), setMsg("A senha precisa de pelo menos 8 caracteres."));
+      const problem = passwordProblem(password);
+      if (problem) return (setStatus("error"), setMsg(problem));
       if (!accepted) return (setStatus("error"), setMsg("Para criar a conta, leia e aceite os termos de uso."));
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -110,6 +112,7 @@ export default function LoginForm({ next = "/minha-area" }: { next?: string }) {
             <label className="block">
               Senha
               <input type="password" required minLength={mode === "criar" ? 8 : 1} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full" autoComplete={mode === "criar" ? "new-password" : "current-password"} />
+              {mode === "criar" && <span className="muted text-[11px]">Pelo menos 8 caracteres, com letras e números.</span>}
             </label>
           )}
           {mode === "criar" && (

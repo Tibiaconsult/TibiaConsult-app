@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordProblem } from "@/lib/password";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -15,7 +16,8 @@ export default function PasswordForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setMsg(null);
-    if (pw.length < 8) return setMsg({ ok: false, text: "A senha precisa de pelo menos 8 caracteres." });
+    const problem = passwordProblem(pw);
+    if (problem) return setMsg({ ok: false, text: problem });
     if (pw !== pw2) return setMsg({ ok: false, text: "As duas senhas não são iguais." });
     setBusy(true);
     const { error } = await createClient().auth.updateUser({ password: pw });
@@ -36,7 +38,7 @@ export default function PasswordForm() {
   return (
     <form onSubmit={submit} className="space-y-3 max-w-md text-[12px]">
       <p>
-        Entrou pelo link do e-mail ou esqueceu a senha? Crie uma nova aqui. <b>Não use a senha da sua conta do Tibia.</b>
+        Entrou pelo link do e-mail ou esqueceu a senha? Crie uma nova aqui: pelo menos 8 caracteres, com letras e números. <b>Não use a senha da sua conta do Tibia.</b>
       </p>
       <label className="block">
         Nova senha

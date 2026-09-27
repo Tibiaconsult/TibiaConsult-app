@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BESTIARY, CHARMS, CHARMS_VERY_RARE } from "@/data/bestiary";
 import { CHARM_LIST, Charm, CharmKind, ECHOES_PER_MAJOR_LEVEL, ECHOES_PROMOTION } from "@/data/charms";
 import { HUNTS } from "@/data/hunts";
@@ -13,6 +13,7 @@ import { createClient } from "@/lib/supabase/client";
 
 // Planejador de charms: nível atual e desejado de cada charm, custo em charm points (major) e em Minor Charm Echoes (minor),
 // com os pontos do Bestiary Tracker e o charm de dano de cada hunt.
+// Com char ativo e login, o plano fica na conta (tabela charm_plans, um por char); sem char, neste navegador.
 
 type Plan = Record<string, { have: number; want: number }>;
 const KEY = "tc-charm-plan";
@@ -51,18 +52,67 @@ export default function CharmPlanner() {
   const [bestiary, setBestiary] = useState<{ points: number; from: string } | null>(null);
   const [huntId, setHuntId] = useState(HUNTS[0]?.id ?? "");
 
-  // plano guardado neste navegador
+  const online = Boolean(char && process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const [status, setStatus] = useState<string | null>(null);
+  // plano deste navegador, oferecido para levar à conta quando o char ainda não tem plano salvo
+  const [localOffer, setLocalOffer] = useState<Plan | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // carrega: do char ativo (conta) ou deste navegador
   useEffect(() => {
-    const p = readPlan();
-    setPlan(p);
-  }, []);
+    if (!online || !char) {
+      setPlan(readPlan());
+      setLocalOffer(null);
+      return;
+    }
+    let alive = true;
+    setStatus("carregando...");
+    createClient()
+      .from("charm_plans")
+      .select("plan, promoted")
+      .eq("char_id", char.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!alive) return;
+        if (error) return setStatus(`Não carregou da conta: ${error.message}`);
+        setStatus(null);
+        const saved = (data?.plan ?? {}) as Plan;
+        setPlan(saved);
+        if (data) setPromoted(data.promoted);
+        const local = readPlan();
+        setLocalOffer(!data && Object.keys(local).length ? local : null);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [online, char]);
+
+  /** Grava o plano: na conta (espera meio segundo parado, para não mandar a cada clique) ou no navegador. */
+  const persist = (next: Plan, prom: boolean) => {
+    if (!online || !char) {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(next));
+      } catch {
+        // sem armazenamento: vale só nesta visita
+      }
+      return;
+    }
+    if (timer.current) clearTimeout(timer.current);
+    setStatus("salvando...");
+    timer.current = setTimeout(async () => {
+      const { error } = await createClient()
+        .from("charm_plans")
+        .upsert({ char_id: char.id, plan: next, promoted: prom, updated_at: new Date().toISOString() });
+      setStatus(error ? `Não salvou: ${error.message}` : `Salvo em ${char.name}.`);
+    }, 500);
+  };
   const save = (next: Plan) => {
     setPlan(next);
-    try {
-      localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
-      // sem armazenamento: vale só nesta visita
-    }
+    persist(next, promoted);
+  };
+  const changePromoted = (v: boolean) => {
+    setPromoted(v);
+    persist(plan, v);
   };
 
   // charm points já feitos no Bestiary Tracker: do char ativo (conta) ou deste navegador
@@ -174,6 +224,14 @@ export default function CharmPlanner() {
 
   return (
     <div className="space-y-5 text-[12px]">
+      {localOffer && char && (
+        <div className="border border-[#c9a13a] bg-[#fff4cf] rounded p-2 flex flex-wrap items-center gap-2">
+          <span>Há um plano de charms guardado neste navegador e {char.name} ainda não tem plano na conta.</span>
+          <button type="button" className="tc-btn !py-0.5" onClick={() => (save(localOffer), setLocalOffer(null))}>
+            levar para {char.name}
+          </button>
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="border border-[#b98a5a] rounded p-3 bg-white/40">
           <span className="font-bold block">Charm points disponíveis</span>
@@ -198,7 +256,7 @@ export default function CharmPlanner() {
           <div className={echoesLeft >= 0 ? "good" : "bad"}>{echoesLeft >= 0 ? `sobram ${fmt(echoesLeft)}` : `faltam ${fmt(-echoesLeft)}`}</div>
         </div>
         <label className="border border-[#b98a5a] rounded p-3 bg-white/40 flex items-start gap-2">
-          <input type="checkbox" checked={promoted} onChange={(e) => setPromoted(e.target.checked)} className="mt-1" />
+          <input type="checkbox" checked={promoted} onChange={(e) => changePromoted(e.target.checked)} className="mt-1" />
           <span>
             <span className="font-bold block">Char promovido</span>
             <span className="muted text-[10px]">
@@ -249,7 +307,9 @@ export default function CharmPlanner() {
         <button type="button" className="tc-btn tc-btn-danger" onClick={() => save({})}>
           limpar o plano
         </button>
-        <span className="muted text-[11px]">O plano fica salvo neste navegador.</span>
+        <span className="muted text-[11px]">
+          {online && char ? (status ?? `O plano fica salvo na conta, em ${char.name}.`) : "O plano fica salvo neste navegador. Com login e char escolhido na barra do topo, fica na conta."}
+        </span>
       </div>
       <p className="muted text-[10px]">
         Custos, efeitos e regras de echoes: TibiaWiki (página de cada charm, Major Charms e Minor Charms), consulta em 26/09/2026. A separação em dano, defesa e
