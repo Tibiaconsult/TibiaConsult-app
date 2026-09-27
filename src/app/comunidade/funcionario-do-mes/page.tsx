@@ -50,7 +50,7 @@ export default async function FuncionarioPage({ searchParams }: { searchParams: 
       <h1>Funcionário do Mês</h1>
       <p className="on-dark mb-4">
         Homenagem a quem mais bateu ponto no Tibia. O tempo online é contado a cada 5 minutos pela lista de quem está online no mundo, como faz o GuildStats. Só
-        entram chars verificados com a opção de aparecer ligada.
+        entram chars liberados na comunidade.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-3 items-center">

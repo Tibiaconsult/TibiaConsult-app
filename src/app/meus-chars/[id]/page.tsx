@@ -4,7 +4,7 @@ import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { SLOTS } from "@/data/equipment";
 import { SetChoice, SlotId, emptySet, encodeSet } from "@/lib/set";
-import { checkVerify, deleteChar, startVerify, updateChar } from "../actions";
+import { deleteChar, setCommunity, updateChar } from "../actions";
 import { VOCATIONS } from "../vocations";
 
 function slotItems(id: string): string[] {
@@ -109,11 +109,11 @@ export default async function CharPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ salvo?: string; erro?: string; verif?: string }>;
+  searchParams: Promise<{ salvo?: string; erro?: string }>;
 }) {
   if (!hasSupabaseEnv()) redirect("/entrar");
   const { id } = await params;
-  const { salvo, erro, verif } = await searchParams;
+  const { salvo, erro } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -154,41 +154,30 @@ export default async function CharPage({
         </a>
       </div>
 
-      <div id="verificar" className="max-w-4xl scroll-mt-24">
-        <Box title={c.verified ? "Char verificado" : "Verificar o char (para postar na Taverna e no mural)"}>
-          {c.verified ? (
-            <p className="good text-[12px]">
-              {c.name} é seu, verificado{c.verified_at ? ` em ${new Date(c.verified_at).toLocaleDateString("pt-BR")}` : ""}. Já dá para contar causos na{" "}
-              <Link href="/comunidade/taverna">Taverna</Link> e comentar no mural. Para ter perfil público, ligue &quot;Mostrar no mural, no ranking e no perfil
-              público&quot; no quadro Básico e salve.
-            </p>
-          ) : (
-            <div className="space-y-2 text-[12px]">
-              <p>
-                A verificação prova que o char é seu e impede que alguém poste fingindo ser você. É rápido: gere um código, cole em qualquer parte do comentário
-                do char no tibia.com (Account Management, Edit Character, Comment), salve lá e clique em &quot;Verificar agora&quot;. Depois pode apagar o
-                código do comentário.
-              </p>
-              {c.verify_code && (
-                <p>
-                  Seu código: <code className="bg-white/70 px-2 py-0.5 rounded font-bold">{c.verify_code}</code>
-                </p>
+      <div id="comunidade" className="max-w-4xl scroll-mt-24">
+        <Box title={c.public_profile ? "🍺 Liberado na comunidade" : "Comunidade"}>
+          <div className="flex flex-wrap items-center gap-3 text-[12px]">
+            <p className="flex-1 min-w-[240px]">
+              {c.public_profile ? (
+                <>
+                  {c.name} já pode contar causos na <Link href="/comunidade/taverna">Taverna</Link>, comentar e aparece no mural, no ranking, no Funcionário do
+                  Mês e no <Link href={`/char/${encodeURIComponent(c.name)}`}>perfil público</Link>.
+                </>
+              ) : (
+                <>
+                  Libere com um clique para postar na Taverna, comentar no mural e aparecer no ranking, no Funcionário do Mês e no perfil público. Ficam
+                  visíveis para todos: nome, mundo, vocação, level, XP ganha, tempo online, mortes e conquistas.
+                </>
               )}
-              <div className="flex flex-wrap gap-2">
-                <form action={startVerify}>
-                  <input type="hidden" name="id" value={c.id} />
-                  <button className="tc-btn">{c.verify_code ? "Gerar outro código" : "Gerar código"}</button>
-                </form>
-                {c.verify_code && (
-                  <form action={checkVerify}>
-                    <input type="hidden" name="id" value={c.id} />
-                    <button className="tc-btn">Verificar agora</button>
-                  </form>
-                )}
-              </div>
-            </div>
-          )}
-          {verif && verif !== "codigo" && <p className={verif === "ok" ? "good mt-2" : "bad mt-2"}>{verif === "ok" ? "Char verificado." : verif}</p>}
+            </p>
+            <form action={setCommunity}>
+              <input type="hidden" name="id" value={c.id} />
+              <input type="hidden" name="on" value={c.public_profile ? "0" : "1"} />
+              <button className={`tc-btn ${c.public_profile ? "tc-btn-danger" : ""}`}>
+                {c.public_profile ? "Tirar da comunidade" : `🍺 Liberar ${c.name} na comunidade`}
+              </button>
+            </form>
+          </div>
         </Box>
       </div>
 
@@ -234,8 +223,8 @@ export default async function CharPage({
             <label className="flex items-start gap-2 sm:col-span-2 text-[12px]">
               <input type="checkbox" name="public_profile" defaultChecked={Boolean(c.public_profile)} className="mt-0.5" />
               <span>
-                Mostrar no mural &quot;Caixão e Vela Preta&quot;, no ranking de XP e no perfil público. Ficam visíveis para todos: nome, mundo, vocação, level,
-                XP ganha, mortes e conquistas. O perfil público só aparece com o char verificado.
+                Liberado na comunidade: Taverna, mural &quot;Caixão e Vela Preta&quot;, ranking de XP, Funcionário do Mês e perfil público. Ficam visíveis para
+                todos: nome, mundo, vocação, level, XP ganha, tempo online, mortes e conquistas.
               </span>
             </label>
           </div>

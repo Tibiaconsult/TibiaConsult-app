@@ -7,7 +7,7 @@ export default function TermosPage() {
   return (
     <div className="max-w-3xl">
       <h1>Termos de uso e privacidade</h1>
-      <Box title="Versão de 27/09/2026">
+      <Box title="Versão de 27/09/2026 (2)">
         <div className="space-y-3 text-[13px]">
           <p>
             Ao criar uma conta ou usar o TibiaConsult, você declara que leu e concorda com estes termos. Se não concordar, não crie conta: as páginas de
@@ -51,10 +51,10 @@ export default function TermosPage() {
             <li>Causos, comentários, reações e denúncias que você fizer na comunidade.</li>
           </ul>
           <p>
-            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você ligar &quot;Mostrar no mural
-            e no ranking&quot; num char, o nome, mundo, vocação, level, XP ganha, tempo online e mortes desse char ficam visíveis para todos no mural Caixão e
-            Vela Preta, no ranking de XP, no Funcionário do Mês e no perfil público. Desligar a opção tira o char dessas páginas. O administrador do site pode
-            ver os dados para manutenção e suporte. Não vendemos nem repassamos dados a ninguém.
+            Cada conta só vê os próprios dados. Nenhuma outra conta tem acesso ao que você cadastra. A exceção é opcional: se você liberar um char na
+            comunidade, o nome, mundo, vocação, level, XP ganha, tempo online e mortes desse char ficam visíveis para todos no mural Caixão e Vela Preta, no
+            ranking de XP, no Funcionário do Mês e no perfil público. Tirar da comunidade tira o char dessas páginas. O administrador do site pode ver os dados
+            para manutenção e suporte. Não vendemos nem repassamos dados a ninguém.
           </p>
           <p>
             Os dados ficam no Supabase (banco de dados) e o site é hospedado na Vercel. Para pedir a exclusão da sua conta e de tudo que ela guarda, use a{" "}
@@ -75,13 +75,10 @@ export default function TermosPage() {
           </h2>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              Para postar e comentar é preciso verificar o char (um código no comentário do char no tibia.com). Causos, comentários e o nome do char que os
-              escreveu são públicos. Reações também.
+              Para postar e comentar, libere o char na comunidade (um clique). Causos, comentários e o nome do char que os escreveu são públicos. Reações
+              também. Cada char só pode estar liberado em uma conta; se alguém liberou o seu, avise pelo Reportar ou sugerir.
             </li>
-            <li>
-              O perfil público (/char/nome) só existe para chars verificados com &quot;Mostrar no mural e no ranking&quot; ligado, e mostra level, mortes, tempo
-              online, causos e conquistas.
-            </li>
+            <li>O perfil público (/char/nome) só existe para chars liberados na comunidade, e mostra level, mortes, tempo online, causos e conquistas.</li>
             <li>
               Zoeira é bem-vinda; ofensa não. Proibido: preconceito, ataques pessoais, ameaças, dados pessoais de terceiros, golpes, venda de itens ou contas e
               divulgação de bot/cheat. Palavrão é liberado; termos preconceituosos são bloqueados automaticamente.

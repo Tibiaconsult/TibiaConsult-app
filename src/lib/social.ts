@@ -91,7 +91,7 @@ export interface Profile {
   vocation: string | null;
   level: number | null;
   world: string | null;
-  verified_at: string | null;
+  joined_at: string;
   deaths: { died_at: string; level: number | null; reason: string | null; by_player: boolean }[];
   snapshots: { date: string; level: number; experience: number }[];
   posts: number;
@@ -178,6 +178,6 @@ export function achievements(p: Profile): Achievement[] {
     "Menos de 10 horas online em 30 dias. Saudável demais para este jogo.",
     Boolean(p.online_since && days(p.online_since) >= 30 && p.online30 < 600),
   );
-  add("novato", "🐣", "Recém-chegado", "Verificou o char nesta semana. Bem-vindo à Taverna.", Boolean(p.verified_at && days(p.verified_at) <= 7));
+  add("novato", "🐣", "Recém-chegado", "Chegou ao TibiaConsult nesta semana. Bem-vindo à Taverna.", days(p.joined_at) <= 7);
   return list.map((a) => ({ ...a, earned: earned.has(a.id) }));
 }
