@@ -187,7 +187,7 @@ export default async function CriaturaPage({ params }: Props) {
                       {RARITY_PT[it.rarity] ?? it.rarity}
                     </span>
                   )}
-                  {it.chance !== null && <b className="w-[46px] text-right whitespace-nowrap">{it.chance}%</b>}
+                  {it.chance !== null && <b className="w-[46px] text-right whitespace-nowrap">{it.chance.toLocaleString("pt-BR")}%</b>}
                 </div>
               ))}
             </div>

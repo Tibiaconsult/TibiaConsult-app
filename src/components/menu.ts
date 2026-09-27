@@ -63,10 +63,10 @@ export const MENU: MenuGroup[] = [
   },
   {
     id: "cacar",
-    label: "Caçar",
+    label: "Hunt",
     icon: "charactertrade",
     items: [
-      { href: "/hunts", label: "Hunts", keywords: "fichas de hunt respawn cacar party" },
+      { href: "/hunts", label: "Fichas de hunt", keywords: "hunts fichas de hunt respawn cacar cacada party" },
       { href: "/hunts/preparar", label: "Preparar para a hunt", keywords: "preparar set imbuements combo charm sair para cacar" },
       { href: "/criaturas", label: "Creatures", keywords: "criatura creature bicho monstro loot drop resistencia fraqueza bestiario" },
       { href: "/ferramentas/bestiario", label: "Bestiary Tracker", keywords: "bestiario charm criaturas creatures" },
