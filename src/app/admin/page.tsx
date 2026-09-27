@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
 import { requireAdmin } from "@/lib/admin";
-import { moderate, setFeedbackStatus } from "./actions";
+import { moderate, setFeedbackStatus, setOptout } from "./actions";
 
 export const metadata = { title: "Painel", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -46,6 +46,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     ...(modComments ?? []).map((x) => ({ ...x, type: "comment" as const })),
   ].sort((a, b) => b.created_at.localeCompare(a.created_at));
   const reasons = (type: string, id: string) => (reports ?? []).filter((r) => r.target_type === type && r.target_id === id);
+
+  const { data: optouts } = await ctx.supabase.from("tracking_optout").select("name, created_at").order("created_at", { ascending: false });
 
   const count = (s: string) => (all ?? []).filter((f) => f.status === s).length;
   const users = new Set((chars ?? []).map((c) => c.user_id)).size;
@@ -114,6 +116,32 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               );
             })}
           </div>
+        )}
+      </Box>
+
+      <Box title="Tirar char das páginas públicas">
+        <p className="text-[12px] mb-2">
+          Membro de guilda (ou qualquer char) que pediu para não aparecer: sai do mural, ranking, Funcionário do Mês e perfil público. Use o nome exato do
+          tibia.com.
+        </p>
+        <form action={setOptout} className="flex flex-wrap gap-2 items-end">
+          <input type="hidden" name="op" value="add" />
+          <input name="name" required maxLength={40} placeholder="Nome do char" className="min-w-[220px]" />
+          <button className="tc-btn tc-btn-danger">Tirar das páginas</button>
+        </form>
+        {(optouts ?? []).length > 0 && (
+          <ul className="mt-3 space-y-1 text-[12px]">
+            {(optouts ?? []).map((o) => (
+              <li key={o.name} className="flex items-center gap-2">
+                <b>{o.name}</b> <span className="muted">desde {new Date(o.created_at).toLocaleDateString("pt-BR")}</span>
+                <form action={setOptout}>
+                  <input type="hidden" name="op" value="remove" />
+                  <input type="hidden" name="name" value={o.name} />
+                  <button className="text-[11px] underline">devolver</button>
+                </form>
+              </li>
+            ))}
+          </ul>
         )}
       </Box>
 

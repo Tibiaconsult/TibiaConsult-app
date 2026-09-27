@@ -14,6 +14,7 @@ export interface Death {
   level: number | null;
   reason: string | null;
   by_player: boolean;
+  guild?: string | null;
 }
 
 const when = (iso: string) =>
@@ -59,6 +60,7 @@ export default function DeathList({ deaths }: { deaths: Death[] }) {
               {d.vocation ? ` · ${d.vocation}` : ""}
               {d.world ? ` · ${d.world}` : ""}
             </span>
+            {d.guild && <span className="tag tag-ice whitespace-nowrap">🛡️ {d.guild}</span>}
             {d.by_player && <span className="tag tag-fire">PvP</span>}
             <span className="text-[11px] opacity-80 ml-auto">{when(d.died_at)}</span>
             <div className="w-full text-[12px] opacity-90">{d.reason}</div>

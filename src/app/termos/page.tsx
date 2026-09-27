@@ -7,7 +7,7 @@ export default function TermosPage() {
   return (
     <div className="max-w-3xl">
       <h1>Termos de uso e privacidade</h1>
-      <Box title="Versão de 27/09/2026 (2)">
+      <Box title="Versão de 27/09/2026 (3)">
         <div className="space-y-3 text-[13px]">
           <p>
             Ao criar uma conta ou usar o TibiaConsult, você declara que leu e concorda com estes termos. Se não concordar, não crie conta: as páginas de
@@ -48,6 +48,11 @@ export default function TermosPage() {
             <li>Sugestões e relatos de erro enviados pela caixa de feedback.</li>
             <li>Level, experiência e mortes dos chars cadastrados, lidos do tibia.com pela API pública do TibiaData.</li>
             <li>Tempo online dos chars cadastrados, contado a cada 5 minutos pela lista pública de quem está online no mundo.</li>
+            <li>
+              Membros das guildas acompanhadas (Rangers e Rangers Academy, em Belobra): nome, level, vocação, cargo, mortes e tempo online, tirados das páginas
+              públicas do tibia.com, como fazem os sites de estatísticas de guilda. Eles aparecem no mural, no ranking, no Funcionário do Mês e no perfil
+              público mesmo sem conta. Quem não quiser aparecer pede pelo <Link href="/feedback">Reportar ou sugerir</Link> e o char sai de todas as páginas.
+            </li>
             <li>Causos, comentários, reações e denúncias que você fizer na comunidade.</li>
           </ul>
           <p>
