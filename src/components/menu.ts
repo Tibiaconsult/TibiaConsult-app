@@ -91,7 +91,7 @@ export const MENU: MenuGroup[] = [
         label: "Exp, exercise, stamina e bless",
         keywords: "calculadora experiencia exercise weapons stamina blessing treino",
       },
-      { href: "/ferramentas/loot", label: "LootSplit", keywords: "divisao de loot party hunt analyser split transferencia" },
+      { href: "/ferramentas/loot", label: "LootSplit ⭐", keywords: "divisao de loot party hunt analyser split transferencia" },
     ],
   },
   {

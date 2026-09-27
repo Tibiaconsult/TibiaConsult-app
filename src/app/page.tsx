@@ -8,6 +8,7 @@ import { TIBIA } from "@/lib/icons";
 import type { Voc } from "@/lib/active";
 import { ALL_VOCS } from "@/components/voc-list";
 import HowTo from "@/components/HowTo";
+import LootSplitSpotlight from "@/components/LootSplitSpotlight";
 import HomePanel from "./HomePanel";
 
 export default async function Home() {
@@ -17,6 +18,7 @@ export default async function Home() {
   return (
     <div>
       <HomePanel initialVoc={initialVoc} />
+      <LootSplitSpotlight />
       <HowTo />
       <Box title="Hoje no Tibia">
         <div className="flex flex-wrap gap-6 items-center">
