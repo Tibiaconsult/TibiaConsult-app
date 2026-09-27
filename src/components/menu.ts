@@ -20,8 +20,7 @@ export const MENU: MenuGroup[] = [
     icon: "news",
     items: [
       { href: "/", label: "Bem-vindo", keywords: "home inicio boosted rashid" },
-      { href: "/tibia/calendario", label: "Calendário do Tibia", keywords: "eventos double xp rapid respawn halloween natal evento calendario" },
-      { href: "/tibia/noticias", label: "Notícias do Tibia", keywords: "news noticias tibia.com anuncio atualizacao" },
+      { href: "/tibia/calendario", label: "Calendário do Tibia", keywords: "noticias news tibia.com eventos double xp rapid respawn halloween natal evento calendario" },
       { href: "/novidades", label: "Novidades do site", keywords: "atualizacoes changelog site" },
       { href: "/instalar", label: "Instalar o app", keywords: "app instalar celular pc windows barra de tarefas fixar tela inicial iphone android" },
       { href: "/feedback", label: "Reportar ou sugerir", keywords: "bug erro sugestao feedback" },
@@ -55,9 +54,9 @@ export const MENU: MenuGroup[] = [
     label: "Montar",
     icon: "abouttibia",
     items: [
-      { href: "/simulador/set", label: "Set", keywords: "montador equipamento inventario itens" },
-      { href: "/planejador/wheel", label: "Wheel of Destiny", keywords: "roda de habilidade wheel wod pontos" },
-      { href: "/rotacoes", label: "Rotações e combos", keywords: "combo rotacao sequencia magias" },
+      { href: "/simulador/set", label: "Set", keywords: "equipamento itens por slot armas montador equipamento inventario itens" },
+      { href: "/planejador/wheel", label: "Wheel e gemas", keywords: "gemas mods supremos basicos sage gem builds prontas roda de habilidade wheel wod pontos" },
+      { href: "/rotacoes", label: "Rotações, combos e cooldowns", keywords: "cooldowns magias spells tempo grupo combo rotacao sequencia magias" },
       { href: "/planejador/proficiencia", label: "Proficiência e catalisadores", keywords: "proficiency perks catalyst catalisador dust po evolucao arma" },
     ],
   },
@@ -90,16 +89,6 @@ export const MENU: MenuGroup[] = [
         keywords: "calculadora experiencia exercise weapons stamina blessing treino",
       },
       { href: "/ferramentas/loot", label: "LootSplit", keywords: "divisao de loot party hunt analyser split transferencia" },
-    ],
-  },
-  {
-    id: "consultar",
-    label: "Consultar",
-    icon: "library",
-    items: [
-      { href: "/cooldowns", label: "Cooldowns", keywords: "magias spells tempo grupo" },
-      { href: "/gemas", label: "Gemas", keywords: "mods supremos basicos sage gem" },
-      { href: "/equipamento", label: "Equipamento", keywords: "itens por slot armas" },
     ],
   },
   {

@@ -43,6 +43,24 @@ export default async function VocationPage({
       <h1>{v.promoted}</h1>
       <p className="on-dark mb-4">{v.intro}</p>
 
+      <Box title={`Atalhos de ${v.promoted}`}>
+        <div className="flex flex-wrap gap-2">
+          {[
+            [`/simulador/set?voc=${v.id}`, "🛡️ Montar set"],
+            [`/rotacoes?voc=${v.id}`, "🔁 Combos e cooldowns"],
+            [`/simulador?voc=${v.id}`, "💥 Simulador de dano"],
+            [`/hunts/preparar?voc=${v.id}`, "🎒 Preparar para a hunt"],
+            [`/planejador/proficiencia?voc=${v.id}`, "⚔️ Proficiência"],
+            [`/gemas?voc=${v.id}`, "💎 Gemas"],
+            [`/equipamento?voc=${v.id}`, "🧰 Itens por slot"],
+          ].map(([href, label]) => (
+            <Link key={href} className="tc-btn !py-0.5" href={href}>
+              {label}
+            </Link>
+          ))}
+        </div>
+      </Box>
+
       <Box title="Stances (desde 06/2026)">
         <div className="grid gap-3 sm:grid-cols-2">
           {v.stances.map((s) => (

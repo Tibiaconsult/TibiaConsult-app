@@ -51,7 +51,7 @@ export default async function NoticiasPage() {
           {news.map((n, i) => {
             const c = NEWS_CATEGORY[n.category ?? ""] ?? { pt: n.category ?? "Notícia", emoji: "📰" };
             return (
-              <section key={n.id} className="tc-panel">
+              <section key={n.id} id={`n${n.id}`} className="tc-panel scroll-mt-24">
                 <div className="tc-title text-left flex flex-wrap items-baseline gap-x-2">
                   <span>
                     {c.emoji} {n.title}
