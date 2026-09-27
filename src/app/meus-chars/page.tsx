@@ -32,9 +32,7 @@ export default async function MeusCharsPage({ searchParams }: { searchParams: Pr
       <Box title="Seus chars">
         <div className="grid gap-3 md:grid-cols-2">
           {(chars ?? []).map((c) => {
-            const setResumo = [c.wand && `${c.wand}${c.wand_tier ? ` T${c.wand_tier}` : ""}`, c.helmet, c.armor, c.legs, c.boots]
-              .filter(Boolean)
-              .join(" · ");
+            const setResumo = [c.wand && `${c.wand}${c.wand_tier ? ` T${c.wand_tier}` : ""}`, c.helmet, c.armor, c.legs, c.boots].filter(Boolean).join(" · ");
             return (
               <Link key={c.id} href={`/meus-chars/${c.id}`} className="block border border-[#b98a5a] rounded p-3 bg-white/40 hover:bg-white/70 no-underline">
                 <div className="font-bold text-[#3a1a00] text-[14px]">{c.name}</div>

@@ -4,14 +4,28 @@ import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 import { SLOTS } from "@/data/equipment";
 import { SetChoice, SlotId, emptySet, encodeSet } from "@/lib/set";
-import { deleteChar, updateChar } from "../actions";
+import { checkVerify, deleteChar, startVerify, updateChar } from "../actions";
 import { VOCATIONS } from "../vocations";
 
 function slotItems(id: string): string[] {
   return SLOTS.find((s) => s.id === id)?.items.map((i) => i.name) ?? [];
 }
 
-function ItemSelect({ name, label, value, slot, withTier, tier }: { name: string; label: string; value: string | null; slot: string; withTier?: boolean; tier?: number }) {
+function ItemSelect({
+  name,
+  label,
+  value,
+  slot,
+  withTier,
+  tier,
+}: {
+  name: string;
+  label: string;
+  value: string | null;
+  slot: string;
+  withTier?: boolean;
+  tier?: number;
+}) {
   const options = slotItems(slot);
   const custom = value && !options.includes(value);
   return (
@@ -38,7 +52,16 @@ function ItemSelect({ name, label, value, slot, withTier, tier }: { name: string
   );
 }
 
-const SLOT_WORDS: Record<string, SlotId> = { wand: "wand", elmo: "helmet", helmet: "helmet", armadura: "armor", armor: "armor", spellbook: "spellbook", botas: "boots", boots: "boots" };
+const SLOT_WORDS: Record<string, SlotId> = {
+  wand: "wand",
+  elmo: "helmet",
+  helmet: "helmet",
+  armadura: "armor",
+  armor: "armor",
+  spellbook: "spellbook",
+  botas: "boots",
+  boots: "boots",
+};
 const IMB_WORDS: Record<string, string> = {
   epiphany: "epiphany",
   void: "void",
@@ -81,10 +104,16 @@ function charToSet(c: Record<string, unknown>): SetChoice {
   return s;
 }
 
-export default async function CharPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ salvo?: string; erro?: string }> }) {
+export default async function CharPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ salvo?: string; erro?: string; verif?: string }>;
+}) {
   if (!hasSupabaseEnv()) redirect("/entrar");
   const { id } = await params;
-  const { salvo, erro } = await searchParams;
+  const { salvo, erro, verif } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -117,12 +146,52 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             Usar este char no simulador de dano
           </a>
         ) : null}
-        <a className="tc-btn" href={`/planejador/wheel?level=${c.level}&voc=${c.vocation.charAt(0).toUpperCase() + c.vocation.slice(1)}${c.wheel_code && /^[KPSDM][A-Za-z0-9_-]{8,}$/.test(c.wheel_code) ? `&code=${c.wheel_code}` : ""}`}>
+        <a
+          className="tc-btn"
+          href={`/planejador/wheel?level=${c.level}&voc=${c.vocation.charAt(0).toUpperCase() + c.vocation.slice(1)}${c.wheel_code && /^[KPSDM][A-Za-z0-9_-]{8,}$/.test(c.wheel_code) ? `&code=${c.wheel_code}` : ""}`}
+        >
           Planejar a Wheel
         </a>
       </div>
 
-      {/* Verificação de dono do char (código no comentário do tibia.com): pronta em startVerify/checkVerify, desligada por decisão de 26/09/2026. */}
+      <div id="verificar" className="max-w-4xl scroll-mt-24">
+        <Box title={c.verified ? "Char verificado" : "Verificar o char (para postar na Taverna e no mural)"}>
+          {c.verified ? (
+            <p className="good text-[12px]">
+              {c.name} é seu, verificado{c.verified_at ? ` em ${new Date(c.verified_at).toLocaleDateString("pt-BR")}` : ""}. Já dá para contar causos na{" "}
+              <Link href="/comunidade/taverna">Taverna</Link> e comentar no mural. Para ter perfil público, ligue &quot;Mostrar no mural, no ranking e no perfil
+              público&quot; no quadro Básico e salve.
+            </p>
+          ) : (
+            <div className="space-y-2 text-[12px]">
+              <p>
+                A verificação prova que o char é seu e impede que alguém poste fingindo ser você. É rápido: gere um código, cole em qualquer parte do comentário
+                do char no tibia.com (Account Management, Edit Character, Comment), salve lá e clique em &quot;Verificar agora&quot;. Depois pode apagar o
+                código do comentário.
+              </p>
+              {c.verify_code && (
+                <p>
+                  Seu código: <code className="bg-white/70 px-2 py-0.5 rounded font-bold">{c.verify_code}</code>
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2">
+                <form action={startVerify}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button className="tc-btn">{c.verify_code ? "Gerar outro código" : "Gerar código"}</button>
+                </form>
+                {c.verify_code && (
+                  <form action={checkVerify}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <button className="tc-btn">Verificar agora</button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
+          {verif && verif !== "codigo" && <p className={verif === "ok" ? "good mt-2" : "bad mt-2"}>{verif === "ok" ? "Char verificado." : verif}</p>}
+        </Box>
+      </div>
+
       <form action={updateChar} className="max-w-4xl">
         <input type="hidden" name="id" value={c.id} />
 
@@ -165,8 +234,8 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             <label className="flex items-start gap-2 sm:col-span-2 text-[12px]">
               <input type="checkbox" name="public_profile" defaultChecked={Boolean(c.public_profile)} className="mt-0.5" />
               <span>
-                Mostrar no mural &quot;Caixão e Vela Preta&quot; e no ranking de XP. Ficam visíveis para todos: nome, mundo, vocação, level, XP
-                ganha e mortes.
+                Mostrar no mural &quot;Caixão e Vela Preta&quot;, no ranking de XP e no perfil público. Ficam visíveis para todos: nome, mundo, vocação, level,
+                XP ganha, mortes e conquistas. O perfil público só aparece com o char verificado.
               </span>
             </label>
           </div>
@@ -184,7 +253,13 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             <ItemSelect name="amulet" label="Amuleto" value={c.amulet} slot="amulet" />
             <label className="sm:col-span-2">
               Imbuements (um por linha: slot e imbuement)
-              <textarea name="imbuements" rows={3} defaultValue={c.imbuements ?? ""} className="mt-1 w-full" placeholder={"Elmo: Powerful Epiphany + Powerful Void\nWand: Powerful Void + Powerful Vampirism"} />
+              <textarea
+                name="imbuements"
+                rows={3}
+                defaultValue={c.imbuements ?? ""}
+                className="mt-1 w-full"
+                placeholder={"Elmo: Powerful Epiphany + Powerful Void\nWand: Powerful Void + Powerful Vampirism"}
+              />
             </label>
           </div>
         </Box>
@@ -197,11 +272,22 @@ export default async function CharPage({ params, searchParams }: { params: Promi
             </label>
             <label>
               Resumo
-              <input name="wheel_summary" defaultValue={c.wheel_summary ?? ""} className="mt-1 w-full" placeholder="Beam Mastery T2 + Energy Wave T1 + Death Echo T1" />
+              <input
+                name="wheel_summary"
+                defaultValue={c.wheel_summary ?? ""}
+                className="mt-1 w-full"
+                placeholder="Beam Mastery T2 + Energy Wave T1 + Death Echo T1"
+              />
             </label>
             <label className="sm:col-span-2">
               Gemas (uma por linha: domínio, mods, grade)
-              <textarea name="gems" rows={4} defaultValue={c.gems ?? ""} className="mt-1 w-full" placeholder={"Sup. direito: Greater Sage, Mana +600 | Energy +2% | RM Beam Mastery (grade I), VR III"} />
+              <textarea
+                name="gems"
+                rows={4}
+                defaultValue={c.gems ?? ""}
+                className="mt-1 w-full"
+                placeholder={"Sup. direito: Greater Sage, Mana +600 | Energy +2% | RM Beam Mastery (grade I), VR III"}
+              />
             </label>
           </div>
         </Box>
@@ -210,7 +296,13 @@ export default async function CharPage({ params, searchParams }: { params: Promi
           <div className="grid gap-3">
             <label>
               Hunts que faz e exp/h (uma por linha)
-              <textarea name="hunts" rows={4} defaultValue={c.hunts ?? ""} className="mt-1 w-full" placeholder={"Asura Citadel solo: 6,5kk/h\nNorcferatu East (team): 9kk/h"} />
+              <textarea
+                name="hunts"
+                rows={4}
+                defaultValue={c.hunts ?? ""}
+                className="mt-1 w-full"
+                placeholder={"Asura Citadel solo: 6,5kk/h\nNorcferatu East (team): 9kk/h"}
+              />
             </label>
             <label>
               Outras notas
