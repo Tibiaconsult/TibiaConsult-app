@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { wikiImage } from "@/lib/md5";
 
 // Rashid muda de cidade a cada server save (10h no horário de Berlim). Fonte: TibiaWiki, Rashid (consulta em 26/09/2026).
 const PLACES: Record<number, { city: string; where: string }> = {
@@ -35,7 +34,7 @@ export default function Rashid() {
   return (
     <div className="flex items-center gap-2">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={wikiImage("Rashid")} alt="" width={32} height={32} className="sprite" />
+      <img src="/rashid.webp" alt="" width={32} height={32} className="sprite" />
       <div className="text-[12px] leading-tight">
         <div className="muted text-[10px]">Rashid hoje</div>
         <div className="font-bold">{p.city}</div>

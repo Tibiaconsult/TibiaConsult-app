@@ -932,3 +932,23 @@ p.on-dark {
     animation: none;
   }
 }
+
+/* Rashid no banner da Taverna (TavernPromo) */
+@keyframes tc-rashid-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+.tc-rashid {
+  animation: tc-rashid-bob 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.6));
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-rashid {
+    animation: none;
+  }
+}
