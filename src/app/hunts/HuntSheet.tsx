@@ -5,6 +5,7 @@ import { creatureHref } from "@/lib/creature-labels";
 import { creatureIcon } from "@/lib/icons";
 import GuildHuntStats from "./GuildHuntStats";
 import HuntDrops from "./HuntDrops";
+import type { HuntDropsData } from "@/lib/hunt-loot";
 import HuntMapBox from "./HuntMapBox";
 import HuntSupplies from "./HuntSupplies";
 import VocSets from "./VocSets";
@@ -15,7 +16,7 @@ function pct(v: number) {
 }
 
 /** Ficha completa de uma hunt. */
-export default function HuntSheet({ h }: { h: Hunt }) {
+export default function HuntSheet({ h, drops }: { h: Hunt; drops?: HuntDropsData }) {
   const rec = HUNT_RECS[h.id];
   return (
     <div>
@@ -56,7 +57,7 @@ export default function HuntSheet({ h }: { h: Hunt }) {
       <HuntMapBox id={h.id} name={h.name} />
       <div className="grid gap-3 lg:grid-cols-2">
         <HuntSupplies h={h} recLevel={rec?.solo ?? {}} teamLevel={rec?.team ?? null} />
-        <HuntDrops h={h} />
+        {drops && <HuntDrops drops={drops} />}
       </div>
 
       <div className="overflow-x-auto mt-4">

@@ -1,7 +1,6 @@
 import Link from "next/link";
-import type { Hunt } from "@/data/hunts";
 import { creatureHref } from "@/lib/creature-labels";
-import { HuntDrop, huntDrops } from "@/lib/hunt-loot";
+import type { HuntDrop, HuntDropsData } from "@/lib/hunt-loot";
 import { itemIcon } from "@/lib/icons";
 import { fmtK } from "@/lib/huntanalyser";
 
@@ -30,8 +29,8 @@ function Row({ d }: { d: HuntDrop }) {
 }
 
 /** O que paga a hunt: itens que mais rendem em média e os raros caros. */
-export default function HuntDrops({ h }: { h: Hunt }) {
-  const { top, rare, goldPerKill } = huntDrops(h);
+export default function HuntDrops({ drops }: { drops: HuntDropsData }) {
+  const { top, rare, goldPerKill } = drops;
   if (!top.length) return null;
   const itemsPerKill = top.reduce((a, d) => a + d.perKill, 0);
   return (
