@@ -995,3 +995,110 @@ p.on-dark {
 .tc-drawing.leaflet-container {
   cursor: crosshair;
 }
+
+/* ===== "Hoje no Tibia" em pódio, na arte do cabeçalho ===== */
+.tc-podium {
+  margin-top: -146px;
+  height: 136px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.tc-podium-title {
+  font-family: var(--font-title);
+  font-size: 15px;
+  color: var(--gold);
+  text-shadow: 0 2px 0 #4a2e00, 0 0 8px #000;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.tc-podium-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+.tc-podium-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  text-decoration: none !important;
+  color: #f5e6c8;
+}
+.tc-podium-sprite {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  margin-bottom: -4px;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.7));
+  transition: transform 0.15s;
+}
+a.tc-podium-step:hover .tc-podium-sprite {
+  transform: translateY(-3px) scale(1.06);
+}
+.tc-podium-block {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 4px;
+  background: linear-gradient(#5b4a36, #2e2418);
+  border: 1px solid #000;
+  border-top: 2px solid #d9a441;
+  border-radius: 4px 4px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  line-height: 1.15;
+}
+.tc-podium-place {
+  position: absolute;
+  top: -11px;
+  left: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #d9a441;
+  color: #2a1a08;
+  font: bold 11px/20px Arial, sans-serif;
+  border: 1px solid #000;
+}
+.tc-podium-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.8;
+}
+.tc-podium-name {
+  font-size: 12px;
+  color: #f3d27a;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .tc-podium {
+    margin-top: 8px;
+    height: auto;
+    padding: 6px 0 0;
+    background: rgba(5, 17, 34, 0.78);
+    border: 1px solid rgba(246, 211, 114, 0.35);
+    border-radius: 4px;
+  }
+  .tc-podium-step {
+    width: 31vw;
+    max-width: 130px;
+  }
+  .tc-podium-sprite {
+    width: 48px;
+    height: 48px;
+  }
+  .tc-podium-name {
+    font-size: 11px;
+    max-width: 29vw;
+  }
+}

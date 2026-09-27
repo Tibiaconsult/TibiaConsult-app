@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { itemIcon, spellIcon } from "@/lib/icons";
-import Boosted from "./Boosted";
 import EventsToday from "./EventsToday";
 import InstallGuide from "./InstallGuide";
-import Rashid from "./Rashid";
 import TavernPromo from "./TavernPromo";
 
 function ThemeBox({ title, children }: { title: string; children: React.ReactNode }) {
@@ -19,12 +17,8 @@ export default function RightColumn() {
   const ew = spellIcon("energy-wave");
   return (
     <aside className="tc-right">
-      <ThemeBox title="Hoje no Tibia">
-        <div className="space-y-2">
-          <Boosted compact />
-          <Rashid />
-          <EventsToday />
-        </div>
+      <ThemeBox title="Eventos">
+        <EventsToday />
       </ThemeBox>
       <TavernPromo />
       <ThemeBox title="Atalhos">
