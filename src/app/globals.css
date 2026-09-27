@@ -1102,3 +1102,22 @@ a.tc-podium-step:hover .tc-podium-sprite {
     max-width: 29vw;
   }
 }
+
+/* ===== Página que vira app sozinha (ex.: /lootsplit): sem menu, colunas nem pódio ===== */
+body:has(.tc-standalone) {
+  background: radial-gradient(circle at 50% 0, #3a2410, #0d0804 70%);
+}
+body:has(.tc-standalone) .tc-sidebar,
+body:has(.tc-standalone) .tc-right,
+body:has(.tc-standalone) .tc-podium,
+body:has(.tc-standalone) .tc-activebar,
+body:has(.tc-standalone) .tc-mobilenav,
+body:has(.tc-standalone) .tc-feedback-fab,
+body:has(.tc-standalone) .tc-footer {
+  display: none !important;
+}
+body:has(.tc-standalone) .tc-page {
+  display: block;
+  max-width: 980px;
+  padding: 16px 12px 24px;
+}
