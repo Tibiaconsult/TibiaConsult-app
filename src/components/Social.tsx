@@ -79,7 +79,7 @@ export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
         <Link href="/entrar" style={link}>
           Entre
         </Link>{" "}
-        para postar, comentar e reagir.
+        para comentar e reagir.
       </p>
     );
   if (!me.locked.length)
@@ -89,7 +89,7 @@ export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
         <Link href="/meus-chars" style={link}>
           Meus chars
         </Link>{" "}
-        para postar e comentar. Reagir você já pode.
+        para comentar. Reagir você já pode.
       </p>
     );
   const target = me.locked.find((c) => c.id === char?.id) ?? me.locked[0];
@@ -108,8 +108,8 @@ export function ReleaseChar({ me, dark }: { me: Me; dark?: boolean }) {
         {busy ? "Liberando..." : `🍺 Liberar ${target.name} na comunidade`}
       </button>
       <p className="opacity-80">
-        Com um clique o char pode postar e comentar, e aparece no mural, no ranking, no Funcionário do Mês e no perfil público. Dá para desligar quando quiser
-        em Meus chars.
+        Com um clique o char pode comentar e contar fofoca pro Rashid, e aparece no mural, no ranking, no Funcionário do Mês e no perfil público. Dá para
+        desligar quando quiser em Meus chars.
       </p>
       {msg && <p className="bad">{msg}</p>}
     </div>
@@ -199,7 +199,7 @@ export function ReactionBar({
   );
 }
 
-/** Denunciar um causo ou comentário. Com 3 denúncias ele some até a moderação olhar. */
+/** Denunciar uma fofoca ou comentário. Com 3 denúncias ele some até a moderação olhar. */
 export function ReportButton({ type, id, me, dark }: { type: "post" | "comment" | "gossip"; id: string; me: Me; dark?: boolean }) {
   const [state, setState] = useState<"idle" | "ask" | "done">("idle");
   const [reason, setReason] = useState("");
@@ -248,7 +248,7 @@ export function friendlyError(msg: string): string {
   return `Não foi possível enviar: ${msg}`;
 }
 
-/** Comentários de um causo ou de uma morte; abre sob demanda. */
+/** Comentários de uma morte; abre sob demanda. */
 export function CommentThread({
   type,
   targetKey,

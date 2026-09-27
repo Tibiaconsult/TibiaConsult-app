@@ -1,22 +1,22 @@
 "use client";
 
-// Banner da lateral: o Rashid, garoto-propaganda da Taverna, com falas que se revezam e o mesmo item que está no topo da Taverna.
+// Banner da lateral: o Rashid, garoto-propaganda da Taverna, com falas que se revezam e a mesma morte que está no topo da Taverna.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { kindOf, timeAgo } from "@/lib/social";
+import { timeAgo } from "@/lib/social";
 import { gossipLines, rashidRumor } from "@/lib/rashid";
 import { hasDb } from "@/lib/social-client";
 import { TimelineItem, fetchTimeline, onSocialChange } from "@/lib/timeline";
 
 const LINES = [
   "Psiu! Morreu pra rat? Aqui ninguém julga. Muito.",
-  "Compro causos. Pago em risadas.",
-  "Na minha taverna a bless é opcional. A história, não.",
+  "Morreu? Relaxa. Eu conto pra todo mundo.",
+  "Na minha taverna a bless é opcional. A fofoca, não.",
   "Toda semana eu mudo de cidade. A Taverna fica.",
-  "Drop raro? Vacilo épico? Conta aí, eu compro.",
-  "Deixou o utamo em casa? Senta que lá vem história.",
+  "O Henricus já está separando as bless da semana.",
+  "Deixou o utamo em casa? Vem comentar no balcão.",
   "Viu uma morte patética? Me conta. Não conto pra ninguém. (Conto sim.)",
 ];
 
@@ -40,7 +40,7 @@ export default function TavernPromo() {
 
   return (
     <div className="tc-themebox overflow-hidden">
-      <div className="tc-themebox-title">🍺 Causos da Taverna</div>
+      <div className="tc-themebox-title">🍺 Taverna</div>
       <div className="relative px-2 pt-2 pb-2.5" style={{ background: "linear-gradient(#4a2c16, #2a170b)", color: "#f3e3c3" }}>
         {/* tábuas do balcão */}
         <div
@@ -71,17 +71,8 @@ export default function TavernPromo() {
             <div className="opacity-70">Espiando a Taverna...</div>
           ) : top === null ? (
             <div>
-              A Taverna está esperando o primeiro causo. <b style={{ color: "#f3d27a" }}>Pode ser o seu.</b>
+              Ninguém morreu ainda. <b style={{ color: "#f3d27a" }}>Por enquanto.</b>
             </div>
-          ) : top.type === "post" ? (
-            <>
-              <div className="text-[10px] opacity-75">
-                Último causo · {timeAgo(top.post.created_at)} · {kindOf(top.post.kind).emoji} {kindOf(top.post.kind).label}
-              </div>
-              <div className="line-clamp-2">
-                <b style={{ color: "#f3d27a" }}>{top.post.char_name}:</b> {top.post.body}
-              </div>
-            </>
           ) : top.gossips.length ? (
             <>
               <div className="text-[10px] opacity-75">🤫 Fofoca fresquinha · {timeAgo(top.gossips[top.gossips.length - 1].created_at)}</div>
