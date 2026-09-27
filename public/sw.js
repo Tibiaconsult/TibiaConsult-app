@@ -13,8 +13,8 @@ self.addEventListener("push", (e) => {
   e.waitUntil(
     self.registration.showNotification(d.title || "TibiaConsult", {
       body: d.body || "",
-      icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      icon: "/icon-192-tc.png",
+      badge: "/icon-192-tc.png",
       tag: d.tag,
       data: { url: d.url || "/notificacoes" },
     }),
