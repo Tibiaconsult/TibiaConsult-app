@@ -1,15 +1,14 @@
 "use client";
 
-// Banner da lateral: o Rashid, garoto-propaganda da Taverna, com falas que se revezam e o último causo publicado.
+// Banner da lateral: o Rashid, garoto-propaganda da Taverna, com falas que se revezam e o mesmo item que está no topo da Taverna.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { kindOf, timeAgo } from "@/lib/social";
-import { RumorDeath, gossipLines, rashidRumor } from "@/lib/rashid";
-import { recentDeaths } from "@/components/GossipBoard";
-import { Gossip, hasDb, recentGossips } from "@/lib/social-client";
-import { createClient } from "@/lib/supabase/client";
+import { gossipLines, rashidRumor } from "@/lib/rashid";
+import { hasDb } from "@/lib/social-client";
+import { TimelineItem, fetchTimeline, onSocialChange } from "@/lib/timeline";
 
 const LINES = [
   "Psiu! Morreu pra rat? Aqui ninguém julga. Muito.",
@@ -21,36 +20,22 @@ const LINES = [
   "Viu uma morte patética? Me conta. Não conto pra ninguém. (Conto sim.)",
 ];
 
-interface Last {
-  char_name: string;
-  kind: string;
-  body: string;
-  created_at: string;
-}
-
 export default function TavernPromo() {
   const onTavern = usePathname() === "/comunidade/taverna";
   const [line, setLine] = useState(0);
-  const [last, setLast] = useState<Last | null>(null);
-  const [gossip, setGossip] = useState<Gossip | null>(null);
-  const [death, setDeath] = useState<RumorDeath | null>(null);
+  const [top, setTop] = useState<TimelineItem | null | undefined>(undefined);
 
   useEffect(() => {
     const t = setInterval(() => setLine((l) => (l + 1) % LINES.length), 4500);
     return () => clearInterval(t);
   }, []);
 
+  // o mesmo item que está no topo da Taverna
   useEffect(() => {
     if (!hasDb()) return;
-    createClient()
-      .from("posts")
-      .select("char_name, kind, body, created_at")
-      .eq("hidden", false)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .then(({ data }) => setLast((data?.[0] as Last) ?? null));
-    recentGossips(1).then((g) => setGossip(g[0] ?? null));
-    recentDeaths(1).then((d) => setDeath(d[0] ?? null));
+    const load = () => fetchTimeline(null, 1).then((l) => setTop(l[0] ?? null));
+    load();
+    return onSocialChange(load);
   }, []);
 
   return (
@@ -82,29 +67,33 @@ export default function TavernPromo() {
         <div className="relative text-[10px] opacity-80 -mt-1 mb-1.5">Rashid, garoto-propaganda (e freguês) da Taverna</div>
 
         <div className="relative rounded px-2 py-1.5 text-[11px] mb-2" style={{ background: "rgba(0,0,0,.35)", border: "1px solid #7a5230" }}>
-          {gossip && (!last || gossip.created_at > last.created_at) ? (
-            <>
-              <div className="text-[10px] opacity-75">🤫 Fofoca fresquinha · {timeAgo(gossip.created_at)}</div>
-              <div className="line-clamp-3">{gossipLines(gossip).text}</div>
-            </>
-          ) : death && (!last || death.died_at > last.created_at) ? (
-            <>
-              <div className="text-[10px] opacity-75">🗣️ Boato do Rashid · {timeAgo(death.died_at)}</div>
-              <div className="line-clamp-3">{rashidRumor(death).text}</div>
-            </>
-          ) : last ? (
-            <>
-              <div className="text-[10px] opacity-75">
-                Último causo · {timeAgo(last.created_at)} · {kindOf(last.kind).emoji} {kindOf(last.kind).label}
-              </div>
-              <div className="line-clamp-2">
-                <b style={{ color: "#f3d27a" }}>{last.char_name}:</b> {last.body}
-              </div>
-            </>
-          ) : (
+          {top === undefined ? (
+            <div className="opacity-70">Espiando a Taverna...</div>
+          ) : top === null ? (
             <div>
               A Taverna está esperando o primeiro causo. <b style={{ color: "#f3d27a" }}>Pode ser o seu.</b>
             </div>
+          ) : top.type === "post" ? (
+            <>
+              <div className="text-[10px] opacity-75">
+                Último causo · {timeAgo(top.post.created_at)} · {kindOf(top.post.kind).emoji} {kindOf(top.post.kind).label}
+              </div>
+              <div className="line-clamp-2">
+                <b style={{ color: "#f3d27a" }}>{top.post.char_name}:</b> {top.post.body}
+              </div>
+            </>
+          ) : top.gossips.length ? (
+            <>
+              <div className="text-[10px] opacity-75">🤫 Fofoca fresquinha · {timeAgo(top.gossips[top.gossips.length - 1].created_at)}</div>
+              <div className="line-clamp-3">{gossipLines(top.gossips[top.gossips.length - 1]).text}</div>
+            </>
+          ) : (
+            <>
+              <div className="text-[10px] opacity-75">
+                🗣️ Boato do Rashid · {top.death.name} morreu {timeAgo(top.death.died_at)}
+              </div>
+              <div className="line-clamp-3">{rashidRumor(top.death).text}</div>
+            </>
           )}
         </div>
 

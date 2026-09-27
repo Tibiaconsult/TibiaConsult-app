@@ -115,6 +115,37 @@ const GENERIC: T[] = [
   (n, k) => `${n} jura que o ${k} veio de lado. O ${k} jura que veio de frente, sorrindo.`,
   (n) => `${n} estava sem bless e com fé. A fé não protege item.`,
   (n, _k, l) => `${n} ia upar pro ${Number(l) + 1 || "próximo"} hoje. Hoje não, amanhã talvez.`,
+  (n) => `${n} foi sem SSA porque "é só uma passadinha". Foi mesmo.`,
+  (n) => `${n} deixou o might ring no depot pra não gastar carga. Economizou o anel, gastou o level.`,
+  (n, k) => `${n} jura que a mãe chamou pra jantar bem na hora do ${k}. A janta estava ótima.`,
+  (n) => `${n} foi fazer xixi rapidinho e deixou o char no respawn. Voltou aliviado e sem level.`,
+  (n, k) => `${n} saiu da hunt pra atender o interfone e o ${k} atendeu o ${n}.`,
+  (n) => `${n} disse que a hotkey mudou sozinha. As hotkeys negam.`,
+  (n) => `${n} usou o mouse com duplo clique fantasma. O clique foi pro templo.`,
+  (n) => `${n} estava tão focado no loot que esqueceu que tinha barra de vida.`,
+  (n) => `${n} foi checar o preço do char no Bazaar. Agora o char vale menos.`,
+  (n, _k, l) => `${n} caiu do level ${l} e já está pensando em voltar pra Rookgaard, onde era feliz.`,
+  (n) => `${n} tinha 3 potions na backpack e fé no coração. Faltou fé.`,
+  (n) => `${n} achou que o server save era às 11 e o respawn achou que era agora.`,
+  (n, k) => `${n} pediu "segura aí rapidinho" pro blocker. O blocker segurou. O ${k} também.`,
+  (n) => `${n} estava comendo e jogando com uma mão só. A mão errada.`,
+  (n) => `${n} desceu a escada certa, no andar errado, na hora errada.`,
+  (n) => `${n} usou o utito tempo na hora que precisava de utamo. Coragem demais, mana de menos.`,
+  (n, k) => `${n} gritou "exura" no chat do Default em vez de apertar a hotkey. O ${k} leu e riu.`,
+  (n) => `${n} disse que ia só terminar a task. A task terminou ${n}.`,
+  (n) => `${n} dormiu no teclado com o char na hunt. Acordou no templo com a marca do F4 na testa.`,
+  (n, k) => `${n} tentou fugir do ${k} pela escada. A escada estava do outro lado do mapa.`,
+  (n) => `${n} deixou o char no offline training... ah não, era a hunt mesmo.`,
+  (n) => `${n} foi olhar o Discord da guilda no meio da hunt. A guilda viu primeiro no mural.`,
+  (n) => `${n} garante que a internet caiu. O Discord dele ficou online o tempo todo.`,
+  (n) => `${n} esqueceu de renovar o imbuement. O imbuement lembrou de ${n}.`,
+  (n) => `${n} estava sem amulet of loss e com muita esperança. A esperança não é item.`,
+  (n, k) => `${n} desafiou o ${k} pra um x1. Perdeu no x1.`,
+  (n, k) => `a esposa de ${n} cansou de esperar e puxou o PC da tomada. O ${k} agradece a colaboração.`,
+  (n) => `a esposa de ${n} avisou três vezes que o jantar estava pronto. Na quarta, desligou o PC da tomada.`,
+  (n) => `${n} prometeu pra esposa que era "só mais uma hunt". A esposa cumpriu a promessa por ele: tirou o PC da tomada.`,
+  (n, k) => `${n} pediu cinco minutinhos pra esposa. Ela deu dois, e o ${k} usou os outros três.`,
+  (n) => `a sogra de ${n} chegou de surpresa e alguém precisou ir abrir o portão. O char ficou sozinho no respawn.`,
 ];
 
 const PVP: T[] = [
@@ -124,6 +155,12 @@ const PVP: T[] = [
   (n, k) => `${n} jura que ${k} estava de bot. ${k} jura que ${n} estava de bobeira.`,
   (n, k) => `${n} e ${k} tinham uma treta antiga. Agora a treta tem placar.`,
   (n) => `${n} achou que o skull era enfeite. Não era.`,
+  (n, k) => `${n} chamou ${k} de noob no Advertising. ${k} respondeu com um tutorial ao vivo.`,
+  (n, k) => `${n} jura que ${k} tinha 5 chars no party. Tinha 1, mas era bom.`,
+  (n, k) => `${n} tentou dar exiva em ${k}. ${k} deu exori em ${n}.`,
+  (n) => `${n} saiu do PZ pra "só olhar". Olhou de perto demais.`,
+  (n, k) => `${n} ia denunciar ${k} por bot. Primeiro vai ter que sair do templo.`,
+  (n, k) => `${n} e ${k} vão resolver isso na DM do Instagram, igual gente grande.`,
 ];
 
 const MANY: T[] = [
@@ -132,6 +169,10 @@ const MANY: T[] = [
   (n, _k, _l, c) => `contaram ${c} bichos em cima de ${n}. Eu parei de contar no terceiro.`,
   (n) => `${n} fez um lure tão grande que o servidor pediu calma.`,
   (n) => `${n} falou "só mais um bicho" umas sete vezes seguidas.`,
+  (n) => `${n} achou que era um lure. Era uma excursão.`,
+  (n) => `${n} puxou tanto bicho que o respawn ao lado ficou vazio e reclamou.`,
+  (n, _k, _l, c) => `${c} contra 1. ${n} gosta de desafio, não de viver.`,
+  (n) => `${n} disse "vem, vem, vem" até que veio tudo.`,
 ];
 
 const FIELD: T[] = [
@@ -139,6 +180,9 @@ const FIELD: T[] = [
   (n) => `${n} pisou onde não devia. Pelo visto, a vida toda.`,
   (n) => `nem monstro precisou: ${n} resolveu sozinho com o piso.`,
   (n) => `${n} achou que o field era decoração. Decoração cara.`,
+  (n) => `${n} escorregou no chão e caiu na lista de mortes.`,
+  (n) => `o chão fez ${n} de otário. O chão, gente.`,
+  (n) => `${n} achou que o fogo era só visual. Era bem real.`,
 ];
 
 const WEAKK: T[] = [
@@ -146,6 +190,9 @@ const WEAKK: T[] = [
   (n, k) => `${n} subestimou o ${k}. O ${k} não subestimou ${n}.`,
   (n, k) => `os ${k}s da região estão comemorando desde ontem por causa de ${n}.`,
   (n, k) => `o ${k} que matou ${n} já está pedindo autógrafo no depot.`,
+  (n, k) => `${n} voltou pra Rookgaard em espírito: morreu pra ${k}.`,
+  (n, k) => `o ${k} contou pros amigos que derrubou ${n}. Ninguém acreditou até ver o mural.`,
+  (n, k) => `${n} está dizendo que era um ${k} "diferente". Era um ${k} normal.`,
 ];
 
 const BOSS: T[] = [
@@ -153,6 +200,9 @@ const BOSS: T[] = [
   (n, k) => `${n} achou que dava pra fazer ${k} de chinelo. Não dava.`,
   (n, k) => `${k} mandou avisar que ${n} pode voltar quando quiser. Adorou a visita.`,
   (n, k) => `${n} entrou na sala de ${k} falando "é rapidinho". Foi mesmo.`,
+  (n, k) => `${n} leu o guia de ${k} no TikTok. Faltou a parte 2.`,
+  (n, k) => `${k} agradece a ${n} pela doação de level. Volte sempre.`,
+  (n, k) => `${n} jurou que ia pegar o drop raro de ${k}. ${k} pegou o drop raro de ${n}.`,
 ];
 
 const RUMOR_OPEN = [
@@ -164,6 +214,11 @@ const RUMOR_OPEN = [
   "Segura essa:",
   "Boato quentinho do depot:",
   "Não fui eu que te contei, mas",
+  "Me contaram no barco de Venore que",
+  "O Djinn azul me sussurrou que",
+  "Enquanto eu vendia um tapete, ouvi que",
+  "O guarda da ponte de Thais jura que",
+  "Tá rolando no Advertising que",
 ];
 
 const RUMOR_CLOSE = [
@@ -175,6 +230,12 @@ const RUMOR_CLOSE = [
   "Isso fica entre nós e a guilda inteira.",
   "Se perguntarem, eu estava vendendo tapete.",
   "Depois reclamam que eu cobro caro nas coisas.",
+  "A bless era mais barata que o drama.",
+  "Aceito F no pix.",
+  "Amanhã tem mais, sempre tem.",
+  "Não fui eu que postei, fui só eu que espalhei.",
+  "Pra saber o resto, compra algo na minha loja.",
+  "O Henricus já está separando as bless.",
 ];
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
