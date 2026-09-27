@@ -295,7 +295,7 @@ export default function BosstiaryTracker() {
                   <td>
                     <RemindButton
                       compact
-                      label="⏰ matei agora"
+                      label="⏰ matei"
                       minutes={cooldown * 60}
                       r={{
                         kind: "boss",

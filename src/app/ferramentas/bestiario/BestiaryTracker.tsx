@@ -158,7 +158,8 @@ export default function BestiaryTracker({
         (status === "todas" ||
           (status === "acompanhando" ? tracked.has(r[0]) : (status === "feitas") === done.has(r[0]))),
     );
-    if (sort === "rende") list.sort((a, b) => ratio(b) - ratio(a) || a[0].localeCompare(b[0]));
+    // muito raras rendem muito por kill, mas não dá para caçar quando quiser: vão para o fim
+    if (sort === "rende") list.sort((a, b) => a[3] - b[3] || ratio(b) - ratio(a) || a[0].localeCompare(b[0]));
     if (sort === "charms") list.sort((a, b) => charmOf(b[1], b[3]) - charmOf(a[1], a[3]) || a[0].localeCompare(b[0]));
     if (sort === "kills") list.sort((a, b) => killsOf(a[1], a[3]) - killsOf(b[1], b[3]) || a[0].localeCompare(b[0]));
     return list;
