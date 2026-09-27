@@ -38,9 +38,7 @@ export default async function RankingPage({ searchParams }: { searchParams: Prom
   return (
     <div>
       <h1>Ranking de XP</h1>
-      <p className="on-dark mb-4">
-        Quanto cada char da turma ganhou de experiência. Só entram chars cadastrados no site cujo dono ligou a opção de aparecer.
-      </p>
+      <p className="on-dark mb-4">Quanto cada char da turma ganhou de experiência. Só entram chars cadastrados no site cujo dono ligou a opção de aparecer.</p>
       <Box title={`Ranking ${period.label.toLowerCase()}`}>
         <div className="flex flex-wrap gap-2 mb-3">
           {PERIODS.map((x) => (

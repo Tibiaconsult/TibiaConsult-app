@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
 import { requireAdmin } from "@/lib/admin";
-import { setFeedbackStatus } from "./actions";
+import { moderate, setFeedbackStatus } from "./actions";
 
 export const metadata = { title: "Painel", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -19,7 +19,33 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (filter) q = q.eq("status", filter);
   const { data: items } = await q;
   const { data: all } = await ctx.supabase.from("feedback").select("status");
-  const { data: chars } = await ctx.supabase.from("chars").select("id, name, vocation, level, world, user_id, created_at").order("created_at", { ascending: false }).limit(200);
+  const { data: chars } = await ctx.supabase
+    .from("chars")
+    .select("id, name, vocation, level, world, user_id, created_at")
+    .order("created_at", { ascending: false })
+    .limit(200);
+
+  // Moderação: tudo que tem denúncia ou está oculto
+  const { data: reports } = await ctx.supabase.from("reports").select("target_type, target_id, reason").limit(500);
+  const reported = { post: new Set<string>(), comment: new Set<string>() };
+  for (const r of reports ?? []) reported[r.target_type as "post" | "comment"].add(r.target_id);
+  const [{ data: modPosts }, { data: modComments }] = await Promise.all([
+    ctx.supabase
+      .from("posts")
+      .select("id, char_name, body, hidden, created_at")
+      .or(`hidden.eq.true,id.in.(${[...reported.post, "00000000-0000-0000-0000-000000000000"].join(",")})`)
+      .order("created_at", { ascending: false }),
+    ctx.supabase
+      .from("comments")
+      .select("id, char_name, body, hidden, created_at, target_type, target_key")
+      .or(`hidden.eq.true,id.in.(${[...reported.comment, "00000000-0000-0000-0000-000000000000"].join(",")})`)
+      .order("created_at", { ascending: false }),
+  ]);
+  const queue = [
+    ...(modPosts ?? []).map((x) => ({ ...x, type: "post" as const })),
+    ...(modComments ?? []).map((x) => ({ ...x, type: "comment" as const })),
+  ].sort((a, b) => b.created_at.localeCompare(a.created_at));
+  const reasons = (type: string, id: string) => (reports ?? []).filter((r) => r.target_type === type && r.target_id === id);
 
   const count = (s: string) => (all ?? []).filter((f) => f.status === s).length;
   const users = new Set((chars ?? []).map((c) => c.user_id)).size;
@@ -41,7 +67,54 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </div>
           ))}
         </div>
-        <p className="muted text-[11px] mt-2">Contas com char cadastrado: {users}. Esta página não aparece no menu e responde &quot;não encontrada&quot; para qualquer outra conta.</p>
+        <p className="muted text-[11px] mt-2">
+          Contas com char cadastrado: {users}. Esta página não aparece no menu e responde &quot;não encontrada&quot; para qualquer outra conta.
+        </p>
+      </Box>
+
+      <Box title={`Moderação da comunidade (${queue.length})`}>
+        {queue.length === 0 ? (
+          <p className="muted">Nenhuma denúncia nem conteúdo oculto. Taverna em paz.</p>
+        ) : (
+          <div className="space-y-3">
+            {queue.map((q) => {
+              const rs = reasons(q.type, q.id);
+              return (
+                <div key={q.type + q.id} className="border border-[#b98a5a] rounded p-3 bg-white/40">
+                  <div className="flex flex-wrap gap-2 items-center text-[11px]">
+                    <span className="tag tag-physical">{q.type === "post" ? "Causo" : "Comentário"}</span>
+                    {q.hidden && <span className="tag tag-death">oculto</span>}
+                    <b>{q.char_name}</b>
+                    <span className="muted">{new Date(q.created_at).toLocaleString("pt-BR")}</span>
+                    <span className="bad">
+                      {rs.length} denúncia{rs.length === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                  <p className="mt-2 whitespace-pre-line text-[13px]">{q.body}</p>
+                  {rs.some((r) => r.reason) && (
+                    <ul className="text-[11px] muted list-disc pl-5">
+                      {rs
+                        .filter((r) => r.reason)
+                        .map((r, i) => (
+                          <li key={i}>{r.reason}</li>
+                        ))}
+                    </ul>
+                  )}
+                  <div className="flex gap-2 mt-2">
+                    {(["show", "delete"] as const).map((op) => (
+                      <form key={op} action={moderate}>
+                        <input type="hidden" name="type" value={q.type} />
+                        <input type="hidden" name="id" value={q.id} />
+                        <input type="hidden" name="op" value={op} />
+                        <button className={`tc-btn ${op === "delete" ? "tc-btn-danger" : ""}`}>{op === "show" ? "Liberar" : "Apagar"}</button>
+                      </form>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Box>
 
       <Box title="Sugestões e bugs">
