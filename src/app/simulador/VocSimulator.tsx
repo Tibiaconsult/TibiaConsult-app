@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import { useEffect, useMemo, useState } from "react";
 import { ELEMENT_LABEL, Element } from "@/data/spells";
 import { HUNTS } from "@/data/hunts";
@@ -15,7 +16,7 @@ function Num({ label, value, onChange, step = 1, min = 0, hint }: { label: strin
   return (
     <label className="block text-[12px]">
       <span className="font-bold">{label}</span>
-      <input type="number" className="mt-1 w-full" value={value} step={step} min={min} onChange={(e) => onChange(Number(e.target.value) || 0)} />
+      <NumberInput className="mt-1 w-full" value={value} step={step} min={min} onValue={onChange} />
       {hint && <span className="muted text-[10px]">{hint}</span>}
     </label>
   );

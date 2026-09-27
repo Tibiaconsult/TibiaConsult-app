@@ -10,6 +10,7 @@ import { EL_PT, SetVoc, incomingProfile, offenseRanking, suggestSet } from "@/li
 import { SetChoice, SlotId, findItem, recommendedSet } from "@/lib/set";
 import { Build } from "@/lib/vocbuild";
 import { ComboStep } from "@/lib/combo";
+import { incomingDamage } from "@/lib/huntdamage";
 import { defaultInputs, simulateRotation, spellDamage, usable } from "@/lib/vocsim";
 
 export const ALL_ELEMENTS: Element[] = ["physical", "fire", "energy", "ice", "earth", "death", "holy"];
@@ -74,6 +75,10 @@ export interface ImbuePick {
 
 /** Elementos que mais batem, sem o físico (não há imbuement de proteção física). */
 function protOrder(h: Hunt): Element[] {
+  // com dano da wiki para os bichos: ordem pelo peso do dano de cada elemento no lure
+  const dmg = incomingDamage(h).rows.filter((r) => PROT_IMB[r.el as Element]).map((r) => r.el as Element);
+  if (dmg.length) return dmg;
+  // sem dados: elementos citados no texto dos ataques da ficha
   const p = incomingProfile(h);
   const order = (Object.entries(p) as [Element, number][])
     .filter(([el, v]) => el !== "physical" && v > 0 && PROT_IMB[el])

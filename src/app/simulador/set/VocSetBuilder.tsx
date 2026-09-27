@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import SaveToChar from "@/components/SaveToChar";
 import { Build, SlotPick, decodeBuild, encodeBuild } from "@/lib/vocbuild";
 import { useEffect, useMemo, useState } from "react";
@@ -270,7 +271,7 @@ export default function VocSetBuilder({ voc }: { voc: Voc }) {
       <div className="flex flex-wrap gap-3 items-end text-[12px]">
         <label>
           <span className="font-bold block">Itens até o level</span>
-          <input type="number" className="w-24" value={level} min={1} onChange={(e) => setLevel(Number(e.target.value) || 1)} />
+          <NumberInput className="w-24" value={level} min={1} max={5000} onValue={setLevel} />
         </label>
         <label>
           <span className="font-bold block">Preencher pela hunt</span>

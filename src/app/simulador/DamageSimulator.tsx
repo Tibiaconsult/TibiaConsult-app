@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import { getActive } from "@/lib/active";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -331,7 +332,7 @@ export default function DamageSimulator() {
       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <label>
           Level
-          <input type="number" className={`mt-1 ${field}`} value={level} onChange={(e) => setLevel(num(e.target.value, 1))} />
+          <NumberInput className={`mt-1 ${field}`} value={level} min={1} max={5000} onValue={setLevel} />
         </label>
         <label>
           Magic level base

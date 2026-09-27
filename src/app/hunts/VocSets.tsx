@@ -1,5 +1,6 @@
 "use client";
 
+import NumberInput from "@/components/NumberInput";
 import { useState } from "react";
 import { setActiveVoc, useActive } from "@/lib/active";
 import { ItemSprite } from "@/components/Icons";
@@ -70,15 +71,7 @@ export default function VocSets({ h }: { h: Hunt }) {
           <div className="flex flex-wrap gap-3 items-end text-[12px] mb-2">
             <label>
               <span className="font-bold block">Itens até o level</span>
-              <input
-                type="number"
-                className="w-24"
-                min={250}
-                value={level}
-                onChange={(e) =>
-                  setLevels({ ...levels, [tab]: Number(e.target.value) || 250 })
-                }
-              />
+              <NumberInput className="w-24" min={250} max={5000} value={level} onValue={(v) => setLevels({ ...levels, [tab]: v })} />
             </label>
             <span>
               <b>Ataque:</b>{" "}
