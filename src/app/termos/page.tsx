@@ -58,6 +58,10 @@ export default function TermosPage() {
               Lembretes que você marcar (boss, stamina) e as creatures que você acompanha no Bestiary Tracker.
             </li>
             <li>
+              Sessões de hunt que você publicar (char, level, hunt, XP/h, lucro/h e creatures mortas) e anúncios do Procura-se PT: ficam visíveis para
+              todos, com o nome do char. Você apaga as suas quando quiser; anúncios de PT somem sozinhos.
+            </li>
+            <li>
               Avisos da sua conta (comentários, fofocas, mortes e level ups dos seus chars, lembretes e boosted do dia), apagados depois de 60 dias. Se você ligar as notificações, o
               endereço de entrega que o navegador cria para este aparelho; desligar apaga o endereço.
             </li>
