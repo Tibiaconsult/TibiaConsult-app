@@ -20,6 +20,8 @@ export interface MapPoint {
   z: number;
   label: string;
   href?: string;
+  /** conteúdo do balão ao clicar (HTML já escapado); sem ele, o clique abre o href */
+  popup?: string;
 }
 
 const floorFile = (z: number) => `/mapa/floor-${String(z).padStart(2, "0")}.png`;
@@ -118,7 +120,8 @@ export default function MapViewer({
         });
         const mk = L.marker([-(p.y - Y0) - 0.5, p.x - X0 + 0.5], { icon, title: p.label }).addTo(pointLayer.current!);
         mk.bindTooltip(p.label, { direction: "top", offset: [0, -20] });
-        if (p.href) mk.on("click", () => (window.location.href = p.href!));
+        if (p.popup) mk.bindPopup(p.popup, { offset: [0, -18], maxWidth: 280 });
+        else if (p.href) mk.on("click", () => (window.location.href = p.href!));
       }
       if (!showMarks) return;
       try {

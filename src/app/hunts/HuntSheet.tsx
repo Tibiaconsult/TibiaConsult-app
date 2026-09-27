@@ -4,7 +4,9 @@ import { HUNT_RECS, REC_SOURCE, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
 import { creatureHref } from "@/lib/creature-labels";
 import { creatureIcon } from "@/lib/icons";
 import GuildHuntStats from "./GuildHuntStats";
+import HuntDrops from "./HuntDrops";
 import HuntMapBox from "./HuntMapBox";
+import HuntSupplies from "./HuntSupplies";
 import VocSets from "./VocSets";
 
 function pct(v: number) {
@@ -52,6 +54,10 @@ export default function HuntSheet({ h }: { h: Hunt }) {
       )}
       <GuildHuntStats huntId={h.id} />
       <HuntMapBox id={h.id} name={h.name} />
+      <div className="grid gap-3 lg:grid-cols-2">
+        <HuntSupplies h={h} recLevel={rec?.solo ?? {}} teamLevel={rec?.team ?? null} />
+        <HuntDrops h={h} />
+      </div>
 
       <div className="overflow-x-auto mt-4">
         <table>
