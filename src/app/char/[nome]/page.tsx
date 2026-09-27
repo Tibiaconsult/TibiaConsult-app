@@ -46,7 +46,8 @@ export default async function CharProfilePage({ params }: Props) {
       <h1>{p.name}</h1>
       <p className="on-dark mb-4">
         {p.vocation ?? "?"} · level {p.level ?? "?"}
-        {p.world ? ` · ${p.world}` : ""} · no TibiaConsult desde {date(p.joined_at)}
+        {p.world ? ` · ${p.world}` : ""}
+        {p.guild ? ` · 🛡️ ${p.guild}${p.rank ? ` (${p.rank})` : ""}` : ""} · no TibiaConsult desde {date(p.joined_at)}
       </p>
 
       <Box title="📋 Ficha">
@@ -113,7 +114,16 @@ export default async function CharProfilePage({ params }: Props) {
 
       <Box title="🍺 Causos na Taverna">
         {posts.length === 0 ? (
-          <p className="text-[12px]">Ainda não contou nenhum causo.</p>
+          <p className="text-[12px]">
+            {p.registered ? (
+              "Ainda não contou nenhum causo."
+            ) : (
+              <>
+                {p.name} ainda não tem conta no site. É seu? <Link href="/entrar">Entre</Link>, cadastre o char em <Link href="/meus-chars">Meus chars</Link> e
+                libere na comunidade para contar causos e comentar.
+              </>
+            )}
+          </p>
         ) : (
           <ul className="space-y-2">
             {posts.map((c) => (

@@ -29,3 +29,17 @@ export async function moderate(form: FormData) {
   await ctx.supabase.from("reports").delete().eq("target_type", type).eq("target_id", id);
   revalidatePath("/admin");
 }
+
+/** Tira (ou devolve) um char das páginas públicas: mural, ranking, Funcionário do Mês e perfil (tracking_optout, 016). */
+export async function setOptout(form: FormData) {
+  const ctx = await requireAdmin();
+  if (!ctx) notFound();
+  const name = String(form.get("name") ?? "")
+    .trim()
+    .slice(0, 40);
+  const op = String(form.get("op") ?? "");
+  if (!name) return;
+  if (op === "add") await ctx.supabase.from("tracking_optout").insert({ name });
+  if (op === "remove") await ctx.supabase.from("tracking_optout").delete().eq("name", name);
+  revalidatePath("/admin");
+}

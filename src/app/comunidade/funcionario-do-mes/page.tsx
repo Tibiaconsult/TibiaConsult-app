@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Box from "@/components/Box";
+import { GuildTabs, GuildTag, loadGuilds, pickGuild } from "@/components/Guilds";
 import { employeeCaption, fmtOnline } from "@/lib/social";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
 
@@ -13,6 +14,7 @@ interface Row {
   level: number | null;
   minutes: number;
   days: number;
+  guild: string | null;
 }
 
 /** "2026-09" do parâmetro, ou o mês atual (horário de Brasília). */
@@ -28,20 +30,24 @@ function monthOf(mes: string | undefined) {
   return { m, cur, isCurrent: m === cur, prev: shift(-1), next: m < cur ? shift(1) : null, label };
 }
 
-async function load(month: string, prev: string, withPrev: boolean) {
+async function load(month: string, prev: string, withPrev: boolean, guild: string | null) {
   if (!hasSupabaseEnv()) return { rows: [] as Row[], last: null as Row | null };
   const supabase = await createClient();
   const [{ data }, lastRes] = await Promise.all([
-    supabase.rpc("online_ranking", { p_month: `${month}-01` }),
-    withPrev ? supabase.rpc("online_ranking", { p_month: `${prev}-01` }) : Promise.resolve({ data: null }),
+    supabase.rpc("online_ranking", { p_month: `${month}-01`, p_guild: guild }),
+    withPrev ? supabase.rpc("online_ranking", { p_month: `${prev}-01`, p_guild: guild }) : Promise.resolve({ data: null }),
   ]);
   return { rows: (data ?? []) as Row[], last: ((lastRes.data ?? []) as Row[])[0] ?? null };
 }
 
-export default async function FuncionarioPage({ searchParams }: { searchParams: Promise<{ mes?: string }> }) {
-  const { mes } = await searchParams;
+const url = (mes: string, g: string | null) => `/comunidade/funcionario-do-mes?mes=${mes}${g ? `&g=${encodeURIComponent(g)}` : ""}`;
+
+export default async function FuncionarioPage({ searchParams }: { searchParams: Promise<{ mes?: string; g?: string }> }) {
+  const { mes, g } = await searchParams;
   const mo = monthOf(mes);
-  const { rows, last } = await load(mo.m, mo.prev, mo.isCurrent);
+  const guilds = await loadGuilds();
+  const guild = pickGuild(guilds, g);
+  const { rows, last } = await load(mo.m, mo.prev, mo.isCurrent, guild);
   const top = rows[0];
   const max = top?.minutes || 1;
 
@@ -49,21 +55,23 @@ export default async function FuncionarioPage({ searchParams }: { searchParams: 
     <div>
       <h1>Funcionário do Mês</h1>
       <p className="on-dark mb-4">
-        Homenagem a quem mais bateu ponto no Tibia. O tempo online é contado a cada 5 minutos pela lista de quem está online no mundo, como faz o GuildStats. Só
-        entram chars liberados na comunidade.
+        Homenagem a quem mais bateu ponto no Tibia. O tempo online é contado a cada 5 minutos pela lista de quem está online no mundo, como faz o GuildStats.
+        Entram todos os membros das guildas acompanhadas e os chars liberados na comunidade.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-3 items-center">
-        <Link href={`/comunidade/funcionario-do-mes?mes=${mo.prev}`} className="tc-btn !py-0.5 !px-3">
+        <Link href={url(mo.prev, guild)} className="tc-btn !py-0.5 !px-3">
           ← {mo.label(mo.prev)}
         </Link>
         <span className="on-dark font-bold">{mo.label(mo.m).replace(/^./, (c) => c.toUpperCase())}</span>
         {mo.next && (
-          <Link href={`/comunidade/funcionario-do-mes?mes=${mo.next}`} className="tc-btn !py-0.5 !px-3">
+          <Link href={url(mo.next, guild)} className="tc-btn !py-0.5 !px-3">
             {mo.label(mo.next)} →
           </Link>
         )}
       </div>
+
+      <GuildTabs guilds={guilds} current={guild} href={(x) => url(mo.m, x)} />
 
       <section className="tc-panel">
         <div className="tc-title">🏅 {mo.isCurrent ? "Liderando o mês" : "Funcionário do Mês"}</div>
@@ -83,6 +91,11 @@ export default async function FuncionarioPage({ searchParams }: { searchParams: 
                   {top.vocation ?? "?"} · level {top.level ?? "?"}
                   {top.world ? ` · ${top.world}` : ""}
                 </div>
+                {top.guild && (
+                  <div className="mt-1">
+                    <GuildTag guild={top.guild} />
+                  </div>
+                )}
                 <div className="font-bold text-[22px] mt-2 text-[#1a3f8f]">{fmtOnline(top.minutes)}</div>
                 <div className="text-[11px] muted">
                   online em {top.days} dia{top.days === 1 ? "" : "s"}
@@ -128,7 +141,8 @@ export default async function FuncionarioPage({ searchParams }: { searchParams: 
                   <td>
                     <Link href={`/char/${encodeURIComponent(r.name)}`} className="font-bold">
                       {r.name}
-                    </Link>
+                    </Link>{" "}
+                    <GuildTag guild={r.guild} />
                     <div className="muted text-[11px]">
                       {r.vocation ?? "?"} · level {r.level ?? "?"}
                       {r.world ? ` · ${r.world}` : ""}
