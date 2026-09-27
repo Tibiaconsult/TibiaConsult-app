@@ -1,5 +1,6 @@
 import { HUNTS, Hunt } from "@/data/hunts";
 import { HUNT_RECS, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
+import { TIBIAROUTE, tibiaRouteUrl } from "@/data/tibiaroute";
 import { creatureIcon } from "@/lib/icons";
 import { HUNT_MAPS } from "@/lib/hunt-map";
 import MapPage from "./MapPage";
@@ -31,7 +32,9 @@ function popup(h: Hunt): string {
     `<div style="font-size:12px"><b>${esc(h.name)}</b>` +
     (lv ? `<div style="font-size:11px;margin:2px 0">Level: ${esc(lv)}</div>` : "") +
     `<div style="margin:4px 0">${mobs}</div>` +
-    `<a href="/hunts?h=${h.id}">Ficha da hunt</a> · <a href="/hunts/preparar?h=${h.id}">Preparar</a></div>`
+    `<a href="/hunts?h=${h.id}">Ficha da hunt</a> · <a href="/hunts/preparar?h=${h.id}">Preparar</a>` +
+    (TIBIAROUTE[h.id]?.[0] ? ` · <a href="${tibiaRouteUrl(TIBIAROUTE[h.id][0].slug)}" target="_blank" rel="noreferrer">Rota (TibiaRoute)</a>` : "") +
+    `</div>`
   );
 }
 

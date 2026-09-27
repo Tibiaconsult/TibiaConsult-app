@@ -4,12 +4,14 @@
 
 import Link from "next/link";
 import MapViewer, { tibiaMapsUrl } from "@/components/MapViewer";
+import { TIBIAROUTE, tibiaRouteUrl } from "@/data/tibiaroute";
 import { HUNT_MAPS, TIBIAROUTE_URL, areaImage } from "@/lib/hunt-map";
 
 export default function HuntMapBox({ id, name }: { id: string; name: string }) {
   const m = HUNT_MAPS[id];
   const img = areaImage(m?.img);
   const has = m?.x !== undefined;
+  const routes = TIBIAROUTE[id] ?? [];
   return (
     <div className="border border-[#b98a5a] rounded p-3 bg-white/40 mt-3">
       <div className="font-bold mb-1">🗺️ Mapa</div>
@@ -31,10 +33,22 @@ export default function HuntMapBox({ id, name }: { id: string; name: string }) {
             Mapa da área (TibiaWiki)
           </a>
         )}
-        <a className="tc-btn !py-0.5" href={TIBIAROUTE_URL} target="_blank" rel="noreferrer" title={`Procure "${name}" na lista do TibiaRoute`}>
-          🧭 Rotas no TibiaRoute
-        </a>
+        {routes.length === 0 && (
+          <a className="tc-btn !py-0.5" href={TIBIAROUTE_URL} target="_blank" rel="noreferrer" title={`Procure "${name}" na lista do TibiaRoute`}>
+            🧭 Rotas no TibiaRoute
+          </a>
+        )}
       </div>
+      {routes.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mt-2 text-[12px]">
+          <b>🧭 Rota desenhada no TibiaRoute:</b>
+          {routes.map((r) => (
+            <a key={r.slug} className="tc-btn !py-0.5" href={tibiaRouteUrl(r.slug)} target="_blank" rel="noreferrer">
+              {r.label}
+            </a>
+          ))}
+        </div>
+      )}
       {!has && !img && <p className="text-[12px] mt-1">Ainda sem posição no mapa para esta hunt.</p>}
     </div>
   );
