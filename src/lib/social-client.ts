@@ -77,7 +77,7 @@ export async function removeRow(table: "posts" | "comments", id: string): Promis
   return error?.message ?? null;
 }
 
-export async function report(type: "post" | "comment" | "gossip", id: string, reason: string | null): Promise<string | null> {
+export async function report(type: "post" | "comment" | "gossip" | "route", id: string, reason: string | null): Promise<string | null> {
   const { error } = await createClient().from("reports").insert({ target_type: type, target_id: id, reason });
   if (error && /duplicate|unique/i.test(error.message)) return "Você já denunciou isso. Obrigado!";
   return error?.message ?? null;

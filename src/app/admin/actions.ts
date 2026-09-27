@@ -15,15 +15,15 @@ export async function setFeedbackStatus(form: FormData) {
   revalidatePath("/admin");
 }
 
-/** Moderação da comunidade: liberar (volta a aparecer e zera as denúncias) ou apagar um causo ou comentário. */
+/** Moderação da comunidade: liberar (volta a aparecer e zera as denúncias) ou apagar um causo, comentário, fofoca ou rota. */
 export async function moderate(form: FormData) {
   const ctx = await requireAdmin();
   if (!ctx) notFound();
   const type = String(form.get("type") ?? "");
   const id = String(form.get("id") ?? "");
   const op = String(form.get("op") ?? "");
-  if (!["post", "comment", "gossip"].includes(type) || !id || !["show", "delete"].includes(op)) return;
-  const table = type === "post" ? "posts" : type === "gossip" ? "gossips" : "comments";
+  if (!["post", "comment", "gossip", "route"].includes(type) || !id || !["show", "delete"].includes(op)) return;
+  const table = type === "post" ? "posts" : type === "gossip" ? "gossips" : type === "route" ? "hunt_routes" : "comments";
   if (op === "delete") await ctx.supabase.from(table).delete().eq("id", id);
   else await ctx.supabase.from(table).update({ hidden: false }).eq("id", id);
   await ctx.supabase.from("reports").delete().eq("target_type", type).eq("target_id", id);
