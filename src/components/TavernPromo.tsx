@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { timeAgo } from "@/lib/social";
+import { BOZO_SAYS } from "@/lib/bozo";
 import { gossipLines, rashidRumor } from "@/lib/rashid";
 import { hasDb } from "@/lib/social-client";
 import { TimelineItem, fetchTimeline, onSocialChange } from "@/lib/timeline";
@@ -20,13 +21,19 @@ const LINES = [
   "Viu uma morte patética? Me conta. Não conto pra ninguém. (Conto sim.)",
 ];
 
+// Rashid e Bozo se revezam no balcão: uma fala de cada
+const SPEAKERS = LINES.flatMap((text, i) => [
+  { who: "Rashid", img: "/rashid.webp", text },
+  ...(i < BOZO_SAYS.length ? [{ who: "Bozo", img: "/bozo.webp", text: BOZO_SAYS[i] }] : []),
+]);
+
 export default function TavernPromo() {
   const onTavern = usePathname() === "/comunidade/taverna";
   const [line, setLine] = useState(0);
   const [top, setTop] = useState<TimelineItem | null | undefined>(undefined);
 
   useEffect(() => {
-    const t = setInterval(() => setLine((l) => (l + 1) % LINES.length), 4500);
+    const t = setInterval(() => setLine((l) => (l + 1) % SPEAKERS.length), 4500);
     return () => clearInterval(t);
   }, []);
 
@@ -50,13 +57,21 @@ export default function TavernPromo() {
         />
         <div className="relative flex items-end gap-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/rashid.webp" alt="Rashid" width={64} height={64} className="tc-rashid shrink-0" style={{ imageRendering: "pixelated" }} />
+          <img
+            key={SPEAKERS[line].who}
+            src={SPEAKERS[line].img}
+            alt={SPEAKERS[line].who}
+            width={64}
+            height={64}
+            className="tc-rashid tc-fade shrink-0"
+            style={{ imageRendering: "pixelated" }}
+          />
           <div
             key={line}
             className="tc-fade relative mb-7 rounded-lg px-2 py-1.5 text-[11px] leading-snug font-bold"
             style={{ background: "#fff8e6", color: "#3a1a00", boxShadow: "0 2px 4px rgba(0,0,0,.5)" }}
           >
-            {LINES[line]}
+            {SPEAKERS[line].text}
             <span
               aria-hidden
               className="absolute -left-1.5 bottom-2 w-0 h-0"
@@ -64,7 +79,9 @@ export default function TavernPromo() {
             />
           </div>
         </div>
-        <div className="relative text-[10px] opacity-80 -mt-1 mb-1.5">Rashid, garoto-propaganda (e freguês) da Taverna</div>
+        <div className="relative text-[10px] opacity-80 -mt-1 mb-1.5">
+          {SPEAKERS[line].who === "Bozo" ? "Bozo, bobo da corte de Thais" : "Rashid, garoto-propaganda (e freguês) da Taverna"}
+        </div>
 
         <div className="relative rounded px-2 py-1.5 text-[11px] mb-2" style={{ background: "rgba(0,0,0,.35)", border: "1px solid #7a5230" }}>
           {top === undefined ? (

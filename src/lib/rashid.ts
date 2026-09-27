@@ -146,6 +146,12 @@ const GENERIC: T[] = [
   (n) => `${n} prometeu pra esposa que era "só mais uma hunt". A esposa cumpriu a promessa por ele: tirou o PC da tomada.`,
   (n, k) => `${n} pediu cinco minutinhos pra esposa. Ela deu dois, e o ${k} usou os outros três.`,
   (n) => `a sogra de ${n} chegou de surpresa e alguém precisou ir abrir o portão. O char ficou sozinho no respawn.`,
+  (n) => `${n} foi caçar em Thais. Eu nunca vou a Thais, lá não é seguro. Taí a prova.`,
+  (n) => `${n} se perdeu nos túneis de Kazordoon, igual a mim. A diferença é que eu não morro, só reclamo.`,
+  (n) => `${n} disse que os elfos de Ab'Dendriel eram gente boa. Eu sempre avisei: conversa de abraçar árvore esconde alguma coisa.`,
+  (n) => `${n} achou que Venore era lugar de fazer negócio. É lugar de concorrência. Com a morte, inclusive.`,
+  (n) => `eu não compro de qualquer um, e o respawn também não aceita qualquer um. ${n} foi recusado.`,
+  (n) => `${n} me chamou de "old friend" e pediu desconto. Não dei. Aí foi caçar sem pot.`,
 ];
 
 const PVP: T[] = [
@@ -238,6 +244,38 @@ const RUMOR_CLOSE = [
   "O Henricus já está separando as bless.",
 ];
 
+// Opiniões do Rashid sobre as cidades (falas dele no jogo, TibiaWiki Rashid/Transcripts), viradas em P.S. da fofoca
+const CITY_PS: Record<string, ((n: string) => string)[]> = {
+  Svargrond: [
+    (n) => `Aqui em Svargrond, com um hidromel bárbaro no bucho, até a morte de ${n} fica mais aconchegante.`,
+    () => `Queria que Svargrond fosse mais quentinho. Mais quente que essa fofoca, impossível.`,
+  ],
+  "Liberty Bay": [
+    (n) => `Liberty Bay é linda, se você evita a favela. ${n} devia ter evitado o respawn também.`,
+    () => `A filha do governador de Liberty Bay é mais bonita que essa morte. Bem mais.`,
+  ],
+  "Port Hope": [
+    () => `Eu não ponho o pé na selva de Port Hope. Já viu o tamanho das centopeias?`,
+    (n) => `Gosto de Port Hope, mas só do povoado. A selva eu deixo pra gente como ${n}.`,
+  ],
+  Ankrahmun: [
+    (n) => `Ah, Ankrahmun, minha terra! Pirâmides perfeitas. Bem diferente da estratégia de ${n}.`,
+    () => `O cheiro da areia do deserto de Ankrahmun... bem melhor que o cheiro dessa hunt.`,
+  ],
+  Darashia: [
+    (n) => `Os mercadores de Darashia cobram preços ridículos. A bless do ${n} também não saiu barata.`,
+    () => `Darashia não é o deserto de verdade, mas quase. Igual a essa desculpa: quase convence.`,
+  ],
+  Edron: [
+    (n) => `Edron é uma ilha tão tranquila... era, até chegar a notícia de ${n}.`,
+    () => `Em Edron eu sempre faço bons negócios. Essa fofoca, por exemplo, já vendi três vezes.`,
+  ],
+  Carlin: [
+    () => `A rainha de Carlin me chama pra ver minhas mercadorias. Essa morte eu não mostro pra ela, é feia demais.`,
+    () => `Reis, rainhas, califas... todo mundo diz que é diferente. No templo, é tudo igual.`,
+  ],
+};
+
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** O boato inventado pelo Rashid para uma morte (sempre o mesmo para a mesma morte). */
@@ -258,5 +296,7 @@ export function rashidRumor(d: RumorDeath) {
   const body = pool[(h >> 3) % pool.length](d.name, k, l, killers.length);
   // "Fiquei sabendo que" pede a frase em minúscula; "Segura essa:" pede maiúscula
   const text = /(que|mas)$/.test(open) ? `${open} ${body}` : `${open} ${cap(body)}`;
-  return { text, close: RUMOR_CLOSE[(h >> 6) % RUMOR_CLOSE.length], sign: `Rashid, direto de ${rashidCity(d.died_at)} · boato não confirmado` };
+  const city = rashidCity(d.died_at);
+  const ps = h % 3 === 1 ? CITY_PS[city]?.[(h >> 9) % CITY_PS[city].length]?.(d.name) : undefined;
+  return { text, close: RUMOR_CLOSE[(h >> 6) % RUMOR_CLOSE.length], ps, sign: `Rashid, direto de ${city} · boato não confirmado` };
 }

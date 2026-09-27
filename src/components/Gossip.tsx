@@ -57,6 +57,7 @@ export function RashidRumor({ d, compact }: { d: RumorDeath; compact?: boolean }
         <div>
           🗣️ {r.text} <i>{r.close}</i>
         </div>
+        {r.ps && <div className="mt-0.5 italic">P.S.: {r.ps}</div>}
         <div className="mt-0.5 text-[10px] opacity-70">— {r.sign}</div>
       </div>
     </div>
