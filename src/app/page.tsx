@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import Box from "@/components/Box";
-import Boosted from "@/components/Boosted";
-import Rashid from "@/components/Rashid";
 import { NEWS, TICKER, formatDate } from "@/data/news";
 import { TIBIA } from "@/lib/icons";
 import type { Voc } from "@/lib/active";
@@ -20,12 +18,6 @@ export default async function Home() {
       <HomePanel initialVoc={initialVoc} />
       <LootSplitSpotlight />
       <HowTo />
-      <Box title="Hoje no Tibia">
-        <div className="flex flex-wrap gap-6 items-center">
-          <Boosted />
-          <Rashid />
-        </div>
-      </Box>
       <Box title="Novidades rápidas">
         <ul className="tc-ticker">
           {TICKER.slice(0, 8).map((t, i) => (

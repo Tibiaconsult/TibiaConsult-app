@@ -7,6 +7,7 @@ import FeedbackButton from "@/components/FeedbackButton";
 import ActiveBar from "@/components/ActiveBar";
 import MobileNav from "@/components/MobileNav";
 import VisitTracker from "@/components/VisitTracker";
+import TodayPodium from "@/components/TodayPodium";
 import "./globals.css";
 
 const medieval = MedievalSharp({ weight: "400", subsets: ["latin"], variable: "--font-medieval" });
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="tc-page">
           <Sidebar />
           <main className="tc-content">
+            <TodayPodium />
             <ActiveBar />
             {children}
           </main>
