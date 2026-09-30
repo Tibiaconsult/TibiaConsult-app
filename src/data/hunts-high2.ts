@@ -288,7 +288,7 @@ export const HIGH_HUNTS_2: Hunt[] = [
       "Proteção de energia e death: o Walking Dread bate 1500+ de energia à distância.",
       "Não segure o lure atrás de Magic Wall: o Walking Dread quebra.",
     ],
-    warning: "Creatures de 18 a 20 mil de exp com 23 a 25 mil de HP: área nova (15.20), o TibiaPal ainda não tem level recomendado. A Forsaken Crypt, logo depois, é 1000+.",
+    warning: "Level 700+ (indicação da guild; o TibiaPal ainda não lista). Creatures de 18 a 20 mil de exp com 23 a 25 mil de HP. A Forsaken Crypt, logo depois, é 1000+.",
   },
   {
     id: "ferumbras-way",

@@ -81,6 +81,11 @@ export const HUNT_RECS: Record<string, HuntRec> = {
     style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", monk: "Físico" },
     detail: "TibiaPal: Feru Way. Não aparece nas listas de sorcerer e druid.",
   },
+  "forgotten-crypt": {
+    solo: { knight: 700, paladin: 700, sorcerer: 700, druid: 700, monk: 700 },
+    style: { sorcerer: "Death", druid: "Gelo" },
+    detail: "Level informado pela guild (30/09/2026): 700+. O TibiaPal ainda não lista a Outer Crypt.",
+  },
   "deep-desert": {
     solo: { paladin: 600, sorcerer: 600, druid: 500, monk: 600 },
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
