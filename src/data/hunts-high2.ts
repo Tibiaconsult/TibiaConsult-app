@@ -1,5 +1,6 @@
 // Hunts de level alto, parte 2: masmorras da Too Hot to Handle (Warzones 7 a 9 no TibiaPal), os sete Grounds do Ferumbras' Ascension,
 // Cobra Bastion, áreas de Issavi e Upper Roshamuul. Creatures e resistências: TibiaWiki, consulta em 26/09/2026.
+// No fim, em 30/09/2026: Forgotten Crypt, Ferumbras Way, Deep Desert, Raubritter Mines e Netherworld (lista de hunts pedida pela guild).
 import type { Hunt } from "./hunts";
 import { SET_DEATH, SET_ENERGIA, SET_FOGO, c } from "./hunts-high";
 
@@ -7,6 +8,7 @@ export const HIGH_HUNTS_2: Hunt[] = [
   {
     id: "antrum-of-the-fallen",
     name: "Antrum of the Fallen (Warzone 7)",
+    aka: ["Warzone 7"],
     city: "Kazordoon",
     access: "Too Hot to Handle Quest (entrada em Kazordoon, level 80, recomendado 300). O TibiaPal chama as três masmorras da quest de Warzones 7 a 9; pelo perfil de resistências, esta é a 7.",
     floors: ["Área: Afflicted Strider, Blemished Spawn, Eyeless Devourer."],
@@ -119,6 +121,7 @@ export const HIGH_HUNTS_2: Hunt[] = [
   {
     id: "grounds-of-undeath",
     name: "Grounds of Undeath (Feru, selo Undead Dragon)",
+    aka: ["Undead Seal", "Feru Undead Dragons", "selo do Ragiaz"],
     city: "Roshamuul",
     access: "Ferumbras' Ascension Quest: um dos sete Grounds ligados pelo Hell Hub (sob o mar a leste de Darashia). Boss: Ragiaz.",
     floors: ["Área: Blightwalker, Undead Dragon, Vexclaw, Hellflayer."],
@@ -134,7 +137,8 @@ export const HIGH_HUNTS_2: Hunt[] = [
   },
   {
     id: "grounds-of-despair",
-    name: "Grounds of Despair (Feru)",
+    name: "Grounds of Despair (Feru, selo Pumin)",
+    aka: ["Pumin Seal", "Feru Pumin", "selo do Tarbaz"],
     city: "Roshamuul",
     access: "Ferumbras' Ascension Quest: um dos sete Grounds ligados pelo Hell Hub (sob o mar a leste de Darashia). Boss: Tarbaz.",
     floors: ["Área: Spectre, Hand of Cursed Fate, Vexclaw, Grimeleech, Hellflayer."],
@@ -168,6 +172,7 @@ export const HIGH_HUNTS_2: Hunt[] = [
   {
     id: "cobra-bastion",
     name: "Cobra Bastion",
+    aka: ["Cobras", "Cobra Basement"],
     city: "Issavi",
     access: "Grave Danger Quest. Os três Cobras são imunes a terra.",
     floors: ["Bastion e -1: Cobra Scout, Cobra Assassin, Cobra Vizier."],
@@ -260,5 +265,123 @@ export const HIGH_HUNTS_2: Hunt[] = [
     element: "ENERGIA: 85 a 103% nas creatures. Fogo: 0 a 90% (tem creature imune). Death: 35 a 90%. O elemento que mais entra é holy (100 a 125%), bom para charm e para outras vocações.",
     set: SET_ENERGIA,
     play: ["Master of Thunder + Aura of Exposed Weakness.", "Rotação de energia: Energy Wave, Great Energy Beam e Lightning; fogo e death só entram convertidos pela stance.", "Charm: Divine Wrath (holy, 100 a 125% em todas as creatures)."],
+  },
+  {
+    id: "forgotten-crypt",
+    name: "Forgotten Crypt (Outer Crypt)",
+    aka: ["Outer Crypt", "cripta de fora"],
+    city: "Ab'Dendriel",
+    access:
+      "The Roost of the Graveborn Quest. É a cripta de fora: entrada livre, caminho para o boss Bone Overlord. Aqui caem os Fetid Hearts que liberam a Forsaken Crypt.",
+    floors: ["Área: Haunted Hunter, Walking Dread, Crypt Construct. O Haunted Hunter invoca 1 Bone Bear."],
+    creatures: [
+      { ...c("Haunted Hunter", 23000, 19500, 4.87, [103, 112, 94, 109, 91, 106, 85], "Invoca 1 Bone Bear. A TibiaWiki ainda não lista os ataques."), weight: 1 },
+      { ...c("Walking Dread", 25000, 18000, 4.39, [109, 103, 100, 112, 88, 109, 91], "Melee 300+, Energy Missile 1500+ (energia), Death Ball 500+ (death), quebra Magic Wall e Wild Growth."), weight: 1 },
+      { ...c("Crypt Construct", 25000, 19730, 5.36, [106, 92, 92, 88, 106, 82, 109], "Cura em área 10.000-13.250 (incomum): mate primeiro."), weight: 1 },
+    ],
+    element:
+      "DEATH: 92 a 112% (média 102%). Energia: 82 a 109% (média 99%). Fogo: 88 a 106% (média 95%). Ice é o que mais entra em duas das três (109 e 112%), bom para druid.",
+    set: SET_DEATH,
+    play: [
+      "Master of Decay + Aura of Exposed Weakness. Com muito Crypt Construct no lure, fogo empata: confira no simulador.",
+      "Mate o Crypt Construct primeiro: ele cura os outros em área.",
+      "Proteção de energia e death: o Walking Dread bate 1500+ de energia à distância.",
+      "Não segure o lure atrás de Magic Wall: o Walking Dread quebra.",
+    ],
+    warning: "Creatures de 18 a 20 mil de exp com 23 a 25 mil de HP: área nova (15.20), o TibiaPal ainda não tem level recomendado. A Forsaken Crypt, logo depois, é 1000+.",
+  },
+  {
+    id: "ferumbras-way",
+    name: "Ferumbras Way (caminho do Feru)",
+    aka: ["Caminho Ferumbras", "Feru Way", "Ferumbras Way"],
+    city: "Darashia",
+    access:
+      "Ferumbras' Ascension Quest: entregue 30 Demonic Essences ao Mazarius (nordeste de Darashia, só fala com level 150+) e entre no portal ao norte dele. São as cavernas entre a zona de proteção e o Hell Hub dos sete selos.",
+    floors: ["Cavernas até o Hell Hub: Vexclaw, Hellflayer, Grimeleech e Demon."],
+    creatures: [
+      { ...c("Vexclaw", 8500, 6248, 3.03, [95, 80, 110, 105, 25, 90, 60], "Melee 0-550+, Energy Bomb 400-500 (energia), Burst Arrow 350-450 (fogo), Physical Ball 150-350, Mana Drain Wave 0-150 mana drain, Ice Beam 400-500+ life drain."), weight: 1 },
+      { ...c("Hellflayer", 14000, 11720, 2.54, [100, 75, 105, 95, 30, 105, 80], "Melee 0-?, Death Beam 850-1250 (death), Shoots Flaming Arrows 450-650 (fogo), Throws Throwing Star 400-550, Shoots Burst Arrows 300-500 (fogo), Physical Bomb 400-500 (físico)."), weight: 1 },
+      { ...c("Grimeleech", 9500, 7216, 2.76, [100, 40, 100, 100, 80, 105, 60], "Melee 0-450, Green Lifedrain Beam 550-950 life drain, Death Bomb 350-400 (death), Throws Viper Stars 50-200 life drain, Throws Glooth Spear bombs drunk."), weight: 1 },
+      { ...c("Demon", 8200, 6000, 2.76, [75, 80, 112, 112, 0, 50, 60], "Melee 0-500, Great Fireball 150-250 (fogo), Energy Beam 300-480 life drain, Energy Strike 210-300, Mana Drain 30-120, invoca Fire Elemental."), weight: 1 },
+    ],
+    element:
+      "ENERGIA: 90 a 105% em Vexclaw, Hellflayer e Grimeleech, mas só 50% no Demon. Death: 40 a 80%. Fogo: 0 a 80% (Demon imune). Holy (100 a 112%) e ice (95 a 112%) são os que mais entram: bons para charm, druid e knight.",
+    set: SET_ENERGIA,
+    play: [
+      "Master of Thunder + Aura of Exposed Weakness.",
+      "Rotação de energia: Energy Wave, Great Energy Beam e Lightning. Onde tiver muito Demon, energia cai: puxe em volta dele.",
+      "Charm: Divine Wrath (holy, 100 a 112% em todas).",
+      "Proteção de death e life drain: Death Beam do Hellflayer (até 1250) e Green Lifedrain Beam do Grimeleech (até 950).",
+    ],
+  },
+  {
+    id: "deep-desert",
+    name: "Deep Desert (Skeletons Darashia)",
+    aka: ["Skeletons Darashia", "Darashia Skeletons", "Skeleton Elite Warrior"],
+    city: "Darashia",
+    access: "Vórtice sob o deserto de Darama, a oeste de Darashia. Parte da The Secret Library Quest acontece aqui e libera todas as salas.",
+    floors: ["Área: Skeleton Elite Warrior e Undead Elite Gladiator (Sandcrawlers soltos, sem peso)."],
+    creatures: [
+      { ...c("Skeleton Elite Warrior", 7800, 5370, 3.45, [100, 0, 125, 100, 105, 105, 95], "Melee 0-500, Distance Life Drain 400-500, Death Missile 3x3 450-550 (death)."), weight: 1 },
+      { ...c("Undead Elite Gladiator", 8000, 5700, 3.82, [100, 105, 90, 100, 20, 80, 110], "Melee 0-500, Whirlwind Sword Throw 500-600, Small Poison Wave 320-420 (físico), Berserk 350-450."), weight: 1 },
+    ],
+    element:
+      "ENERGIA: 105% no Skeleton e 80% no Gladiator (média 92%). Fogo não: 20% no Gladiator. Death não: 0% no Skeleton. Terra é boa para druid e monk (95 e 110%).",
+    set: SET_ENERGIA,
+    play: [
+      "Master of Thunder + Aura of Exposed Weakness.",
+      "Energia é o único elemento que entra bem nas duas; fogo e death só convertidos pela stance.",
+      "Charm: Divine Wrath no Skeleton (125%). No Gladiator, Poison (terra, 110%).",
+      "Proteção de death e físico: Death Missile e o Whirlwind Throw batem 500+.",
+    ],
+  },
+  {
+    id: "raubritter-mines",
+    name: "Raubritter Mines (Isle of Ada)",
+    aka: ["Raubritter Mines", "Adaean Mines", "Minas da Isle of Ada"],
+    city: "Bounac (Isle of Ada)",
+    access:
+      "The Order of the Stag Quest (depois da The Order of the Lion). Barco de pesca ao sul do castelo de Bounac (use a corda). O Second In Command Demeron libera as minas a noroeste. À noite, raids de Night Harpy lotam a ilha.",
+    floors: [
+      "Minas e arredores da Isle of Ada: Raubritter Skirmisher, Raubritter Marksman e Raubritter Chastener.",
+      "A TibiaWiki não separa a lista das minas: as três Raubritters são as creatures comuns da ilha. A Bloodfire Gorge, embaixo do Stag Bastion, tem as mesmas.",
+    ],
+    creatures: [
+      { ...c("Raubritter Skirmisher", 11000, 8550, 3.92, [112, 100, 85, 80, 115, 91, 106], "A TibiaWiki ainda não lista."), weight: 1 },
+      { ...c("Raubritter Marksman", 10500, 9025, 3.45, [116, 100, 85, 85, 112, 88, 112], "A TibiaWiki ainda não lista."), weight: 1 },
+      { ...c("Raubritter Chastener", 10000, 9500, 3.68, [120, 100, 85, 75, 106, 85, 112], "A TibiaWiki ainda não lista."), weight: 1 },
+    ],
+    element: "FOGO: 106 a 115% nas três. Energia: 85 a 91%. Death: 100%. Físico entra 112 a 120%: bom para charm, knight e monk.",
+    set: SET_FOGO,
+    play: [
+      "Master of Flames + Aura of Exposed Weakness.",
+      "Rotação de fogo: Great Fire Wave e Hell's Core.",
+      "Charm: Wound (físico, 112 a 120%).",
+      "À noite as raids de Night Harpy enchem a ilha: bom para lure, ruim se o supply estiver no fim.",
+    ],
+  },
+  {
+    id: "netherworld",
+    name: "Lost Souls (Netherworld, Port Hope)",
+    aka: ["Lost Souls Port Hope", "Flimsy Port Hope", "Flimsy Lost Souls Port Hope", "Netherworld"],
+    city: "Port Hope",
+    access: "Feaster of Souls Quest. Teleport invisível a leste de Banuta (sob o mar ao sul de Quirefang). Também dá para chegar pelo portal do 2º andar da Brain Grounds.",
+    floors: [
+      "Flimsy, Mean e Freakish Lost Soul, sem Grim Reaper. Bosses: Unaz the Mean, Irgix the Flimsy e Vok the Freakish.",
+      "O TibiaPal separa o -1 (a partir de 400 para sorcerer) e o -1 com -2 (500+).",
+    ],
+    creatures: [
+      { ...c("Flimsy Lost Soul", 4000, 4500, 3.54, [50, 0, 120, 100, 100, 80, 80], "Melee até 350, Envenom (terra) 200-350, Death Berserk 360-500, Energy Beam 300-420, Life Drain 320-400, Drill Bolt até 450."), weight: 1 },
+      { ...c("Mean Lost Soul", 5000, 5580, 3.68, [45, 0, 130, 100, 100, 70, 80], "Melee; mana drain só contra druid."), weight: 1 },
+      { ...c("Freakish Lost Soul", 7000, 7020, 4.15, [40, 0, 140, 100, 100, 65, 30], "Melee; mana drain só contra druid."), weight: 1 },
+    ],
+    element: "FOGO: 100% nas três. Death é zero em todas. Energia: 65 a 80%. Holy entra 120 a 140% (charm Divine Wrath).",
+    set: SET_FOGO,
+    play: [
+      "Master of Flames + Aura of Exposed Weakness (Sapped Strength também serve).",
+      "Rotação de fogo: Great Fire Wave, Hell's Core e Ultimate Flame Strike no burst. Nunca death.",
+      "Charm: Divine Wrath (holy, 120 a 140%).",
+      "Prey de dano na Freakish (7.020 de exp). Vale para bestiário e para a chance de Stone Skin Amulet.",
+    ],
   },
 ];

@@ -8,5 +8,8 @@
   "forsaken-crypt": { "x": 32881, "y": 31594, "z": 11, "ref": "entrada: marcador To Forsaken Crypt (TibiaMaps)" },
   "unhallowed-crypt": { "x": 32823, "y": 31534, "z": 10, "ref": "marcador Unhallowed Crypt (TibiaMaps)" },
   "issavi-catacombs": { "x": 33857, "y": 31529, "z": 7, "ref": "entrada: marcador Kilmaresh Catacombs (TibiaMaps)" },
-  "issavi-sewers": { "x": 33875, "y": 31477, "z": 7, "ref": "entrada: marcador Issavi sewers (TibiaMaps)" }
+  "issavi-sewers": { "x": 33875, "y": 31477, "z": 7, "ref": "entrada: marcador Issavi sewers (TibiaMaps)" },
+  "ferumbras-way": { "x": 33271, "y": 32395, "z": 7, "ref": "entrada: Mazarius, nordeste de Darashia (TibiaWiki, Ferumbras' Ascension Quest)" },
+  "raubritter-mines": { "x": 33872, "y": 32193, "z": 7, "ref": "minas da Isle of Ada (TibiaWiki, The Order of the Stag Quest)" },
+  "forgotten-crypt": { "x": 32925, "y": 31779, "z": 11, "ref": "embaixo de Draconia (TibiaWiki, The Roost of the Graveborn Quest)" }
 }

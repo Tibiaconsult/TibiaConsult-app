@@ -67,7 +67,7 @@ export default function HuntExplorer({ drops }: { drops: Record<string, HuntDrop
 
   const { fit, others } = useMemo(() => {
     const term = norm(q.trim());
-    const text = HUNTS.filter((h) => !term || norm([h.name, h.city, ...h.creatures.map((c) => c.name)].join(" ")).includes(term));
+    const text = HUNTS.filter((h) => !term || norm([h.name, ...(h.aka ?? []), h.city, ...h.creatures.map((c) => c.name)].join(" ")).includes(term));
     if (mode === "todas") return { fit: text, others: [] as Hunt[] };
     const ok = (h: Hunt) => {
       const r = HUNT_RECS[h.id];

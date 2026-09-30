@@ -1,4 +1,4 @@
-// Posição de cada hunt no mapa (x, y, andar) e a imagem da área na TibiaWiki. Gerado por scripts/hunt-maps.mjs em 27/09/2026.
+// Posição de cada hunt no mapa (x, y, andar) e a imagem da área na TibiaWiki. Gerado por scripts/hunt-maps.mjs em 30/09/2026.
 // Sem coordenada: radiant-ascendancy, radiant-skyhold, bloodfire-gorge, issavi-goannas, issavi-ogres.
 
 export interface HuntMap {
@@ -312,5 +312,38 @@ export const HUNT_MAPS: Record<string, HuntMap> = {
     "x": 33632,
     "y": 32401,
     "z": 7
+  },
+  "forgotten-crypt": {
+    "page": "Forgotten Crypt",
+    "x": 32925,
+    "y": 31779,
+    "z": 11,
+    "ref": "embaixo de Draconia (TibiaWiki, The Roost of the Graveborn Quest)"
+  },
+  "ferumbras-way": {
+    "page": "Ferumbras' Ascension Quest",
+    "x": 33271,
+    "y": 32395,
+    "z": 7,
+    "ref": "entrada: Mazarius, nordeste de Darashia (TibiaWiki, Ferumbras' Ascension Quest)"
+  },
+  "deep-desert": {
+    "page": "Deep Desert",
+    "x": 33106,
+    "y": 32383,
+    "z": 7
+  },
+  "raubritter-mines": {
+    "page": "Isle of Ada",
+    "x": 33872,
+    "y": 32193,
+    "z": 7,
+    "ref": "minas da Isle of Ada (TibiaWiki, The Order of the Stag Quest)"
+  },
+  "netherworld": {
+    "page": "Netherworld",
+    "x": 33543,
+    "y": 31438,
+    "z": 8
   }
 };

@@ -19,6 +19,8 @@ export interface Creature {
 export interface Hunt {
   id: string;
   name: string;
+  /** outros nomes que os jogadores usam (TibiaPal, guilds), para a busca */
+  aka?: string[];
   city: string;
   access: string;
   floors: string[];
@@ -32,8 +34,9 @@ export interface Hunt {
 const BASE_HUNTS: Hunt[] = [
   {
     id: "lost-souls",
-    name: "Lost Souls (Brain Grounds / Netherworld)",
-    city: "Darashia",
+    name: "Lost Souls (Brain Grounds, Venore)",
+    aka: ["Lost Souls Venore", "Flimsy Venore"],
+    city: "Venore",
     access: "Feaster of Souls Quest (level 250, recomendado 300). Teleport invisível ao norte do Jakundaf Desert. Chão amarelo (ulcer) tira 15%, 20% e 25% do HP máximo em terra por andar.",
     floors: [
       "1º andar: Grim Reaper e Flimsy Lost Soul.",

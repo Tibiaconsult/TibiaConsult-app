@@ -28,6 +28,7 @@ export default function HuntSheet({ h, drops }: { h: Hunt; drops?: HuntDropsData
           Simular o dano nesta hunt
         </Link>
       </div>
+      {h.aka?.length ? <p className="muted text-[12px] mb-1">Também chamada de: {h.aka.join(", ")}</p> : null}
       <p>{h.access}</p>
       <ul className="list-disc pl-5 mt-2">
         {h.floors.map((f) => (
