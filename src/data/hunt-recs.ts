@@ -62,12 +62,40 @@ export const HUNT_RECS: Record<string, HuntRec> = {
     style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", monk: "Físico" },
     detail: "TibiaPal: Feru DT Seal (Dark Torturer). PT: Feru Seals a partir de 500.",
   },
-  ...Object.fromEntries(
-    ["grounds-of-deceit", "grounds-of-despair"].map((id) => [
-      id,
-      { solo: {}, team: 500, detail: "O TibiaPal cita também os selos Pumin e Infernatil e a Feru Way sem dizer a qual Ground correspondem; aqui fica só o level de PT (Feru Seals, 500+)." },
-    ]),
-  ),
+  "grounds-of-deceit": {
+    solo: {},
+    team: 500,
+    detail: "O TibiaPal não lista este selo separado; aqui fica só o level de PT (Feru Seals, 500+).",
+  },
+  // Pumin é o guardião do selo do Tarbaz (TibiaWiki, Ferumbras' Ascension Quest/Spoiler)
+  "grounds-of-despair": {
+    solo: { knight: 800, paladin: 800, sorcerer: 800, monk: 500 },
+    team: 500,
+    style: { knight: "Energia", paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", monk: "Energia" },
+    detail: "TibiaPal: Feru Pumin Seal (sorcerer: andar do boss). PT: Feru Seals a partir de 500.",
+  },
+  // Adicionadas em 30/09/2026 (TibiaPal, mesma consulta)
+  "ferumbras-way": {
+    solo: { knight: 800, paladin: 800, monk: 600 },
+    team: 500,
+    style: { knight: "Gelo", paladin: "Diamond Arrows, Ethereal", monk: "Físico" },
+    detail: "TibiaPal: Feru Way. Não aparece nas listas de sorcerer e druid.",
+  },
+  "deep-desert": {
+    solo: { paladin: 600, sorcerer: 600, druid: 500, monk: 600 },
+    style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
+    detail: "TibiaPal: Deep Desert (Darashia Skeletons).",
+  },
+  "lost-souls": {
+    solo: { knight: 550, sorcerer: 500, monk: 600 },
+    style: { knight: "Fogo", sorcerer: "Fogo", monk: "Terra" },
+    detail: "TibiaPal: Flimsy Venore. Knight 550 no -1; sorcerer 500 no -1 e -2.",
+  },
+  netherworld: {
+    solo: { knight: 550, sorcerer: 400, monk: 600 },
+    style: { knight: "Fogo", sorcerer: "Fogo", monk: "Terra" },
+    detail: "TibiaPal: Flimsy Port Hope. Sorcerer 400 só no -1 e 500 no -1 e -2.",
+  },
   "cobra-bastion": {
     solo: { knight: 550, paladin: 600, sorcerer: 500, monk: 500 },
     style: { knight: "Gelo, fogo, energia ou death", paladin: "Diamond Arrows, Ethereal", sorcerer: "Death", monk: "Energia" },

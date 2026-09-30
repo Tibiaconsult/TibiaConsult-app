@@ -48,6 +48,7 @@ export const HIGH_HUNTS: Hunt[] = [
   {
     id: "furious-crater",
     name: "Furious Crater (Soul War)",
+    aka: ["Soul War"],
     city: "Kilmaresh",
     access: "Soul War Quest: só por teleport no hub. Cinco andares, três de hunt.",
     floors: ["Andares de hunt: Cloak of Terror, Vibrant Phantom, Courage Leech."],
@@ -287,6 +288,7 @@ export const HIGH_HUNTS: Hunt[] = [
   {
     id: "secret-library-fire",
     name: "Secret Library: ala de fogo",
+    aka: ["Fire Library"],
     city: "Carlin",
     access: "Sob o noroeste de Tiquanda, pela Isle of the Kings. A biblioteca tem uma ala por elemento; a de fogo é imune a fogo.",
     floors: ["Ala de fogo: Guardian of Tales, Rage Squid, Burning Book."],
@@ -302,6 +304,7 @@ export const HIGH_HUNTS: Hunt[] = [
   {
     id: "secret-library-energy",
     name: "Secret Library: ala de energia",
+    aka: ["Energy Library"],
     city: "Carlin",
     access: "Sob o noroeste de Tiquanda, pela Isle of the Kings. A ala de energia é imune a energia (e o Brain Squid, a holy).",
     floors: ["Ala de energia: Knowledge Elemental, Energuardian of Tales, Brain Squid, Energetic Book."],
@@ -318,6 +321,7 @@ export const HIGH_HUNTS: Hunt[] = [
   {
     id: "secret-library-ice",
     name: "Secret Library: ala de gelo",
+    aka: ["Ice Library"],
     city: "Carlin",
     access: "Sob o noroeste de Tiquanda, pela Isle of the Kings. A ala de gelo é imune a gelo.",
     floors: ["Ala de gelo: Animated Feather, Squid Warden, Icecold Book."],

@@ -46,6 +46,7 @@ export const EXTRA_HUNTS: Hunt[] = [
   {
     id: "asura-vaults",
     name: "Asura Vaults (True Asuras)",
+    aka: ["True Asura", "True Asuras", "True Asura -2"],
     city: "Port Hope",
     access: "Asura Palace Quest e The Lost Brother Quest; espelho no térreo do palácio. Level 250+ para entrar.",
     floors: ["Três andares do Secret Basement: Hellspawn, Hellhound e as três True Asuras."],
@@ -129,6 +130,7 @@ export const EXTRA_HUNTS: Hunt[] = [
   {
     id: "crystal-enigma",
     name: "Crystal Enigma (Gnomprona)",
+    aka: ["Gnomprona"],
     city: "Edron",
     access: "Primal Ordeal Quest. Level 600+ recomendado para mages.",
     floors: ["Headpecker, Mantosaurus, Mercurial Menace, Noxious Ripptor e Shrieking Cry-Stal."],
@@ -161,6 +163,7 @@ export const EXTRA_HUNTS: Hunt[] = [
   {
     id: "ingol",
     name: "Ingol (surface e todos os andares)",
+    aka: ["Ingol -1", "Ingol -2", "Ingol -3", "Deeper Ingol"],
     city: "Ilha entre Roshamuul e Marapur",
     access: "Winter Update 2022. A The Cradle of Monsters Quest acontece na ilha. Os andares de baixo são chamados de Deeper Ingol.",
     floors: [
@@ -187,11 +190,12 @@ export const EXTRA_HUNTS: Hunt[] = [
   {
     id: "norcferatu",
     name: "Norcferatu (Fortress e Dungeons)",
+    aka: ["Norcferatu Fortress", "Norcferatu Dungeons", "Norcferatu Catacombs", "Norcferatu Dungeons East", "Norcferatu Dungeons West"],
     city: "Yalahar (Vengoth)",
     access: "Atualização 15.10. Fortress na superfície de Vengoth; Dungeons no subsolo, com a NPC Anaztassja Moroia e o boss Vladrukh. TibiaWiki recomenda 550+ nos Dungeons.",
     floors: [
       "Norcferatu Fortress (superfície): as 6 creatures abaixo.",
-      "Norcferatu Dungeons (subsolo): as mesmas 6 creatures e o boss Vladrukh.",
+      "Norcferatu Dungeons (subsolo, também chamados de catacombs): as mesmas 6 creatures e o boss Vladrukh. O TibiaPal separa o lado oeste e o lado leste; o leste pede um pouco mais de level (paladin e monk 700).",
     ],
     creatures: [
       c("Dworc Shadowstalker", 8900, 8930, 2.99, [95, 60, 100, 105, 105, 105, 95], "Fica invisível por uns 5 segundos, Life Drain até 625."),

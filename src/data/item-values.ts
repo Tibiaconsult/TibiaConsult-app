@@ -1,5 +1,5 @@
 // Valor dos itens de loot: [venda para NPC, valor de referência da wiki]. Gerado por scripts/item-values.mjs a partir da TibiaWiki
-// em 27/09/2026. 549 de 609 itens com valor.
+// em 30/09/2026. 558 de 618 itens com valor.
 
 export const ITEM_VALUES: Record<string, [number, number]> = {
   "Abyss Hammer": [20000, 20000],
@@ -61,6 +61,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Bow": [130, 130],
   "Brinebrute Claw": [2600, 2600],
   "Broadsword": [500, 500],
+  "Broken Gladiator Shield": [190, 190],
   "Broken Mitmah Necklace": [210, 210],
   "Broken Shamanic Staff": [35, 35],
   "Brooch of Embracement": [14000, 14000],
@@ -134,6 +135,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Deadly Fangs": [5500, 5500],
   "Death Ring": [1000, 1000],
   "Decayed Finger Bone": [5100, 5100],
+  "Demon Horn": [1000, 1000],
   "Demon Shield": [30000, 30000],
   "Demon Trophy": [40000, 40000],
   "Demonbone Amulet": [32000, 32000],
@@ -186,6 +188,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Flaming Arrow": [0, 5],
   "Flash Arrow": [0, 5],
   "Flask of Demonic Blood": [0, 80],
+  "Flask of Warrior's Sweat": [10000, 10000],
   "Focus Cape": [6000, 6000],
   "Frazzle Skin": [400, 400],
   "Frazzle Tongue": [700, 700],
@@ -262,6 +265,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Hellspawn Tail": [475, 475],
   "Hemp Rope": [350, 350],
   "Honeycomb": [40, 500],
+  "Hunting Spear": [25, 25],
   "Ice Cube": [250, 200],
   "Ice Rapier": [1000, 1000],
   "Idol of the Forge": [950, 950],
@@ -298,6 +302,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Liodile Fang": [480, 480],
   "Lizard Heart": [530, 530],
   "Lost Soul (Item)": [120, 120],
+  "Mace": [30, 30],
   "Machete": [6, 6],
   "Magic Light Wand": [35, 10000],
   "Magic Plate Armor": [90000, 90000],
@@ -307,6 +312,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Magma Coat": [11000, 11000],
   "Magma Legs": [11000, 11000],
   "Magma Monocle": [2500, 2500],
+  "Mammoth Whopper": [300, 300],
   "Mana Potion": [0, 56],
   "Mantassin Tail": [280, 280],
   "Manticore Ear": [310, 310],
@@ -361,6 +367,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Pair of Hellflayer Horns": [1300, 1300],
   "Pair of Iron Fists": [4000, 4000],
   "Peacock Feather Fan": [350, 350],
+  "Pelvis Bone": [30, 30],
   "Pick": [15, 15],
   "Piece of Dead Brain": [420, 420],
   "Piece of Draconian Steel": [3000, 4000],
@@ -369,6 +376,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Piece of Hellfire Armor": [550, 550],
   "Piece of Royal Steel": [10000, 10000],
   "Plate Armor": [400, 400],
+  "Plate Legs": [115, 115],
   "Platinum Amulet": [2500, 2500],
   "Platinum Coin": [100, 100],
   "Poison Dagger": [50, 50],
@@ -486,6 +494,7 @@ export const ITEM_VALUES: Record<string, [number, number]> = {
   "Sulphider Shell": [2200, 2200],
   "Sulphur Powder": [1900, 1900],
   "Sulphurous Stone": [100, 100],
+  "Sword": [25, 25],
   "Talon": [320, 320],
   "Telescope Eye": [1600, 1600],
   "Terra Amulet": [1500, 1500],
