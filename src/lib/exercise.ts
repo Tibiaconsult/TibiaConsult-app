@@ -2,7 +2,9 @@
 // - Formulae, seção Skills: pontos para o próximo nível P = A·b^(skill−c); total Tp = A·(b^(skill−c) − 1)/(b − 1).
 //   A: magic 1600, melee 50, distance 30, shielding 100 (fist usa a constante de melee). c: 0 no magic level, 10 nos demais.
 // - Exercise Weapons: carga de wand/rod = 600 de mana; melee (e wraps) = 7,2 hits; bow = 4,32 hits; shield = 14,4 blocks.
-//   Regular 500 cargas (347.222 gp ou 25 TC), durable 1.800 (1.250.000 gp ou 90 TC), lasting 14.400 (10.000.000 gp ou 720 TC). Uma carga a cada 2 s.
+//   Regular 500 cargas (25 TC), durable 1.800 (90 TC), lasting 14.400 (720 TC). Uma carga a cada 2 s.
+// - Preço em gold no NPC: +25% a partir da server save de 06/10/2026 (tibia.com, "Adjustment of Market Fee and Exercise Weapons", 01/10/2026):
+//   347.222 → 434.028, 1.250.000 → 1.562.500, 10.000.000 → 12.500.000.
 //   Dummies de casa (Demon, Ferumbras, Monk Exercise Dummy): +10%.
 // - Loyalty: +5% a cada 360 pontos (máx. 50%) sobre os pontos de skill.
 
@@ -29,9 +31,9 @@ const B: Record<Voc, Record<Skill, number>> = {
 };
 export const PER_CHARGE: Record<Skill, number> = { magic: 600, melee: 7.2, fist: 7.2, distance: 4.32, shielding: 14.4 };
 export const WEAPONS = [
-  { id: "regular", label: "Exercise", charges: 500, gold: 347222, tc: 25 },
-  { id: "durable", label: "Durable", charges: 1800, gold: 1250000, tc: 90 },
-  { id: "lasting", label: "Lasting", charges: 14400, gold: 10000000, tc: 720 },
+  { id: "regular", label: "Exercise", charges: 500, gold: 434028, goldBefore: 347222, tc: 25 },
+  { id: "durable", label: "Durable", charges: 1800, gold: 1562500, goldBefore: 1250000, tc: 90 },
+  { id: "lasting", label: "Lasting", charges: 14400, gold: 12500000, goldBefore: 10000000, tc: 720 },
 ] as const;
 
 export function totalPoints(voc: Voc, skill: Skill, level: number): number {

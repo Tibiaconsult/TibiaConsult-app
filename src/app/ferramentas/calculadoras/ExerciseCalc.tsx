@@ -145,7 +145,7 @@ export default function ExerciseCalc() {
                 <tr>
                   <th>Arma</th>
                   <th>Quantas</th>
-                  <th>Gold (NPC)</th>
+                  <th>Gold (NPC, desde 06/10)</th>
                   <th>Tibia Coins (Store)</th>
                   <th>Tempo de treino</th>
                 </tr>
@@ -183,6 +183,10 @@ export default function ExerciseCalc() {
         <li>
           Loyalty soma 5% a cada 360 pontos sobre os pontos de skill mostrados; o treino em si não acelera. Por isso, com loyalty, use o skill atual e o
           desejado como aparecem no jogo (já com o bônus). Dummy de casa (Demon, Ferumbras ou Monk Exercise Dummy): +10%.
+        </li>
+        <li>
+          Gold no NPC com o aumento de 25% da server save de 06/10/2026 (anúncio do tibia.com de 01/10). Antes disso: 347.222 (regular), 1.250.000 (durable) e
+          10.000.000 (lasting). O preço em Tibia Coins não mudou.
         </li>
         <li>O TibiaPal chega aos mesmos números. O Intibia mostra a metade das armas para magic level; não localizei fonte que explique essa diferença.</li>
       </ul>

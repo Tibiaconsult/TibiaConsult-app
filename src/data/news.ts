@@ -6,6 +6,10 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-10-03", text: "Exercise weapons 25% mais caras no NPC a partir da server save de 06/10 (regular 434.028, durable 1.562.500, lasting 12.500.000): a calculadora já usa o preço novo. Quem for treinar, compre antes.", href: "/ferramentas/calculadoras" },
+  { date: "2026-10-03", text: "Exaltation Overload até a server save de 05/10: Ruse 4% e Transcendence 1,5% para todos, fiendish em dobro e +50% de XP por stack de sinister embrace. Está no calendário.", href: "/tibia/calendario" },
+  { date: "2026-10-03", text: "Annual Autumn Vintage de 01/10 a 08/10 e de 17/10 a 24/10: se o mundo completar, health e mana potions ficam 33% mais fortes por 7 dias.", href: "/tibia/calendario" },
+  { date: "2026-09-30", text: "Hunts novas: Outer Crypt (700+), Ferumbras Way, Deep Desert (Skeletons Darashia), Raubritter Mines e Lost Souls de Port Hope. A busca acha as hunts pelo nome que a guild usa (Pumin Seal, Fire Library, Ingol -3...).", href: "/hunts" },
   { date: "2026-09-27", text: "Rotas dos jogadores: desenhe no mapa o caminho que você faz numa hunt e ajude outros jogadores a caçar melhor. As mais úteis recebem 👍.", href: "/hunts" },
   { date: "2026-09-27", text: "Mapa com o respawn: cada creature no lugar em que nasce, com a quantidade, e o total da área na ficha da hunt.", href: "/mapa" },
   { date: "2026-09-27", text: "Ficha da hunt com supplies por vocação e level, drops que pagam a hunt e link direto para a rota no TibiaRoute.", href: "/hunts" },
