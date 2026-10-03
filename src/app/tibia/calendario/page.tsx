@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
-import { SS_NOTE, TibiaEvent, day, eventInfo, fmtDay } from "@/lib/tibiaEvents";
+import { SS_NOTE, TibiaEvent, day, eventInfo, fmtDay, withAnnounced } from "@/lib/tibiaEvents";
 
 export const metadata = { title: "Calendário de eventos do Tibia" };
 export const dynamic = "force-dynamic";
@@ -40,7 +40,7 @@ async function load(from: string, to: string, today: string) {
     supabase.from("tibia_events").select("id, name, start_date, end_date, tentative").gte("end_date", today).order("start_date").limit(14),
     supabase.from("tibia_news").select("id, date, title, type").neq("type", "ticker").order("date", { ascending: false }).limit(5),
   ]);
-  return { month: (a.data ?? []) as TibiaEvent[], soon: (b.data ?? []) as TibiaEvent[], news: (c.data ?? []) as News[] };
+  return { month: withAnnounced((a.data ?? []) as TibiaEvent[], from, to), soon: withAnnounced((b.data ?? []) as TibiaEvent[], today), news: (c.data ?? []) as News[] };
 }
 
 export default async function CalendarioPage({ searchParams }: { searchParams: Promise<{ mes?: string }> }) {

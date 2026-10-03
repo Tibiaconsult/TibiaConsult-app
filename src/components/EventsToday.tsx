@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
-import { TibiaEvent, eventInfo, fmtDay } from "@/lib/tibiaEvents";
+import { TibiaEvent, eventInfo, fmtDay, withAnnounced } from "@/lib/tibiaEvents";
 
 /** "Hoje no Tibia": evento acontecendo agora e o próximo, com link para o calendário. */
 export default async function EventsToday() {
@@ -8,7 +8,7 @@ export default async function EventsToday() {
   const today = new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
   const supabase = await createClient();
   const { data } = await supabase.from("tibia_events").select("id, name, start_date, end_date, tentative").gte("end_date", today).order("start_date").limit(6);
-  const list = (data ?? []) as TibiaEvent[];
+  const list = withAnnounced((data ?? []) as TibiaEvent[], today);
   const now = list.filter((e) => e.start_date <= today);
   const next = list.find((e) => e.start_date > today);
   if (!now.length && !next) return null;

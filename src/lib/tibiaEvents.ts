@@ -34,7 +34,24 @@ const INFO: Record<string, { pt: string; emoji: string; color: string }> = {
   "Rise of Devovorga": { pt: "Rise of Devovorga", emoji: "🌋", color: "#6b2a8a" },
   "Annual Autumn Vintage": { pt: "Vindima de Outono", emoji: "🍇", color: "#7a3a5a" },
   "The Lightbearer": { pt: "The Lightbearer", emoji: "🕯️", color: "#b08a1a" },
+  "Exaltation Overload": { pt: "Exaltation Overload (forja turbinada)", emoji: "⚒️", color: "#9a5b12" },
+  "Game World Merge": { pt: "Fusão de mundos", emoji: "🔀", color: "#4a4a6a" },
 };
+
+/** Eventos anunciados nas notícias do tibia.com que a TibiaWiki não lista em "Upcoming Events" (entram junto com a tabela). */
+export const ANNOUNCED: TibiaEvent[] = [
+  // "Exaltation Overload", 28/09/2026: da server save de 02/10 à de 05/10 (último dia 04/10). Ruse 4% e Transcendence 1,5% para todos, fiendish em dobro, +50% de XP por stack de sinister embrace
+  { id: "Exaltation Overload|2026-10-02", name: "Exaltation Overload", start_date: "2026-10-02", end_date: "2026-10-04", tentative: false },
+  // "Game World Merge Announcement", 21/09/2026: "on October 22, 2026 at the earliest"
+  { id: "Game World Merge|2026-10-22", name: "Game World Merge", start_date: "2026-10-22", end_date: "2026-10-22", tentative: true },
+];
+
+/** Junta a tabela com os anunciados que caem no período, sem repetir. */
+export function withAnnounced(list: TibiaEvent[], from: string, to = "9999-12-31"): TibiaEvent[] {
+  const ids = new Set(list.map((e) => e.id));
+  const extra = ANNOUNCED.filter((e) => !ids.has(e.id) && e.end_date >= from && e.start_date <= to);
+  return [...list, ...extra].sort((a, b) => a.start_date.localeCompare(b.start_date));
+}
 
 export const eventInfo = (name: string) => INFO[name] ?? { pt: name, emoji: "📅", color: "#555" };
 
