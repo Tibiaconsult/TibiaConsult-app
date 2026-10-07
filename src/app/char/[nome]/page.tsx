@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Box from "@/components/Box";
+import { charHunts } from "@/lib/char-hunts";
 import { rashidRumor } from "@/lib/rashid";
 import { Profile, achievements, fmtOnline } from "@/lib/social";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
@@ -36,6 +37,7 @@ export default async function CharProfilePage({ params }: Props) {
   const { p, gained30, deaths30 } = r;
   const list = achievements(p);
   const earned = list.filter((a) => a.earned);
+  const ch = charHunts(p.vocation, p.level, p.deaths);
   return (
     <div>
       <h1>{p.name}</h1>
@@ -65,6 +67,60 @@ export default async function CharProfilePage({ params }: Props) {
           {p.wins > 0 && ` · 🏅 ${p.wins}x Funcionário do Mês`}
         </p>
       </Box>
+
+      {(ch.rec || ch.deathHunts.length > 0) && (
+        <Box title="🎯 Hunts para este char">
+          {ch.rec && (
+            <>
+              {ch.rec.ok.length === 0 ? (
+                <p className="text-[12px]">Nenhuma hunt do site com recomendação solo para essa vocação neste level.</p>
+              ) : (
+                <ul className="space-y-1 text-[12px]">
+                  {ch.rec.ok.map(({ h, min }) => (
+                    <li key={h.id} className="flex flex-wrap items-baseline gap-x-2">
+                      <Link href={`/hunts?h=${h.id}`} className="font-bold">
+                        {h.name}
+                      </Link>
+                      <span className="muted">({min}+)</span>
+                      <Link href={`/hunts/preparar?h=${h.id}&voc=${ch.voc}`} className="text-[11px]">
+                        preparar
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {ch.rec.next && (
+                <p className="text-[11px] mt-2">
+                  Próxima: <Link href={`/hunts?h=${ch.rec.next.h.id}`}>{ch.rec.next.h.name}</Link> a partir do level {ch.rec.next.min}.
+                </p>
+              )}
+              <p className="muted text-[10px] mt-1">
+                Recomendação solo do TibiaPal para a vocação, as mais altas que o level {p.level} já alcança.{" "}
+                <Link href={`/hunts?voc=${ch.voc}&level=${p.level}`}>Ver todas</Link>
+              </p>
+            </>
+          )}
+          {ch.deathHunts.length > 0 && (
+            <div className="mt-3 border-t border-[#b98a5a]/40 pt-2 text-[12px]">
+              <b>Pelas mortes:</b>
+              <ul className="list-disc pl-5 mt-1 space-y-0.5">
+                {ch.deathHunts.map(({ creature, hunts }) => (
+                  <li key={creature}>
+                    <span className="capitalize">{creature}</span> aparece em{" "}
+                    {hunts.slice(0, 4).map((h, i) => (
+                      <span key={h.id}>
+                        {i > 0 && ", "}
+                        <Link href={`/hunts?h=${h.id}`}>{h.name}</Link>
+                      </span>
+                    ))}
+                    . A ficha mostra os ataques e a proteção que vale levar.
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Box>
+      )}
 
       <Box title={`🏅 Conquistas (${earned.length} de ${list.length})`}>
         <div className="grid gap-2 sm:grid-cols-2">

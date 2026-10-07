@@ -40,12 +40,17 @@ export default function HuntExplorer({ drops }: { drops: Record<string, HuntDrop
   // abre a hunt da URL (?h=id), para links compartilhados
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    const h = new URLSearchParams(window.location.search).get("h");
+    const sp = new URLSearchParams(window.location.search);
+    const h = sp.get("h");
     if (h && HUNTS.some((x) => x.id === h)) setSelected(h);
-    // filtro solo parte da vocação e do level ativos (barra do topo)
+    // filtro solo parte da vocação e do level da URL (link da página do char) ou dos ativos (barra do topo)
     const a = getActive();
-    if (a.voc) setVoc(a.voc);
-    if (a.char) setLevel(a.char.level);
+    const uv = sp.get("voc");
+    const ul = Number(sp.get("level"));
+    if (uv && uv in REC_VOC_LABEL) setVoc(uv as RecVoc);
+    else if (a.voc) setVoc(a.voc);
+    if (ul > 0 && ul <= 5000) setLevel(ul);
+    else if (a.char) setLevel(a.char.level);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
