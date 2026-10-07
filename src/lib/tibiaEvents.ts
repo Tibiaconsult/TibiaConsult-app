@@ -38,10 +38,8 @@ const INFO: Record<string, { pt: string; emoji: string; color: string }> = {
   "Game World Merge": { pt: "Fusão de mundos", emoji: "🔀", color: "#4a4a6a" },
 };
 
-/** Eventos anunciados nas notícias do tibia.com que a TibiaWiki não lista em "Upcoming Events" (entram junto com a tabela). */
+/** Eventos anunciados sem data de server save na notícia (a 031 lê sozinha as que dizem "between the server saves of ... and ..."). */
 export const ANNOUNCED: TibiaEvent[] = [
-  // "Exaltation Overload", 28/09/2026: da server save de 02/10 à de 05/10 (último dia 04/10). Ruse 4% e Transcendence 1,5% para todos, fiendish em dobro, +50% de XP por stack de sinister embrace
-  { id: "Exaltation Overload|2026-10-02", name: "Exaltation Overload", start_date: "2026-10-02", end_date: "2026-10-04", tentative: false },
   // "Game World Merge Announcement", 21/09/2026: "on October 22, 2026 at the earliest"
   { id: "Game World Merge|2026-10-22", name: "Game World Merge", start_date: "2026-10-22", end_date: "2026-10-22", tentative: true },
 ];
