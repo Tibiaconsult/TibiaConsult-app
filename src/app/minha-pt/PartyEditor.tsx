@@ -50,7 +50,7 @@ export function RemoveChar({ name }: { name: string }) {
   );
 }
 
-export function NotifyToggle({ name, on }: { name: string; on: boolean }) {
+export function NotifyToggle({ name, on, kind }: { name: string; on: boolean; kind: "death" | "level" }) {
   const router = useRouter();
   const [v, setV] = useState(on);
   return (
@@ -61,11 +61,11 @@ export function NotifyToggle({ name, on }: { name: string; on: boolean }) {
         onChange={async (e) => {
           const next = e.target.checked;
           setV(next);
-          await createClient().rpc("set_party_notify", { p_name: name, p_notify: next });
+          await createClient().rpc(kind === "death" ? "set_party_notify" : "set_party_notify_level", { p_name: name, p_notify: next });
           router.refresh();
         }}
       />
-      🔔 avisar no celular se morrer
+      {kind === "death" ? "⚰️ avisar se morrer" : "⬆️ avisar quando upar"}
     </label>
   );
 }
