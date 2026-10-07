@@ -95,7 +95,7 @@ export const HIGH_HUNTS: Hunt[] = [
     id: "mirrored-nightmare",
     name: "Mirrored Nightmare (Soul War)",
     city: "Kilmaresh",
-    access: "Soul War Quest: teleport no hub de Zarganash. As Apparitions imitam cada vocação.",
+    access: "Soul War Quest: teleport no hub de Zarganash. As Apparitions imitam cada vocação. Desde o patch de 06/10/2026 as Apparitions voltam a puxar echo raid ao morrer.",
     floors: ["Área: Many Faces, Distorted Phantom.", "Apparitions: Druid's Apparition, Knight's Apparition, Monk's Apparition, Paladin's Apparition, Sorcerer's Apparition."],
     creatures: [
       { ...c("Many Faces", 30000, 18870, 5.36, [100, 130, 50, 70, 105, 100, 100], "Melee 0-1200+, Avalanche 1000+ (gelo)."), weight: 2 },
