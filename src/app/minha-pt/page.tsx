@@ -41,7 +41,7 @@ export default async function MinhaPtPage() {
       <Box title="➕ Montar a PT">
         <AddChar />
         <div className="mt-3 border-t border-[#b98a5a]/40 pt-2">
-          <p className="text-[12px] mb-1">🔔 Quando alguém da PT morrer, chega um aviso no sino do site e no celular (ligue abaixo neste aparelho).</p>
+          <p className="text-[12px] mb-1">🔔 Quando alguém da PT morrer ou subir de level, chega um aviso no sino do site e no celular (ligue abaixo neste aparelho). Dá para escolher por char, embaixo de cada um.</p>
           <PushToggle />
         </div>
         <p className="muted text-[11px] mt-2">
@@ -138,7 +138,8 @@ export default async function MinhaPtPage() {
               </div>
               <p className="text-[11px] mt-2 flex flex-wrap gap-3">
                 <Link href={`/char/${encodeURIComponent(c.name)}`}>página do char e hunts recomendadas</Link>
-                <NotifyToggle name={c.name} on={c.notify !== false} />
+                <NotifyToggle name={c.name} kind="death" on={c.notify !== false} />
+                <NotifyToggle name={c.name} kind="level" on={c.notify_level !== false} />
                 <RemoveChar name={c.name} />
               </p>
             </Box>

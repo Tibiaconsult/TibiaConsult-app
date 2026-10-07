@@ -8,6 +8,8 @@ export interface PartyChar {
   guild: string | null;
   /** aviso no celular quando morrer */
   notify?: boolean;
+  /** aviso no celular quando subir de level */
+  notify_level?: boolean;
   snaps: { d: string; l: number; e: number }[];
   online: { d: string; m: number }[];
   last_seen: string | null;

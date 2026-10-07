@@ -36,7 +36,12 @@ export default async function MinhaAreaPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1>Minha área</h1>
-        <LogoutButton className="tc-btn" label={`sair (${user.email})`} />
+        <div className="flex flex-wrap gap-2">
+          <Link href="/minha-pt" className="tc-btn">
+            👥 Minha PT
+          </Link>
+          <LogoutButton className="tc-btn" label={`sair (${user.email})`} />
+        </div>
       </div>
       <p className="on-dark mb-4">
         Tudo aqui é só seu: nenhuma outra conta vê seus chars, seu bestiário ou suas sugestões. O resto do site continua aberto para explorar
