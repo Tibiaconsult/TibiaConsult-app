@@ -93,6 +93,7 @@ export const MENU: MenuGroup[] = [
         keywords: "calculadora experiencia exercise weapons stamina blessing treino",
       },
       { href: "/ferramentas/loot", label: "LootSplit ⭐", keywords: "divisao de loot party hunt analyser split transferencia" },
+      { href: "/ferramentas/conversor-tc", label: "Conversor de Tibia Coins", keywords: "tc tibia coins reais kk gold preco converter venda compra market" },
     ],
   },
   {
