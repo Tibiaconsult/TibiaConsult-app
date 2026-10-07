@@ -9,7 +9,8 @@ export default async function EventsToday() {
   const supabase = await createClient();
   const { data } = await supabase.from("tibia_events").select("id, name, start_date, end_date, tentative").gte("end_date", today).order("start_date").limit(6);
   const list = withAnnounced((data ?? []) as TibiaEvent[], today);
-  const now = list.filter((e) => e.start_date <= today);
+  // previsão que já devia ter começado sem notícia confirmando: não mostra como "agora"
+  const now = list.filter((e) => e.start_date <= today && !e.tentative);
   const next = list.find((e) => e.start_date > today);
   if (!now.length && !next) return null;
   return (
