@@ -29,7 +29,7 @@ export default function ProficiencyPlanner() {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {PROFICIENCY.map((t, i) => (
             <button key={t.wand} type="button" onClick={() => setWandIdx(i)} className="border border-[#b98a5a] rounded p-2 bg-white/40 flex items-center gap-2" style={i === wandIdx ? { outline: "2px solid #1a6b2d" } : undefined}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
