@@ -34,6 +34,7 @@ export const MENU: MenuGroup[] = [
     items: [
       { href: "/minha-area", label: "Minha área", keywords: "perfil painel meu char" },
       { href: "/meus-chars", label: "Meus chars", keywords: "cadastrar personagem" },
+      { href: "/minha-pt", label: "Minha PT", keywords: "party pt acompanhar amigos xp online mortes" },
       { href: "/entrar", label: "Entrar", keywords: "login conta cadastro" },
     ],
   },
