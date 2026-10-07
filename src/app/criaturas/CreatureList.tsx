@@ -85,12 +85,12 @@ export default function CreatureList({ rows }: { rows: Row[] }) {
           ))}
         </select>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
         {list.map((r) => (
           <Link
             key={r.name}
             href={creatureHref(r.name)}
-            className="flex gap-2 items-center border border-[#b98a5a] rounded p-2 bg-white/40 hover:bg-white/70 !no-underline text-[#3a1a00]"
+            className="flex gap-2 items-center min-w-0 border border-[#b98a5a] rounded p-2 bg-white/40 hover:bg-white/70 !no-underline text-[#3a1a00]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={creatureIcon(r.name)} alt="" width={48} height={48} loading="lazy" className="sprite shrink-0" style={{ objectFit: "contain" }} />
