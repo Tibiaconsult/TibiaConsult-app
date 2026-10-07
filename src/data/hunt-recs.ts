@@ -91,15 +91,21 @@ export const HUNT_RECS: Record<string, HuntRec> = {
     style: { paladin: "Diamond Arrows, Ethereal", sorcerer: "Energia", druid: "Forked Thorns + Forked Glacier", monk: "Terra" },
     detail: "TibiaPal: Deep Desert (Darashia Skeletons).",
   },
+  // Lost Souls: o TibiaPal novo (pós-rebalanceamento) só traz knight, sorcerer e monk; paladin, druid e PT vêm da lista antiga
+  // (tibiapal.com/hunting-old, antes de 06/2026) e ficam marcados no detail. TibiaWiki (Brain Grounds e Netherworld): mínimo 300 (knight e mages) e 350 (paladin).
   "lost-souls": {
-    solo: { knight: 550, sorcerer: 500, monk: 600 },
-    style: { knight: "Fogo", sorcerer: "Fogo", monk: "Terra" },
-    detail: "TibiaPal: Flimsy Venore. Knight 550 no -1; sorcerer 500 no -1 e -2.",
+    solo: { knight: 550, paladin: 600, sorcerer: 500, druid: 500, monk: 600 },
+    team: 250,
+    style: { knight: "Fogo", paladin: "Great Fireball", sorcerer: "Fogo (Great Fire Wave e GFB)", druid: "Great Fireball", monk: "Terra" },
+    detail:
+      "TibiaPal: Flimsy Venore. Knight 550 no -1; sorcerer 500 no -1 e -2; monk 600. Paladin 600, druid 500 e PT 250 são da lista do TibiaPal de antes do rebalanceamento de 06/2026 (a nova ainda não traz). A TibiaWiki aceita a partir de 300 (350 paladin), mas aí rende pouco.",
   },
   netherworld: {
-    solo: { knight: 550, sorcerer: 400, monk: 600 },
-    style: { knight: "Fogo", sorcerer: "Fogo", monk: "Terra" },
-    detail: "TibiaPal: Flimsy Port Hope. Sorcerer 400 só no -1 e 500 no -1 e -2.",
+    solo: { knight: 550, paladin: 600, sorcerer: 400, druid: 500, monk: 600 },
+    team: 250,
+    style: { knight: "Fogo", paladin: "Great Fireball", sorcerer: "Fogo (Great Fire Wave e GFB)", druid: "Great Fireball", monk: "Terra" },
+    detail:
+      "TibiaPal: Flimsy Port Hope. Sorcerer 400 só no -1 e 500 no -1 e -2; knight 550; monk 600. Druid 500 e PT 250 são da lista de antes do rebalanceamento de 06/2026; paladin 600 vem da Lost Souls de Venore (a lista antiga não separa Port Hope para paladin).",
   },
   "cobra-bastion": {
     solo: { knight: 550, paladin: 600, sorcerer: 500, monk: 500 },
