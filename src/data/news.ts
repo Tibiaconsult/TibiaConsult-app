@@ -6,6 +6,8 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-10-07", text: "Conversor de Tibia Coins: informe o preço da TC no seu mundo e quanto você cobra; X TC viram kk e reais na hora, com a taxa nova do Market e texto pronto para copiar.", href: "/ferramentas/conversor-tc" },
+  { date: "2026-10-07", text: "Minha PT: acompanhe os chars da sua PT (XP por dia, tempo online, mortes) e receba aviso no celular quando alguém morrer ou upar.", href: "/minha-pt" },
   { date: "2026-10-06", text: "Patch de 06/10: Echo Wardens voltam a nascer com 4 creatures normais, dão 20% de dano extra (era 50%) e dropam 50 dust (eram 15); echo raids voltaram na Mirrored Nightmare; Swift Foot com cooldown de 4 s; taxa do Market agora 2,5% (teto 2,5kk).", href: "/hunts?h=mirrored-nightmare" },
   { date: "2026-10-06", text: "Exercise weapons 25% mais caras no NPC desde a server save de 06/10: regular 434.028, durable 1.562.500, lasting 12.500.000. A calculadora já usa o preço novo; em Tibia Coins não mudou.", href: "/ferramentas/calculadoras" },
   { date: "2026-10-03", text: "Exaltation Overload até a server save de 05/10: Ruse 4% e Transcendence 1,5% para todos, fiendish em dobro e +50% de XP por stack de sinister embrace. Está no calendário.", href: "/tibia/calendario" },
