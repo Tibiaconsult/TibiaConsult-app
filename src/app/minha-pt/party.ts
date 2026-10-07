@@ -6,6 +6,8 @@ export interface PartyChar {
   vocation: string | null;
   level: number | null;
   guild: string | null;
+  /** aviso no celular quando morrer */
+  notify?: boolean;
   snaps: { d: string; l: number; e: number }[];
   online: { d: string; m: number }[];
   last_seen: string | null;

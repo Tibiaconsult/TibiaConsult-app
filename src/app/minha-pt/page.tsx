@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Box from "@/components/Box";
 import { createClient, hasSupabaseEnv } from "@/lib/supabase/server";
-import { AddChar, RemoveChar } from "./PartyEditor";
+import { PushToggle } from "@/components/Notifications";
+import { AddChar, NotifyToggle, RemoveChar } from "./PartyEditor";
 import XpBars from "./XpBars";
 import { PartyChar, hours, shortXp, stats } from "./party";
 
@@ -39,6 +40,10 @@ export default async function MinhaPtPage() {
 
       <Box title="➕ Montar a PT">
         <AddChar />
+        <div className="mt-3 border-t border-[#b98a5a]/40 pt-2">
+          <p className="text-[12px] mb-1">🔔 Quando alguém da PT morrer, chega um aviso no sino do site e no celular (ligue abaixo neste aparelho).</p>
+          <PushToggle />
+        </div>
         <p className="muted text-[11px] mt-2">
           Até 10 chars, de qualquer mundo. O site busca o level todo dia, as mortes a cada 10 minutos e quem está online a cada 5 minutos.
         </p>
@@ -133,6 +138,7 @@ export default async function MinhaPtPage() {
               </div>
               <p className="text-[11px] mt-2 flex flex-wrap gap-3">
                 <Link href={`/char/${encodeURIComponent(c.name)}`}>página do char e hunts recomendadas</Link>
+                <NotifyToggle name={c.name} on={c.notify !== false} />
                 <RemoveChar name={c.name} />
               </p>
             </Box>

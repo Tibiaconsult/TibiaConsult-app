@@ -49,3 +49,23 @@ export function RemoveChar({ name }: { name: string }) {
     </button>
   );
 }
+
+export function NotifyToggle({ name, on }: { name: string; on: boolean }) {
+  const router = useRouter();
+  const [v, setV] = useState(on);
+  return (
+    <label className="inline-flex items-center gap-1 text-[11px] cursor-pointer">
+      <input
+        type="checkbox"
+        checked={v}
+        onChange={async (e) => {
+          const next = e.target.checked;
+          setV(next);
+          await createClient().rpc("set_party_notify", { p_name: name, p_notify: next });
+          router.refresh();
+        }}
+      />
+      🔔 avisar no celular se morrer
+    </label>
+  );
+}
