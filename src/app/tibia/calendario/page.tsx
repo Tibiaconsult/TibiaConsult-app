@@ -47,7 +47,7 @@ export default async function CalendarioPage({ searchParams }: { searchParams: P
   const { mes } = await searchParams;
   const mo = monthOf(mes);
   const { month, soon, news } = await load(mo.cells[0], mo.cells[mo.cells.length - 1], mo.today);
-  const now = soon.filter((e) => e.start_date <= mo.today);
+  const now = soon.filter((e) => e.start_date <= mo.today && !e.tentative);
   const next = soon.filter((e) => e.start_date > mo.today).slice(0, 8);
   const daysTo = (d: string) => Math.round((day(d).getTime() - day(mo.today).getTime()) / 86400000);
 

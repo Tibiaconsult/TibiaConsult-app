@@ -6,7 +6,8 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
-  { date: "2026-10-03", text: "Exercise weapons 25% mais caras no NPC a partir da server save de 06/10 (regular 434.028, durable 1.562.500, lasting 12.500.000): a calculadora já usa o preço novo. Quem for treinar, compre antes.", href: "/ferramentas/calculadoras" },
+  { date: "2026-10-06", text: "Patch de 06/10: Echo Wardens voltam a nascer com 4 creatures normais, dão 20% de dano extra (era 50%) e dropam 50 dust (eram 15); echo raids voltaram na Mirrored Nightmare; Swift Foot com cooldown de 4 s; taxa do Market agora 2,5% (teto 2,5kk).", href: "/hunts?h=mirrored-nightmare" },
+  { date: "2026-10-06", text: "Exercise weapons 25% mais caras no NPC desde a server save de 06/10: regular 434.028, durable 1.562.500, lasting 12.500.000. A calculadora já usa o preço novo; em Tibia Coins não mudou.", href: "/ferramentas/calculadoras" },
   { date: "2026-10-03", text: "Exaltation Overload até a server save de 05/10: Ruse 4% e Transcendence 1,5% para todos, fiendish em dobro e +50% de XP por stack de sinister embrace. Está no calendário.", href: "/tibia/calendario" },
   { date: "2026-10-03", text: "Annual Autumn Vintage de 01/10 a 08/10 e de 17/10 a 24/10: se o mundo completar, health e mana potions ficam 33% mais fortes por 7 dias.", href: "/tibia/calendario" },
   { date: "2026-09-30", text: "Hunts novas: Outer Crypt (700+), Ferumbras Way, Deep Desert (Skeletons Darashia), Raubritter Mines e Lost Souls de Port Hope. A busca acha as hunts pelo nome que a guild usa (Pumin Seal, Fire Library, Ingol -3...).", href: "/hunts" },
