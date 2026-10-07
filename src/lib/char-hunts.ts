@@ -2,9 +2,13 @@
 // pelas mortes registradas, em quais hunts do site aparecem as creatures que mataram o char.
 
 import { HUNTS, type Hunt } from "@/data/hunts";
+import { HUNT_RECS } from "@/data/hunt-recs";
 import { huntsFor } from "@/lib/hunt-level";
 
 const VOCS = ["knight", "paladin", "sorcerer", "druid", "monk"] as const;
+
+/** Hunts que sempre aparecem no quadro quando o level alcança, mesmo fora das mais altas (pedido da guild). */
+const FEATURED = ["lost-souls", "netherworld"];
 
 /** "Royal Paladin" → "paladin"; "None" ou desconhecida → null */
 export function baseVoc(vocation: string | null): (typeof VOCS)[number] | null {
@@ -25,6 +29,13 @@ export function killers(reason: string | null): string[] {
 export function charHunts(vocation: string | null, level: number | null, deaths: { reason: string | null; by_player: boolean }[]) {
   const voc = baseVoc(vocation);
   const rec = voc && level ? huntsFor(voc, level, 6) : null;
+  if (rec && voc && level) {
+    for (const id of FEATURED) {
+      const min = HUNT_RECS[id]?.solo[voc];
+      const h = HUNTS.find((x) => x.id === id);
+      if (h && typeof min === "number" && min <= level && !rec.ok.some((x) => x.h.id === id)) rec.ok.push({ h, min });
+    }
+  }
   // creature que matou → hunts em que ela aparece
   const seen = new Map<string, Hunt[]>();
   for (const d of deaths.slice(0, 10)) {
