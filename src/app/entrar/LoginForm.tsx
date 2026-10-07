@@ -3,7 +3,6 @@
 import { passwordProblem } from "@/lib/password";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Mode = "senha" | "link" | "criar";
@@ -12,7 +11,6 @@ type Mode = "senha" | "link" | "criar";
 const TERMS_VERSION = "2026-09-26";
 
 export default function LoginForm({ next = "/minha-area", create = false }: { next?: string; create?: boolean }) {
-  const router = useRouter();
   const [mode, setMode] = useState<Mode>(create ? "criar" : "senha");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +18,7 @@ export default function LoginForm({ next = "/minha-area", create = false }: { ne
   const [msg, setMsg] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
   const [unconfirmed, setUnconfirmed] = useState(false);
+  const [stuck, setStuck] = useState<string | null>(null);
   // "esqueci a senha": o link do e-mail volta direto para a caixa de senha da Minha área
   const [forgot, setForgot] = useState(false);
 
@@ -64,7 +63,7 @@ export default function LoginForm({ next = "/minha-area", create = false }: { ne
         options: { emailRedirectTo: redirectTo(), data: { terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() } },
       });
       if (error) return (setStatus("error"), setMsg(error.message));
-      if (data.session) return router.push(next);
+      if (data.session) return go(next);
       setStatus("sent");
       setMsg("Conta criada. Confirme pelo link que enviamos ao seu e-mail (olhe também o lixo eletrônico) e depois entre com a senha.");
       return;
@@ -75,8 +74,17 @@ export default function LoginForm({ next = "/minha-area", create = false }: { ne
       return (setStatus("error"), setMsg("Seu e-mail ainda não foi confirmado. Clique abaixo para receber o link de confirmação."));
     }
     if (error) return (setStatus("error"), setMsg(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message));
-    router.push(next);
-    router.refresh();
+    go(next);
+  }
+
+  // Depois de entrar, recarrega a página de destino inteira: no app instalado (PWA) a navegação interna às vezes não saía do
+  // "Aguarde...". Se em 8 s ainda estiver aqui, libera o botão com um link direto.
+  function go(to: string) {
+    window.location.assign(to);
+    window.setTimeout(() => {
+      setStatus("idle");
+      setStuck(to);
+    }, 8000);
   }
 
   return (
@@ -131,6 +139,11 @@ export default function LoginForm({ next = "/minha-area", create = false }: { ne
             {status === "sending" ? "Aguarde..." : mode === "senha" ? "Entrar" : mode === "criar" ? "Criar conta" : "Receber link de acesso"}
           </button>
           {msg && <p className={status === "error" ? "bad" : "good"}>{msg}</p>}
+          {stuck && (
+            <p className="good">
+              Você já entrou na conta. Se a página não abriu sozinha, <a href={stuck}>toque aqui para continuar</a>.
+            </p>
+          )}
           {unconfirmed && mode === "senha" && (
             <button type="button" className="tc-btn" onClick={resend} disabled={status === "sending"}>
               Reenviar e-mail de confirmação
