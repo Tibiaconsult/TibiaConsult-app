@@ -4,7 +4,8 @@
 // - major exige o bestiário completo da creature; minor exige o estágio 2;
 // - charm elemental (Zap, Enflame, Freeze, Poison, Curse, Divine Wrath, Wound): 5% da vida máxima da creature, limitado a 2x o level do char,
 //   e a resistência da creature ao elemento conta;
-// - Overflux (2,5% da mana máxima) e Overpower (5% da vida máxima do char): limitados a 8% da vida da creature; entram como físico.
+// - Overflux (2,5% da mana máxima) e Overpower (5% da vida máxima do char): limitados a 8% da vida da creature;
+//   aparecem como físico, mas são neutros: ignoram a resistência da creature.
 // Peso de cada creature = fração dos kills no lure x vida dela (a parte do dano que você gasta nela).
 // Fração dos kills: respawn do mapa (hunt-spawns) ou, sem ele, a proporção de kills das estatísticas de loot da TibiaWiki.
 
@@ -84,13 +85,12 @@ function options(c: Hunt["creatures"][number], voc: SetVoc, level: number): Char
     return { charm: CHARM_OF[el], el, dmg: Math.round(Math.min(raw, cap) * (taken / 100)), capped: raw > cap };
   }).filter((o) => o.dmg > 0);
   const per = PER_LEVEL[voc];
-  const phys = (c.taken.physical ?? 100) / 100;
   const limit = 0.08 * c.hp;
   const flux = 0.025 * per.mana * level;
   const power = 0.05 * per.hp * level;
   if (voc === "sorcerer" || voc === "druid")
-    out.push({ charm: "Overflux", el: null, dmg: Math.round(Math.min(flux, limit) * phys), capped: flux > limit });
-  if (voc === "knight") out.push({ charm: "Overpower", el: null, dmg: Math.round(Math.min(power, limit) * phys), capped: power > limit });
+    out.push({ charm: "Overflux", el: null, dmg: Math.round(Math.min(flux, limit)), capped: flux > limit });
+  if (voc === "knight") out.push({ charm: "Overpower", el: null, dmg: Math.round(Math.min(power, limit)), capped: power > limit });
   return out.sort((a, b) => b.dmg - a.dmg);
 }
 
@@ -146,7 +146,8 @@ export function charmsByCreature(h: Hunt, voc: SetVoc, level: number, owned?: Se
   };
   walk(0, 0);
 
-  // minors: leech nas duas que mais pesam; Bless na que bate mais forte; depois Numb, Cleanse e Adrenaline Burst
+  // minors: leech nas duas que mais pesam; Numb na que bate mais forte; depois Cleanse, Adrenaline Burst e Bless
+  // (Bless rende pouco: tira 6 a 12% só da perda que sobra depois das blessings, que já cobrem 86%)
   const hit = h.creatures.map((c) => {
     const d = CREATURE_DAMAGE[c.name];
     if (!d) return null;
@@ -160,11 +161,11 @@ export function charmsByCreature(h: Hunt, voc: SetVoc, level: number, owned?: Se
     minors.set(i, [leech[k], why]);
   });
   const byHit = [...h.creatures.keys()].filter((i) => !minors.has(i) && hit[i]).sort((a, b) => (hit[b]?.max ?? 0) - (hit[a]?.max ?? 0));
-  if (byHit[0] !== undefined) minors.set(byHit[0], ["Bless", "perde menos XP se morrer para ela: é a que bate mais forte entre as que sobram"]);
+  if (byHit[0] !== undefined) minors.set(byHit[0], ["Numb", "paralisa a creature depois de ela atacar, mesmo sendo imune a paralyze: vai na que bate mais forte entre as que sobram"]);
   const rest: [string, string][] = [
-    ["Numb", "paralisa a creature depois de ela atacar: segura quem cola em você"],
-    ["Cleanse", "tira um status negativo (veneno, fogo, paralyze) quando ela acerta"],
+    ["Cleanse", "tira um status negativo (veneno, fogo, paralyze, hex) quando ela acerta"],
     ["Adrenaline Burst", "corre mais depois de apanhar: ajuda a sair de trap"],
+    ["Bless", "rende pouco: tira de 6 a 12% só da perda que sobra depois das blessings"],
   ];
   for (const i of order) if (!minors.has(i) && rest.length) minors.set(i, rest.shift()!);
 

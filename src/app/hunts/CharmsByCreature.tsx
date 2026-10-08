@@ -166,7 +166,8 @@ export default function CharmsByCreature({ h }: { h: Hunt }) {
       )}
       <p className="muted text-[10px] mt-2">
         Dano por ativação: 5% da vida da creature, limitado a 2x o level, vezes a resistência dela ao elemento (TibiaWiki, Major Charms). Overflux e Overpower
-        usam mana e vida aproximadas pelo level, sem equipamento, e param em 8% da vida da creature. Fração dos kills: {source}.
+        usam mana e vida aproximadas pelo level, sem equipamento, ignoram a resistência e param em 8% da vida da creature. Conta premium sem a Charm
+        Expansion (Store) ativa no máximo 6 charms ao mesmo tempo: comece pelo topo da lista. Fração dos kills: {source}.
         {char ? "" : " Com login e char ativo, o quadro marca os bestiários que você já completou e pode usar só os charms que você tem."}
       </p>
     </div>
