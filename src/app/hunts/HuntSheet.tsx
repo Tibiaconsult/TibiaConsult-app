@@ -4,6 +4,7 @@ import { HUNT_RECS, REC_SOURCE, REC_VOC_LABEL, RecVoc } from "@/data/hunt-recs";
 import { creatureHref } from "@/lib/creature-labels";
 import { creatureIcon } from "@/lib/icons";
 import GuildHuntStats from "./GuildHuntStats";
+import CharmsByCreature from "./CharmsByCreature";
 import HuntDrops from "./HuntDrops";
 import type { HuntDropsData } from "@/lib/hunt-loot";
 import HuntMapBox from "./HuntMapBox";
@@ -103,6 +104,7 @@ export default function HuntSheet({ h, drops }: { h: Hunt; drops?: HuntDropsData
           </tbody>
         </table>
       </div>
+      <CharmsByCreature h={h} />
       <p className="mt-4">
         <span className="font-bold">Elemento para sorcerer: </span>
         {h.element}
