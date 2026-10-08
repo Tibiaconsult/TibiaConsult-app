@@ -7,6 +7,7 @@ import Box from "@/components/Box";
 import { ItemSprite } from "@/components/Icons";
 import SaveToChar from "@/components/SaveToChar";
 import ComboPlayer from "@/components/ComboPlayer";
+import CharmsByCreature from "../CharmsByCreature";
 import { sorcererSteps, vocSteps } from "@/lib/player-steps";
 import type { Hunt } from "@/data/hunts";
 import { HUNT_RECS } from "@/data/hunt-recs";
@@ -236,6 +237,7 @@ export default function HuntPrep({ h, voc }: { h: Hunt; voc: SetVoc }) {
           </Box>
         </div>
       </div>
+      <CharmsByCreature h={h} />
 
       <div className="h-4" />
       <Box title="Dano que você toma">
