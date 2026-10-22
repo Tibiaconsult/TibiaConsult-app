@@ -197,7 +197,7 @@ export const HIGH_HUNTS: Hunt[] = [
     id: "radiant-ascendancy",
     name: "Radiant Ascendancy",
     city: "Marapur",
-    access: "Make Believe Quest. Área feita para exp: não dá gold nem item vendável. Depois de 3.000 creatures mortas, as que sobram viram as versões Devoted por 1 hora (mesmas resistências, bem mais exp).",
+    access: "Make Believe Quest. Área feita para exp: não dá gold nem item vendável. Depois de 3.000 creatures mortas, as que sobram viram as versões Devoted por 2 horas desde 20/10/2026, antes era 1 hora (mesmas resistências, bem mais exp).",
     floors: ["Regulares: Radiant Templar, Radiant Inquisitor, Radiant Zealot."],
     creatures: [
       { ...c("Radiant Templar", 37000, 34520, 4.87, [95, 105, 75, 110, 110, 80, 95], "A TibiaWiki ainda não lista."), weight: 1 },
@@ -213,7 +213,7 @@ export const HIGH_HUNTS: Hunt[] = [
     id: "radiant-skyhold",
     name: "Radiant Skyhold",
     city: "Marapur",
-    access: "Make Believe Quest. Área feita para exp: não dá gold nem item vendável. Depois de 3.000 creatures mortas, as que sobram viram as versões Devoted por 1 hora.",
+    access: "Make Believe Quest. Área feita para exp: não dá gold nem item vendável. Depois de 3.000 creatures mortas, as que sobram viram as versões Devoted por 2 horas (desde 20/10/2026; antes era 1 hora).",
     floors: ["Regulares: Radiant Warden, Radiant Paragon, Radiant Acolyte."],
     creatures: [
       { ...c("Radiant Warden", 38500, 35540, 4.63, [90, 80, 110, 90, 70, 110, 105], "A TibiaWiki ainda não lista."), weight: 1 },
@@ -283,7 +283,7 @@ export const HIGH_HUNTS: Hunt[] = [
     ],
     element: "DEATH: 100 a 110% nas creatures. Fogo: 85 a 100%. Energia: 100 a 105%. O elemento que mais entra é terra (100 a 120%), bom para charm e para outras vocações.",
     set: SET_DEATH,
-    play: ["Master of Decay + Aura of Exposed Weakness.", "Rotação de death: Great Death Beam e Death Echo; fogo e energia só entram convertidos pela stance.", "Charm: Poison (terra, 100 a 120% em todas as creatures)."],
+    play: ["Patch de 20/10/2026: os três bulltaurs dão cerca de 10% menos gold.", "Master of Decay + Aura of Exposed Weakness.", "Rotação de death: Great Death Beam e Death Echo; fogo e energia só entram convertidos pela stance.", "Charm: Poison (terra, 100 a 120% em todas as creatures)."],
   },
   {
     id: "secret-library-fire",
