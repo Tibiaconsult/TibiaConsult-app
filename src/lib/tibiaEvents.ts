@@ -36,12 +36,18 @@ const INFO: Record<string, { pt: string; emoji: string; color: string }> = {
   "The Lightbearer": { pt: "The Lightbearer", emoji: "🕯️", color: "#b08a1a" },
   "Exaltation Overload": { pt: "Exaltation Overload (forja turbinada)", emoji: "⚒️", color: "#9a5b12" },
   "Game World Merge": { pt: "Fusão de mundos", emoji: "🔀", color: "#4a4a6a" },
+  "New Game Worlds": { pt: "Mundos novos: Quirina, Nebulera e Farsabra", emoji: "🌍", color: "#2a6a4a" },
+  "Winter Update Test": { pt: "Backup de chars para o teste do Winter Update", emoji: "❄️", color: "#3a6a9a" },
 };
 
 /** Eventos anunciados sem data de server save na notícia (a 031 lê sozinha as que dizem "between the server saves of ... and ..."). */
 export const ANNOUNCED: TibiaEvent[] = [
-  // "Game World Merge Announcement", 21/09/2026: "on October 22, 2026 at the earliest"
-  { id: "Game World Merge|2026-10-22", name: "Game World Merge", start_date: "2026-10-22", end_date: "2026-10-22", tentative: true },
+  // ticker de 19/10/2026: as fusões são na quinta, 22/10; ticker de 22/10: mundos fundidos já no ar
+  { id: "Game World Merge|2026-10-22", name: "Game World Merge", start_date: "2026-10-22", end_date: "2026-10-22", tentative: false },
+  // ticker de 20/10/2026: backup dos chars para o teste do Winter Update em 27/10, 10:00 CET
+  { id: "Winter Update Test|2026-10-27", name: "Winter Update Test", start_date: "2026-10-27", end_date: "2026-10-27", tentative: false },
+  // "New Optional and Open PvP Game Worlds", 20/10/2026: "On Wednesday, October 28, we plan to set up"
+  { id: "New Game Worlds|2026-10-28", name: "New Game Worlds", start_date: "2026-10-28", end_date: "2026-10-28", tentative: true },
 ];
 
 /** Junta a tabela com os anunciados que caem no período, sem repetir. */

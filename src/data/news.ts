@@ -6,6 +6,10 @@ export interface NewsEntry {
 }
 
 export const TICKER: { date: string; text: string; href?: string }[] = [
+  { date: "2026-10-22", text: "Fusão de mundos feita hoje: os mundos fundidos já estão no ar, com world board e trade board. Mundos novos (Quirina, Nebulera e Farsabra, só premium no começo) previstos para 28/10.", href: "/tibia/calendario" },
+  { date: "2026-10-20", text: "Patch de 20/10: Asuras dão mais XP (True Dawnfire 8.100, True Midnight 8.200, True Feverbloom 8.600) e 10 a 14% menos gold; Norcferatu Dungeons perdem XP (Orclops 8.820, Dworc 7.680, Gloom Maw 7.550); bulltaurs 10% menos gold; Devoted radiants duram 2 horas.", href: "/hunts?h=norcferatu" },
+  { date: "2026-10-20", text: "Overpower e Overflux não são mais afetados pela Aura of Exposed Weakness; os outros charms entram na stance no primeiro hit. Teste do Winter Update: backup dos chars em 27/10, 10:00 CET.", href: "/ferramentas/charms" },
+  { date: "2026-10-13", text: "Patch de 13/10: Mirrored Nightmare não solta mais várias apparitions de uma imagem só; compra no NPC não leva mais o item errado depois de buscar outro.", href: "/hunts?h=mirrored-nightmare" },
   { date: "2026-10-07", text: "Conversor de Tibia Coins: informe o preço da TC no seu mundo e quanto você cobra; X TC viram kk e reais na hora, com a taxa nova do Market e texto pronto para copiar.", href: "/ferramentas/conversor-tc" },
   { date: "2026-10-07", text: "Minha PT: acompanhe os chars da sua PT (XP por dia, tempo online, mortes) e receba aviso no celular quando alguém morrer ou upar.", href: "/minha-pt" },
   { date: "2026-10-06", text: "Patch de 06/10: Echo Wardens voltam a nascer com 4 creatures normais, dão 20% de dano extra (era 50%) e dropam 50 dust (eram 15); echo raids voltaram na Mirrored Nightmare; Swift Foot com cooldown de 4 s; taxa do Market agora 2,5% (teto 2,5kk).", href: "/hunts?h=mirrored-nightmare" },
